@@ -1519,6 +1519,34 @@ export const UnitFetchData = createAsyncThunk(
     return response.data;
   },
 );
+export const AttendanceSyncGet = createAsyncThunk(
+  "Sync/MonthlyAttget",
+  async ({ CompanyID }) => {
+    var url = store.getState().globalurl.AttendanceSyncController;
+
+    const data = {
+      CompanyID: CompanyID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data),
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+
+    return response.data;
+  },
+);
 export const EventsgetData = createAsyncThunk(
   "EventsgetData/get",
   async ({ accessID, get, recID, Type }) => {
@@ -2418,6 +2446,22 @@ export const BirthdayAnniversaryGet = createAsyncThunk(
   "GetData/Birthday Anniversary",
   async ({ data }) => {
     const url = store.getState().globalurl.BirthdayAnniversaryGet;
+
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk4ODA2MTV9.uVL-s9M7nOPBH01dT1bpQbu0xbwXK4JT7HQo8h87t50",
+      },
+    });
+    console.log("🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:", response)
+    return response.data;
+  }
+);
+export const PaidLeaveProcess = createAsyncThunk(
+  "Paidleave/Process",
+  async ({ data }) => {
+    const url = store.getState().globalurl.PaidLeaveProcessurl;
 
     console.log("get" + JSON.stringify(data));
     const response = await axios.post(url, data, {

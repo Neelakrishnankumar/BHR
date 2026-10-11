@@ -49,7 +49,7 @@ import {
 } from "../../../store/reducers/Formapireducer";
 import CloseIcon from "@mui/icons-material/Close";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { CheckinAutocomplete, Employeeautocomplete, MultiFormikOptimizedAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
+import { CheckinAutocomplete, Employeeautocomplete, MultiFormikOptimizedAutocomplete, MultiFormikOptimizedselectAutocomplete, Productautocomplete } from "../../../ui-components/global/Autocomplete";
 import {
     GridToolbarContainer,
     GridActionsCellItem,
@@ -190,6 +190,28 @@ const EditAttendanceEntry = () => {
         setSelectedProjectID(projectID);
         setOpenUnlockDialog(true);
 
+    };
+    const handleShiftChange = (rowSLNO, newValue) => {
+        setRows((prevRows) =>
+            prevRows.map((r) =>
+                r.SLNO === rowSLNO
+                    ? {
+                        ...r,
+                        ShiftID: newValue?.RecordID || "",
+                        ShiftName: newValue?.Name || null,
+                        // the grid's From/To columns show these when shiftChecked is false
+                        ShiftStartTime: newValue?.ShiftStartTime || "",
+                        // note: your shift API key is "ShiftendTime" (lowercase e)
+                        ShiftEndTime: newValue?.ShiftendTime ?? newValue?.ShiftEndTime ?? "",
+                        // clear any manual override made through the clock popup
+                        shiftChecked: false,
+                        ShiftCheck: "N",
+                        ShiftFromTime: "",
+                        ShiftToTime: "",
+                    }
+                    : r
+            )
+        );
     };
     const handleUnlockSubmit = async () => {
         if (!unlockReason.trim()) {
@@ -367,6 +389,8 @@ const EditAttendanceEntry = () => {
                 EntryDate: selectedDate,
                 // LeaveFlag = Y must ALWAYS post as "N", regardless of whatever
                 // value row.Present holds (hard guard, independent of UI state)
+                ShiftID: row.ShiftID || "",
+                ShiftName: row.ShiftName || "",
                 Present: isOnLeave ? "N" : (Number(row.Present) === 1 ? "Y" : "N"),
                 Remarks: row.Remarks || "",
                 AdminID: UserRecordid,
@@ -786,7 +810,57 @@ const EditAttendanceEntry = () => {
             field: "ShiftName",
             headerName: "Shift Name",
             headerAlign: "center",
-            width: 150,
+            width: 230,
+            sortable: false,
+            renderCell: (params) => (
+                <Box
+                    sx={{ width: "100%" }}
+                    onKeyDown={(e) => e.stopPropagation()} // stop DataGrid from swallowing typing
+                >
+                    <CheckinAutocomplete
+                        id={`shift-${params.row.SLNO}`}
+                        name={`shift-${params.row.SLNO}`}
+                        label="Shift"
+                        variant="outlined"
+                        size="small"
+                        disabled={params.row.LeaveFlag === "Y"}
+                        value={
+                            params.row.ShiftName
+                                ? { RecordID: params.row.ShiftID || "", Name: params.row.ShiftName }
+                                : null
+                        }
+                        onChange={(newValue) => handleShiftChange(params.row.SLNO, newValue)}
+                         url={CompanyID === "742"
+                            ? `${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                    AccessID: "2215",
+                                    ScreenName: "Trust Shift",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID='${CompanyID}'`,
+                                },
+                            })}`
+                            : `${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                    AccessID: "2215",
+                                    ScreenName: "Shift",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `CompanyID='${CompanyID}' AND EmployeeID='${params.row.EmpID}'`,
+                                },
+                            })}`
+                        }
+                        // url={CompanyID ==`${listViewurl}?data=${JSON.stringify({
+                        //     Query: {
+                        //         AccessID: "2215",
+                        //         ScreenName: "Shift",
+                        //         VerticalLicense: Subscriptionlastthree,
+                        //         // employee-wise filter
+                        //         Filter: `CompanyID='${CompanyID}' AND EmployeeID='${params.row.EmpID}'`,
+                        //         Any: "",
+                        //     },
+                        // })}`}
+                    />
+                </Box>
+            ),
         },
 
         {
@@ -1150,7 +1224,7 @@ const EditAttendanceEntry = () => {
                                                                 },
                                                             })}`}
                                                         /> */}
-                                                        <MultiFormikOptimizedAutocomplete
+                                                        <MultiFormikOptimizedselectAutocomplete
                                                             sx={{
                                                                 width: "100%",
                                                                 "& .MuiOutlinedInput-root": {
@@ -1180,7 +1254,10 @@ const EditAttendanceEntry = () => {
                                                                         ScreenName: "Classification",
                                                                         VerticalLicense:
                                                                             Subscriptionlastthree,
-                                                                        Filter: `CompanyID=${CompanyID} AND Name <> 'Student'`,
+                                                                            Filter: CompanyID === "742"
+                                                                                    ? `CompanyID=${CompanyID}`
+                                                                                    : `CompanyID=${CompanyID} AND Name <> 'Student'`,
+                                                                        // Filter: `CompanyID=${CompanyID} AND Name <> 'Student'`,
                                                                         Any: "",
                                                                     },
                                                                 },

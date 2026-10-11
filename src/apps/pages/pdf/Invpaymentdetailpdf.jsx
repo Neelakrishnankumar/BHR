@@ -1985,19 +1985,19 @@ const groups = buildGroups(data, mode, selectedMonthNums);
                   );
                 }
 
-                if (entry.type === "grand") {
-                  return (
-                    <View key={idx} style={styles.grandRow}>
-                      <Text style={styles.wLabelSpanNoProject} />
-                      <Text style={[styles.grandLabel, styles.wProject, styles.cellNum]}>Grand Total</Text>
-                      {/* <Text style={[styles.grandLabel, styles.wProject, styles.cellCenter]}>Grand Total</Text> */}
-                      <Text style={[styles.grandValue, styles.wAmount]}>{money(entry.grandAmount)}</Text>
-                      <Text style={[styles.grandValue, styles.wPaid]}>{money(entry.grandPaid)}</Text>
-                      <Text style={[styles.grandValue, styles.wDue]}>{money(entry.grandDue)}</Text>
-                      <Text style={styles.wLastPaid} />
-                    </View>
-                  );
-                }
+                // if (entry.type === "grand") {
+                //   return (
+                //     <View key={idx} style={styles.grandRow}>
+                //       <Text style={styles.wLabelSpanNoProject} />
+                //       <Text style={[styles.grandLabel, styles.wProject, styles.cellNum]}>Grand Total</Text>
+                //       {/* <Text style={[styles.grandLabel, styles.wProject, styles.cellCenter]}>Grand Total</Text> */}
+                //       <Text style={[styles.grandValue, styles.wAmount]}>{money(entry.grandAmount)}</Text>
+                //       <Text style={[styles.grandValue, styles.wPaid]}>{money(entry.grandPaid)}</Text>
+                //       <Text style={[styles.grandValue, styles.wDue]}>{money(entry.grandDue)}</Text>
+                //       <Text style={styles.wLastPaid} />
+                //     </View>
+                //   );
+                // }
 
                 return null;
               })}

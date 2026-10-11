@@ -28,6 +28,7 @@ import {
   AttendanceProcess,
   paySlipGet,
   CustomisedCaptionGet,
+  AttendanceSyncGet,
 } from "../../../store/reducers/Formapireducer";
 import CircularProgress from "@mui/material/CircularProgress";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -38,6 +39,7 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { DataGrid } from "@mui/x-data-grid";
 import { useProSidebar } from "react-pro-sidebar";
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import ResetTvIcon from "@mui/icons-material/ResetTv";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -222,6 +224,32 @@ const EditAttendance = () => {
       setproData(newValue);
     } else {
       setproData(null);
+    }
+  };
+   const handleSync = async (values) => {
+     const data = {
+      Month: values.attmonth?.toString() ?? "",
+      Year: values.attyear ?? "",
+      EmployeeID: useCurrentEmp
+        ? EMPID
+        : empData?.RecordID ?? "",
+      ProjectID: proData?.RecordID ?? "",
+      CompanyID
+
+    };
+    try {
+      const res = await dispatch(
+        AttendanceSyncGet({
+         CompanyID:CompanyID
+        })
+      ).unwrap();
+
+      if (res.status === "success") {
+           dispatch(Attendance({ data }));
+
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
   const AttColumn = [
@@ -942,6 +970,30 @@ const EditAttendance = () => {
                     </Button>
 
                   </PDFDownloadLink> */}
+                  <Button
+                  startIcon={<AutorenewIcon />}
+                  // onClick={() =>
+                  //   dispatch(
+                  //     PartySync({
+                  //       accessid: "TR321",
+                  //       action: "sync",
+                  //     })
+                  //   )
+                  // }
+                  onClick={()=>handleSync(values)}
+                  sx={{
+                    backgroundColor: "#2971f5",
+                    color: "#fff",
+                    borderRadius: 2,
+                    px: 3,
+                    textTransform: "none",
+                    "&:hover": {
+                      backgroundColor: "#085bd6",
+                    },
+                  }}
+                >
+                  Sync
+                </Button>
                   <Button 
                   type="submit" 
                   variant="contained" 

@@ -321,30 +321,26 @@ const EditLeaveEnquiry = () => {
     );
   }
 
-      const fnLogOut = (props) => {
-  
-          Swal.fire({
-              title: errorMsgData.Warningmsg[props],
-              // text:data.payload.Msg,
-              icon: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#3085d6",
-              cancelButtonColor: "#d33",
-              confirmButtonText: props,
-          }).then((result) => {
-              if (result.isConfirmed) {
-                  if (props === "Logout") {
-                      navigate("/");
-                  }
-                  if (props === "Close") {
-                      navigate(-1);
-                  }
-              } else {
-                  return;
-              }
-          });
-      };
-
+const fnLogOut = (props) => {
+  Swal.fire({
+    title:
+      errorMsgData?.Warningmsg?.[props] ||
+      `Are you sure you want to ${props}?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: props,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      if (props === "Logout") {
+        navigate("/");
+      } else if (props === "Close") {
+        navigate(-1);
+      }
+    }
+  });
+};
   return (
     <React.Fragment>
       <Box sx={{ height: "100vh", overflow: "auto" }}>

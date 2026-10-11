@@ -225,7 +225,7 @@ const Editdoccategory = () => {
   return (
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
-      <Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
+      {/*<Paper elevation={3} sx={{ margin: "0px 10px", background: "#F2F0F0" }}>
         <Box display="flex" justifyContent="space-between" p={2}>
           <Box display="flex" borderRadius="3px" alignItems="center">
             {broken && !rtl && (
@@ -269,233 +269,336 @@ const Editdoccategory = () => {
             </Tooltip>
           </Box>
         </Box>
-      </Paper>
-      {/* {!getLoading ? ( */}
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={initialValues}
-            enableReinitialize={true}
-            onSubmit={(values) => {
-              setTimeout(() => {
-                fnSave(values);
-              }, 100);
-            }}
-            validationSchema={validationSchema}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-            }) => (
-              <form onSubmit={handleSubmit}>
+      </Paper>*/}
+      <Box sx={{ height: "100vh", overflow: "auto" }}>
+        <Box sx={{ backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          <Box sx={{ p: 1.5, borderRadius: 3, }}>
+            <Paper sx={{ borderRadius: 3 }}>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                p={2}
+              >
 
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-
-                  {CompanyAutoCode == "Y" ? (
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="text"
-                      label="Code"
-                      placeholder="Auto"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.Code}
-                      id="Code"
-                      name="Code"
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      InputProps={{ readOnly: true }}
-                      // required
-                      focused
-                      // autoFocus
-                      sx={{
-
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
-                      }}
-                      inputProps={{ maxLength: 8 }}
-                      onInvalid={(e) => {
-                        e.target.setCustomValidity("Please Fill The Code");
-                      }}
-                      onInput={(e) => {
-                        e.target.setCustomValidity("");
-                      }}
-                    />
-                  ) : (
-
-                    <TextField
-                      fullWidth
-                      variant="standard"
-                      type="text"
-                      label={
-                        <>
-                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                        </>
-                      }
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      value={values.Code}
-                      id="Code"
-                      name="Code"
-                      error={!!touched.Code && !!errors.Code}
-                      helperText={touched.Code && errors.Code}
-                      // required
-                      focused
-                      autoFocus
-                      sx={{
-
-                        backgroundColor: "#ffffff", // Set the background to white
-                        "& .MuiFilledInput-root": {
-                          backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                        }
-                      }}
-                      inputProps={{ maxLength: 8 }}
-                      onInvalid={(e) => {
-                        e.target.setCustomValidity("Please Fill The Code");
-                      }}
-                      onInput={(e) => {
-                        e.target.setCustomValidity("");
-                      }}
-                    />
+                {/* LEFT SIDE */}
+                <Box display="flex" alignItems="center">
+                  {broken && !rtl && (
+                    <IconButton onClick={() => toggleSidebar()}>
+                      <MenuOutlinedIcon />
+                    </IconButton>
                   )}
+                  <Breadcrumbs
+                    maxItems={3}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    <Typography
+                      sx={{
+                        cursor: "default",
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: "#111827",
+                        // mb: 0.2,
+                        px: 1,
+                        py: 0.2,
+                      }}
 
+                    >
+                      Document Category
+                    </Typography>
 
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="text"
-                    label={
-                      <>
-                        Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                      </>
-                    }
-                    value={values.Name}
-                    id="Name"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    name="Name"
-                    error={!!touched.Name && !!errors.Name}
-                    helperText={touched.Name && errors.Name}
-                    focused
-                    autoFocus={CompanyAutoCode === "Y"}
-                    sx={{
-
-                      backgroundColor: "#ffffff", // Set the background to white
-                      "& .MuiFilledInput-root": {
-                        backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
-                      }
-                    }}
-                    // required
-                    inputProps={{ maxLength: 90 }}
-                    multiline
-                    onInvalid={(e) => {
-                      e.target.setCustomValidity(
-                        "Please fill the Name"
-                      );
-                    }}
-                    onInput={(e) => {
-                      e.target.setCustomValidity("");
-                    }}
-                  />
-                
-                  <TextField
-                    fullWidth
-                    variant="standard"
-                    type="Number"
-                    label="Sort Order"
-                    value={values.SortOrder}
-                    id="SortOrder"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    name="SortOrder"
-                    error={!!touched.SortOrder && !!errors.SortOrder}
-                    helperText={touched.SortOrder && errors.SortOrder}
-
-                    focused
-                    onWheel={(e) => e.target.blur()}
-                    InputProps={{
-                      inputProps: {
-                        style: { textAlign: "right", background: "" },
-                      },
-                    }}
-                    onInput={(e) => {
-                      e.target.value = Math.max(0, parseInt(e.target.value))
-                        .toString()
-                        .slice(0, 8);
-                    }}
-                  />
-                  <FormControl>
-                    <Box>
-                      <Field
-                        //  size="small"
-                        type="checkbox"
-                        name="delete"
-                        id="delete"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="Delete"
-                      />
-
-                      <FormLabel focused={false}>Delete</FormLabel>
-                      <Field
-                        //  size="small"
-                        type="checkbox"
-                        name="checkbox"
-                        id="checkbox"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="Disable"
-                      />
-
-                      <FormLabel focused={false}>Disable</FormLabel>
-                        
-                    </Box>
-                  </FormControl>
-
+                  </Breadcrumbs>
                 </Box>
-                <Box display="flex" justifyContent="end" padding={1} gap={2}>
-                  {YearFlag == "true" ? (
-                    <LoadingButton
-                      color="secondary"
-                      variant="contained"
-                      type="submit"
-                      loading={loading}
-                    // onClick={() => {
-                    //   fnSave(values);
-                    // }}
-                    >
-                      Save
-                    </LoadingButton>
-                  ) : (
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      disabled={true}
-                    >
-                      Save
-                    </Button>
-                  )}
-                  {/* {YearFlag == "true" ? (
+                {/* </Box> */}
+
+                <Box display="flex">
+                  <Tooltip title="Close">
+                    <IconButton onClick={() => fnLogOut("Close")} color="error">
+                      <ResetTvIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Logout">
+                    <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                      <LogoutOutlinedIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Box>
+            </Paper>
+          </Box>
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+              <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 1 }}>
+                <Formik
+                  initialValues={initialValues}
+                  enableReinitialize={true}
+                  onSubmit={(values) => {
+                    setTimeout(() => {
+                      fnSave(values);
+                    }, 100);
+                  }}
+                  validationSchema={validationSchema}
+                >
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    isSubmitting,
+                    values,
+                    handleSubmit,
+                  }) => (
+                    <form onSubmit={handleSubmit}>
+                      <Box display="flex" alignItems="center" gap={1.5} mb={3}>
+                        <Box
+                          sx={{
+                            width: 36,
+                            // height: 36,
+                            borderRadius: "50%",
+                            backgroundColor: "#E0E7FF",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: 18,
+                          }}
+                        >
+                          🗂️
+                        </Box>
+                        <Box>
+                          <Typography variant="h6" fontWeight={700} color="#0D94885">
+                            Document Category
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Manage document categories and their details.
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box
+                        display="grid"
+                        gap={formGap}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        // gap="30px"
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
+                          },
+                        }}
+                      >
+
+                        {CompanyAutoCode == "Y" ? (
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            label="Code"
+                            placeholder="Auto"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.Code}
+                            id="Code"
+                            name="Code"
+                            error={!!touched.Code && !!errors.Code}
+                            helperText={touched.Code && errors.Code}
+                            InputProps={{ readOnly: true }}
+                            // required
+                            // focused
+                            // autoFocus
+                            sx={{
+
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              }
+                            }}
+                            inputProps={{ maxLength: 8 }}
+                            onInvalid={(e) => {
+                              e.target.setCustomValidity("Please Fill The Code");
+                            }}
+                            onInput={(e) => {
+                              e.target.setCustomValidity("");
+                            }}
+                          />
+                        ) : (
+
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            label={
+                              <>
+                                Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                              </>
+                            }
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.Code}
+                            id="Code"
+                            name="Code"
+                            error={!!touched.Code && !!errors.Code}
+                            helperText={touched.Code && errors.Code}
+                            // required
+                            // focused
+                            autoFocus
+                            sx={{
+
+                              backgroundColor: "#ffffff", // Set the background to white
+                              "& .MuiFilledInput-root": {
+                                backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                              }
+                            }}
+                            inputProps={{ maxLength: 8 }}
+                            onInvalid={(e) => {
+                              e.target.setCustomValidity("Please Fill The Code");
+                            }}
+                            onInput={(e) => {
+                              e.target.setCustomValidity("");
+                            }}
+                          />
+                        )}
+
+
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="text"
+                          label={
+                            <>
+                              Name<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          value={values.Name}
+                          id="Name"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="Name"
+                          error={!!touched.Name && !!errors.Name}
+                          helperText={touched.Name && errors.Name}
+                          // focused
+                          autoFocus={CompanyAutoCode === "Y"}
+                          sx={{
+
+                            backgroundColor: "#ffffff", // Set the background to white
+                            "& .MuiFilledInput-root": {
+                              backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
+                            }
+                          }}
+                          // required
+                          inputProps={{ maxLength: 90 }}
+                          multiline
+                          onInvalid={(e) => {
+                            e.target.setCustomValidity(
+                              "Please fill the Name"
+                            );
+                          }}
+                          onInput={(e) => {
+                            e.target.setCustomValidity("");
+                          }}
+                        />
+
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                          type="Number"
+                          label="Sort Order"
+                          value={values.SortOrder}
+                          id="SortOrder"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          name="SortOrder"
+                          error={!!touched.SortOrder && !!errors.SortOrder}
+                          helperText={touched.SortOrder && errors.SortOrder}
+
+                          // focused
+                          onWheel={(e) => e.target.blur()}
+                          InputProps={{
+                            inputProps: {
+                              style: { textAlign: "right", background: "" },
+                            },
+                          }}
+                          onInput={(e) => {
+                            e.target.value = Math.max(0, parseInt(e.target.value))
+                              .toString()
+                              .slice(0, 8);
+                          }}
+                        />
+                        <FormControl>
+                          <Box>
+                            <Field
+                              //  size="small"
+                              type="checkbox"
+                              name="delete"
+                              id="delete"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Delete"
+                            />
+
+                            <FormLabel focused={false}>Delete</FormLabel>
+                            <Field
+                              //  size="small"
+                              type="checkbox"
+                              name="checkbox"
+                              id="checkbox"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                              label="Disable"
+                            />
+
+                            <FormLabel focused={false}>Disable</FormLabel>
+
+                          </Box>
+                        </FormControl>
+
+                      </Box>
+                      <Box display="flex" justifyContent="end" padding={1} gap={2}>
+                        {YearFlag == "true" ? (
+                          <LoadingButton
+                            // color="secondary"
+                            variant="contained"
+                            type="submit"
+                             sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
+                            loading={loading}
+                          // onClick={() => {
+                          //   fnSave(values);
+                          // }}
+                          >
+                            Save
+                          </LoadingButton>
+                        ) : (
+                          <Button
+                          sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": {
+                                  bgcolor: "#0F766E",
+                                },
+                              }}
+                            // color="secondary"
+                            variant="contained"
+                            disabled={true}
+                          >
+                            Save
+                          </Button>
+                        )}
+                        {/* {YearFlag == "true" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -514,7 +617,7 @@ const Editdoccategory = () => {
                       Delete
                     </Button>
                   )} */}
-                  {/* {mode == "E" ? (
+                        {/* {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -544,31 +647,41 @@ const Editdoccategory = () => {
                   ) : (
                     null
                   )} */}
-                  {/* <Button
+                        {/* <Button
                     color="error"
                     variant="contained"
                     
                     >
                     Delete
                   </Button> */}
-                  <Button
-                    color="warning"
-                    variant="contained"
-                    onClick={() => {
-                      navigate(-1);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
+                        <Button
+                          // color="warning"
+                           sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#F97316",
+                              "&:hover": {
+                                bgcolor: "#EA580C",
+                              },
+                            }}
+                          variant="contained"
+                          onClick={() => {
+                            navigate(-1);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
 
-        </Paper>
-      {/* ) : (
-        false
-      )} */}
+              </Paper>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     </React.Fragment>
   );
 };

@@ -123,8 +123,8 @@ const Editoverhead = () => {
     }
   }
 
-    const [openoverheadModal, setOpenOverheadModal] = useState(false);
-  
+  const [openoverheadModal, setOpenOverheadModal] = useState(false);
+
   const explorelistViewData = useSelector(
     (state) => state.exploreApi.explorerowData
   );
@@ -189,11 +189,11 @@ const Editoverhead = () => {
           <GridToolbarQuickFilter />
           <Tooltip title="ADD">
             <IconButton
-            onClick={()=> {
-         
-              setOpenOverheadModal(true);
-            }}
-            type="reset">
+              onClick={() => {
+
+                setOpenOverheadModal(true);
+              }}
+              type="reset">
               <AddOutlinedIcon />
             </IconButton>
           </Tooltip>
@@ -445,7 +445,7 @@ const Editoverhead = () => {
     if (response.payload.Status == "Y") {
       setLoading(false);
       dispatch(
-        fetchExplorelitview("TR325", Subscriptionlastthree,"Additional Expense", `parentID=${recID} AND CompanyID=${CompanyID}`, "")
+        fetchExplorelitview("TR325", Subscriptionlastthree, "Additional Expense", `parentID=${recID} AND CompanyID=${CompanyID}`, "")
       );
 
       toast.success(response.payload.Msg);
@@ -500,8 +500,8 @@ const Editoverhead = () => {
 
   //For side menu
   const formSections = [
-       { value: 0, label: "Overhead", desc: "Manage overhead expense details", icon: "💰" },
-    { value: 1, label: "Additional Expense",desc: "Manage additional expense records", icon: "🧾" },
+    { value: 0, label: "Overhead", desc: "Manage overhead expense details", icon: "💰" },
+    { value: 1, label: "Additional Expense", desc: "Manage additional expense records", icon: "🧾" },
   ]
 
   function FormSectionsSidebar({
@@ -626,7 +626,7 @@ const Editoverhead = () => {
     <React.Fragment>
       {getLoading ? <LinearProgress /> : false}
       <Box sx={{ height: "100vh", overflow: "auto" }}>
- <Paper
+        <Paper
           elevation={0}
           sx={{
             mx: 2,
@@ -638,71 +638,71 @@ const Editoverhead = () => {
             bgcolor: "#fff",
           }}
         >
-                <Box display="flex" justifyContent="space-between">
+          <Box display="flex" justifyContent="space-between">
             <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-                 <Box>
-                            <Typography
-                              sx={{
-                                fontSize: 20,
-                                fontWeight: 700,
-                                color: "#111827",
-                                // mb: 0.2,
-                                px: 1,
-                                py: 0.2,
-                              }}
-                            >
-                              {mode === "A"
-                                ? `New Overhead`
-                                : `Edit Overhead`}
-                            </Typography>
-            <Box
-              display={isNonMobile ? "flex" : "none"}
-              borderRadius="3px"
-              alignItems="center"
-            >
-              <Breadcrumbs
-                maxItems={3}
-                aria-label="breadcrumb"
-                   separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
-                                    sx={breadcrumbStyles.separator}
-              >
+              {broken && !rtl && (
+                <IconButton onClick={() => toggleSidebar()}>
+                  <MenuOutlinedIcon />
+                </IconButton>
+              )}
+              <Box>
                 <Typography
-                sx={
-                                     show == "0"
-                                        ? breadcrumbStyles.active
-                                        : breadcrumbStyles.item
-                                    } 
-                  onClick={() => {
-                    setScreen(0);
+                  sx={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#111827",
+                    // mb: 0.2,
+                    px: 1,
+                    py: 0.2,
                   }}
                 >
-                  Overhead
+                  {mode === "A"
+                    ? `New Overhead`
+                    : `Edit Overhead`}
                 </Typography>
-                {show == "1" ? (
-                  <Typography
-                    sx={
-                                         show == "1"
-                                            ? breadcrumbStyles.active
-                                            : breadcrumbStyles.item
-                                        } 
+                <Box
+                  display={isNonMobile ? "flex" : "none"}
+                  borderRadius="3px"
+                  alignItems="center"
+                >
+                  <Breadcrumbs
+                    maxItems={3}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+                    sx={breadcrumbStyles.separator}
                   >
-                    Additional Expense
-                  </Typography>
-                ) : (
-                  false
-                )}
+                    <Typography
+                      sx={
+                        show == "0"
+                          ? breadcrumbStyles.active
+                          : breadcrumbStyles.item
+                      }
+                      onClick={() => {
+                        setScreen(0);
+                      }}
+                    >
+                      Overhead
+                    </Typography>
+                    {show == "1" ? (
+                      <Typography
+                        sx={
+                          show == "1"
+                            ? breadcrumbStyles.active
+                            : breadcrumbStyles.item
+                        }
+                      >
+                        Additional Expense
+                      </Typography>
+                    ) : (
+                      false
+                    )}
 
-              </Breadcrumbs>
+                  </Breadcrumbs>
+                </Box>
+              </Box>
             </Box>
-          </Box>
- </Box>
-          <Box display="flex">
-            {/* {mode !== "A" ? (
+            <Box display="flex">
+              {/* {mode !== "A" ? (
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                 <InputLabel id="demo-select-small">Explore</InputLabel>
                 <Select
@@ -719,64 +719,64 @@ const Editoverhead = () => {
             ) : (
               false
             )} */}
-            <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
+              <Tooltip title="Close">
+                <IconButton onClick={() => fnLogOut("Close")} color="error">
+                  <ResetTvIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Logout">
+                <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                  <LogoutOutlinedIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
-        </Box>
-      </Paper>
+        </Paper>
 
-      {show == "0" && !getLoading ? (
-            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-              {/* LEFT: Form Sections sidebar */}
-              {mode !== "A" && (
-                <FormSectionsSidebar
-                  show={show}
-                  screenChange={screenChange}
-                  sections={formSections}
-                  open={sectionsOpen}
-                  onToggle={() => setSectionsOpen((p) => !p)}
-                />
-              )}
-              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
-          <Formik
-            initialValues={initialValue}
-            // onSubmit={(values, { resetForm }) => {
-            //   setTimeout(() => {
-            //     fnSave(values);
-            //   }, 100);
-            // }}
-            onSubmit={(values, { setSubmitting }) => {
-              setSubmitting(true);
-              fnSave(values);
-              setSubmitting(false);
-            }}
+        {show == "0" && !getLoading ? (
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            {/* LEFT: Form Sections sidebar */}
+            {mode !== "A" && (
+              <FormSectionsSidebar
+                show={show}
+                screenChange={screenChange}
+                sections={formSections}
+                open={sectionsOpen}
+                onToggle={() => setSectionsOpen((p) => !p)}
+              />
+            )}
+            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+              <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                <Formik
+                  initialValues={initialValue}
+                  // onSubmit={(values, { resetForm }) => {
+                  //   setTimeout(() => {
+                  //     fnSave(values);
+                  //   }, 100);
+                  // }}
+                  onSubmit={(values, { setSubmitting }) => {
+                    setSubmitting(true);
+                    fnSave(values);
+                    setSubmitting(false);
+                  }}
 
-            validationSchema={validationSchema}
-            enableReinitialize={true}
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              setFieldValue
-            }) => (
-              <form onSubmit={handleSubmit}>
+                  validationSchema={validationSchema}
+                  enableReinitialize={true}
+                >
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    isSubmitting,
+                    values,
+                    handleSubmit,
+                    setFieldValue
+                  }) => (
+                    <form onSubmit={handleSubmit}>
 
 
-  {/* ----- CARD HEADER ----- */}
+                      {/* ----- CARD HEADER ----- */}
                       <Box display="flex" alignItems="center" gap={1} mb={0.5}>
                         <Box
                           sx={{
@@ -801,300 +801,300 @@ const Editoverhead = () => {
                         </Box>
                       </Box>
 
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  {CompanyAutoCode == "Y" ? (
-                    <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label="Code"
-                      placeholder="Auto"
-                      variant="outlined"
-                      size="small"
-                      focused
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      InputProps={{ readOnly: true }}
-                         sx={{
-                                "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                      <Box
+                        display="grid"
+                        gap={formGap}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        // gap="30px"
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
+                          },
+                        }}
+                      >
+                        {CompanyAutoCode == "Y" ? (
+                          <TextField
+                            name="code"
+                            type="text"
+                            id="code"
+                            label="Code"
+                            placeholder="Auto"
+                            variant="outlined"
+                            size="small"
+                            focused
+                            value={values.code}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.code && !!errors.code}
+                            helperText={touched.code && errors.code}
+                            InputProps={{ readOnly: true }}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
                                 },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                              }}
-                    // autoFocus
-                    />
-                  ) : (
-                    <TextField
-                      name="code"
-                      type="text"
-                      id="code"
-                      label={
-                        <>
-                          Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                        </>
-                      }
-                      variant="outlined"
-                      size="small"
-                      focused
-                      // required
-                      value={values.code}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.code && !!errors.code}
-                      helperText={touched.code && errors.code}
-                      autoFocus
-                         sx={{
-                                "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
+                          // autoFocus
+                          />
+                        ) : (
+                          <TextField
+                            name="code"
+                            type="text"
+                            id="code"
+                            label={
+                              <>
+                                Code<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                              </>
+                            }
+                            variant="outlined"
+                            size="small"
+                            focused
+                            // required
+                            value={values.code}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            error={!!touched.code && !!errors.code}
+                            helperText={touched.code && errors.code}
+                            autoFocus
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
                                 },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                              }}
-                    />
-                  )}
-                  <TextField
-                    name="name"
-                    type="text"
-                    id="name"
-                    label={
-                      <>
-                        {getBusinessCaption("Overhead", "Overhead")}
-                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                      </>
-                    }
-                    variant="outlined"
-                    size="small"
-                    focused
-                    value={values.name}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.name && !!errors.name}
-                    helperText={touched.name && errors.name}
-                    autoFocus={CompanyAutoCode == "Y"}
-                       sx={{
-                                "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
+                          />
+                        )}
+                        <TextField
+                          name="name"
+                          type="text"
+                          id="name"
+                          label={
+                            <>
+                              {getBusinessCaption("Overhead", "Overhead")}
+                              <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          variant="outlined"
+                          size="small"
+                          focused
+                          value={values.name}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.name && !!errors.name}
+                          helperText={touched.name && errors.name}
+                          autoFocus={CompanyAutoCode == "Y"}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              backgroundColor: "#fff",
+                              borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
-                                },
+                              "& fieldset": {
+                                borderColor: "#d1d5db", // 👈 light grey border
+                              },
+                              "&:hover fieldset": {
+                                borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                              },
+                              "&.Mui-focused fieldset": {
+                                borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                borderWidth: "1px",
+                              },
+                            },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                              }}
-                  // required
-                  />
-                  {/* <FormControl
+                            "& .MuiInputLabel-root": {
+                              color: "#6b7280", // label grey
+                            },
+                            "& .MuiInputLabel-root.Mui-focused": {
+                              color: "#6b7280", // keep same on focus
+                            },
+                          }}
+                        // required
+                        />
+                        {/* <FormControl
                     focused
                     variant="standard"
                   //sx={{ gridColumn: "span 2" }}
                   > */}
-                  {/* <InputLabel id="frequency">Frequency<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
-                  <TextField
-                    label={
-                      <>
-                        Frequency<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                      </>
-                    }
-                    id="frequency"
-                    name="frequency"
-                    focused
-                    variant="outlined"
-                    size="small"
-                    value={values.frequency}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.frequency && !!errors.frequency}
-                    helperText={touched.frequency && errors.frequency}
-                       sx={{
-                                "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                        {/* <InputLabel id="frequency">Frequency<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
+                        <TextField
+                          label={
+                            <>
+                              Frequency<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          id="frequency"
+                          name="frequency"
+                          focused
+                          variant="outlined"
+                          size="small"
+                          value={values.frequency}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.frequency && !!errors.frequency}
+                          helperText={touched.frequency && errors.frequency}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              backgroundColor: "#fff",
+                              borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
-                                },
+                              "& fieldset": {
+                                borderColor: "#d1d5db", // 👈 light grey border
+                              },
+                              "&:hover fieldset": {
+                                borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                              },
+                              "&.Mui-focused fieldset": {
+                                borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                borderWidth: "1px",
+                              },
+                            },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                              }}
-                  // required
-                  >
+                            "& .MuiInputLabel-root": {
+                              color: "#6b7280", // label grey
+                            },
+                            "& .MuiInputLabel-root.Mui-focused": {
+                              color: "#6b7280", // keep same on focus
+                            },
+                          }}
+                        // required
+                        >
 
-                    <MenuItem value="D">Daily</MenuItem>
-                    <MenuItem value="W">Weekly</MenuItem>
-                    <MenuItem value="M">Monthly</MenuItem>
-                    <MenuItem value="Y">Yearly</MenuItem>
-                    <MenuItem value="B">By Monthly</MenuItem>
-                    <MenuItem value="S">Six Month</MenuItem>
-                    <MenuItem value="Q">Quarterly</MenuItem>
-                    <MenuItem value="F">Fortnightly</MenuItem>
-                  </TextField>
-                  <CheckinAutocomplete
-                    sx={{ marginTop: "1px" }}
-                    name="OverheadType"
-                    label={
-                      <>
-                        {getBusinessCaption("OverheadType", "Overhead Type")}
-                        <span style={{ color: "red", fontSize: "20px" }}>*</span>
-                      </>
-                    }
-                    variant="outlined"
-                    id="OverheadType"
-                    value={values.OverheadType}
-                    onChange={(newValue) => {
-                      setFieldValue("OverheadType", newValue);
-                      console.log(newValue, "--newValue");
-                      console.log(newValue.RecordID, "////");
-                    }}
-                    error={!!touched.OverheadType && !!errors.OverheadType}
-                    helperText={touched.OverheadType && errors.OverheadType}
-                    //  onChange={handleSelectionFunctionname}
-                    // defaultValue={selectedFunctionName}
-                    url={`${listViewurl}?data=${JSON.stringify({
-                      Query: {
-                        AccessID: "2126",
-                        ScreenName: "OverheadType",
-                        VerticalLicense: Subscriptionlastthree,
-                        Filter: `CompanyID=${CompanyID}`,
-                        Any: "",
-                      },
-                    })}`}
-                  // url={`${listViewurl}?data={"Query":{"AccessID":"2126","ScreenName":"OverheadType",Filter":"CompanyID=${CompanyID}","Any":""}}`}
-                  />
-                  <TextField
-                    label="Account Type"
-                    // {
-                    //   <>
-                    //     Account Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
-                    //   </>
-                    // }
-                    select
-                    id="accounttype"
-                    name="accounttype"
-                    focused
-                    variant="outlined"
-                    size="small"
-                    value={values.accounttype}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={!!touched.accounttype && !!errors.accounttype}
-                    helperText={touched.accounttype && errors.accounttype}
-                       sx={{
-                                "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                          <MenuItem value="D">Daily</MenuItem>
+                          <MenuItem value="W">Weekly</MenuItem>
+                          <MenuItem value="M">Monthly</MenuItem>
+                          <MenuItem value="Y">Yearly</MenuItem>
+                          <MenuItem value="B">By Monthly</MenuItem>
+                          <MenuItem value="S">Six Month</MenuItem>
+                          <MenuItem value="Q">Quarterly</MenuItem>
+                          <MenuItem value="F">Fortnightly</MenuItem>
+                        </TextField>
+                        <CheckinAutocomplete
+                          sx={{ marginTop: "1px" }}
+                          name="OverheadType"
+                          label={
+                            <>
+                              {getBusinessCaption("OverheadType", "Overhead Type")}
+                              <span style={{ color: "red", fontSize: "20px" }}>*</span>
+                            </>
+                          }
+                          variant="outlined"
+                          id="OverheadType"
+                          value={values.OverheadType}
+                          onChange={(newValue) => {
+                            setFieldValue("OverheadType", newValue);
+                            console.log(newValue, "--newValue");
+                            console.log(newValue.RecordID, "////");
+                          }}
+                          error={!!touched.OverheadType && !!errors.OverheadType}
+                          helperText={touched.OverheadType && errors.OverheadType}
+                          //  onChange={handleSelectionFunctionname}
+                          // defaultValue={selectedFunctionName}
+                          url={`${listViewurl}?data=${JSON.stringify({
+                            Query: {
+                              AccessID: "2126",
+                              ScreenName: "OverheadType",
+                              VerticalLicense: Subscriptionlastthree,
+                              Filter: `CompanyID=${CompanyID}`,
+                              Any: "",
+                            },
+                          })}`}
+                        // url={`${listViewurl}?data={"Query":{"AccessID":"2126","ScreenName":"OverheadType",Filter":"CompanyID=${CompanyID}","Any":""}}`}
+                        />
+                        <TextField
+                          label="Account Type"
+                          // {
+                          //   <>
+                          //     Account Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
+                          //   </>
+                          // }
+                          select
+                          id="accounttype"
+                          name="accounttype"
+                          focused
+                          variant="outlined"
+                          size="small"
+                          value={values.accounttype}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={!!touched.accounttype && !!errors.accounttype}
+                          helperText={touched.accounttype && errors.accounttype}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              backgroundColor: "#fff",
+                              borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
-                                },
+                              "& fieldset": {
+                                borderColor: "#d1d5db", // 👈 light grey border
+                              },
+                              "&:hover fieldset": {
+                                borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                              },
+                              "&.Mui-focused fieldset": {
+                                borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                borderWidth: "1px",
+                              },
+                            },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                              }}
-                  // required
-                  >
+                            "& .MuiInputLabel-root": {
+                              color: "#6b7280", // label grey
+                            },
+                            "& .MuiInputLabel-root.Mui-focused": {
+                              color: "#6b7280", // keep same on focus
+                            },
+                          }}
+                        // required
+                        >
 
-                    <MenuItem value="Debit">Debit</MenuItem>
-                    <MenuItem value="Credit">Credit</MenuItem>
+                          <MenuItem value="Debit">Debit</MenuItem>
+                          <MenuItem value="Credit">Credit</MenuItem>
 
-                  </TextField>
+                        </TextField>
 
-                  {/* </FormControl> */}
+                        {/* </FormControl> */}
 
-                  {/* <FormControl
+                        {/* <FormControl
                     focused
                     variant="standard"
                   //sx={{ gridColumn: "span 2" }}
                   >
                     <InputLabel id="productCost">Type<span style={{ color: 'red',fontSize:'20px'}}>*</span></InputLabel> */}
-                  {/* <TextField
+                        {/* <TextField
                     label={
                       <>
                         Type<span style={{ color: "red", fontSize: "20px" }}>*</span>
@@ -1120,7 +1120,7 @@ const Editoverhead = () => {
                   </TextField> */}
 
 
-                  {/* <Box>                    
+                        {/* <Box>                    
                     <Field
                       //  size="small"
                       type="checkbox"
@@ -1146,67 +1146,67 @@ const Editoverhead = () => {
 
                     <FormLabel focused={false}>Disable</FormLabel>
                   </Box> */}
-                  <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
+                        <Box display="flex" alignItems="center" gap={2} flexWrap="wrap">
 
-                    {/* {(values?.OverheadType?.Name === "Cost of Employee" || values?.OverheadType?.Name === "Salary Advance" || values?.OverheadType?.Name === "Salary Advance Recovery" || values?.OverheadType?.Name === "Irregular") && ( */}
-                      <Box display="flex" alignItems="center">
-                        <Field
-                          type="checkbox"
-                          name="impactpayroll"
-                          id="impactpayroll"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          as={Checkbox}
-                        />
-                        <FormLabel focused={false}>Impact Payroll</FormLabel>
+                          {/* {(values?.OverheadType?.Name === "Cost of Employee" || values?.OverheadType?.Name === "Salary Advance" || values?.OverheadType?.Name === "Salary Advance Recovery" || values?.OverheadType?.Name === "Irregular") && ( */}
+                          <Box display="flex" alignItems="center">
+                            <Field
+                              type="checkbox"
+                              name="impactpayroll"
+                              id="impactpayroll"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Impact Payroll</FormLabel>
+                          </Box>
+                          {/* )} */}
+
+                          <Box display="flex" alignItems="center">
+                            <Field
+                              type="checkbox"
+                              name="delete"
+                              id="delete"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Delete</FormLabel>
+                          </Box>
+
+                          <Box display="flex" alignItems="center">
+                            <Field
+                              type="checkbox"
+                              name="disable"
+                              id="disable"
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              as={Checkbox}
+                            />
+                            <FormLabel focused={false}>Disable</FormLabel>
+                          </Box>
+
+                        </Box>
+
                       </Box>
-                    {/* )} */}
-
-                    <Box display="flex" alignItems="center">
-                      <Field
-                        type="checkbox"
-                        name="delete"
-                        id="delete"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                      />
-                      <FormLabel focused={false}>Delete</FormLabel>
-                    </Box>
-
-                    <Box display="flex" alignItems="center">
-                      <Field
-                        type="checkbox"
-                        name="disable"
-                        id="disable"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                      />
-                      <FormLabel focused={false}>Disable</FormLabel>
-                    </Box>
-
-                  </Box>
-
-                </Box>
-                <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
-                  <LoadingButton
-                    variant="contained"
-                      sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#0D9488",
-                        "&:hover": {
-                          bgcolor: "#0F766E",
-                        },
-                      }}
-                    type="submit"
-                    loading={loading}
-                  >
-                    Save
-                  </LoadingButton>
-                  {/* {mode == "E" ? (
+                      <Box display="flex" justifyContent="end" padding={1} gap={formGap}>
+                        <LoadingButton
+                          variant="contained"
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                            px: 4,
+                            bgcolor: "#0D9488",
+                            "&:hover": {
+                              bgcolor: "#0F766E",
+                            },
+                          }}
+                          type="submit"
+                          loading={loading}
+                        >
+                          Save
+                        </LoadingButton>
+                        {/* {mode == "E" ? (
                     <Button
                       color="error"
                       variant="contained"
@@ -1233,82 +1233,82 @@ const Editoverhead = () => {
                   ) : (
                     null
                   )} */}
-                  <Button
-                    variant="contained"
-                    sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#F97316",
-                        "&:hover": {
-                          bgcolor: "#EA580C",
-                        },
-                      }}
-                    onClick={() =>
-                      navigate(-1)
-                    }
-                  >
-                    Back
-                  </Button>
-                </Box>
-              </form>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            textTransform: "none",
+                            borderRadius: 2,
+                            px: 4,
+                            bgcolor: "#F97316",
+                            "&:hover": {
+                              bgcolor: "#EA580C",
+                            },
+                          }}
+                          onClick={() =>
+                            navigate(-1)
+                          }
+                        >
+                          Back
+                        </Button>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
+        ) : (
+          false
+        )}
+        {show == "1" ? (
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            {/* RIGHT: shared Form Sections sidebar — same as Personnel */}
+            {mode !== "A" && (
+              <FormSectionsSidebar
+                show={show}
+                screenChange={screenChange}
+                sections={formSections}
+                open={sectionsOpen}
+                onToggle={() => setSectionsOpen((p) => !p)}
+              />
             )}
-          </Formik>
-        </Paper>
-           </Box>
-                    </Box>
-      ) : (
-        false
-      )}
-      {show == "1" ? (
-  <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-              {/* RIGHT: shared Form Sections sidebar — same as Personnel */}
-              {mode !== "A" && (
-                <FormSectionsSidebar
-                  show={show}
-                  screenChange={screenChange}
-                  sections={formSections}
-                  open={sectionsOpen}
-                  onToggle={() => setSectionsOpen((p) => !p)}
-                />
-              )}
-              {/* LEFT: Contact form */}
-              <Box flex={1} minWidth={0}>
-                <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
-                
-          <Formik
-                            initialValues={initialValue2}
-                            enableReinitialize
-                            validationSchema={validationSchema1}
-                            onSubmit={(values, { resetForm }) => {
-              setTimeout(() => {
-                AddexpFnsave(values, resetForm, false);
-                 setOpenOverheadModal(false);
-              }, 100);
-            }}
-          
-          >
-            {({
-              errors,
-              touched,
-              handleBlur,
-              handleChange,
-              isSubmitting,
-              values,
-              handleSubmit,
-              resetForm,
-              setFieldValue
-            }) => (
-              <form
-                onSubmit={handleSubmit}
-                onReset={() => {
-                  selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                  resetForm();
-                setOpenOverheadModal(true);
-                }}
-              >
+            {/* LEFT: Contact form */}
+            <Box flex={1} minWidth={0}>
+              <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
 
-  {/* ----- CARD HEADER ----- */}
+                <Formik
+                  initialValues={initialValue2}
+                  enableReinitialize
+                  validationSchema={validationSchema1}
+                  onSubmit={(values, { resetForm }) => {
+                    setTimeout(() => {
+                      AddexpFnsave(values, resetForm, false);
+                      setOpenOverheadModal(false);
+                    }, 100);
+                  }}
+
+                >
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    isSubmitting,
+                    values,
+                    handleSubmit,
+                    resetForm,
+                    setFieldValue
+                  }) => (
+                    <form
+                      onSubmit={handleSubmit}
+                      onReset={() => {
+                        selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                        resetForm();
+                        setOpenOverheadModal(true);
+                      }}
+                    >
+
+                      {/* ----- CARD HEADER ----- */}
                       <Box display="flex" alignItems="center" gap={1} mb={0.5}>
                         <Box
                           sx={{
@@ -1333,151 +1333,151 @@ const Editoverhead = () => {
                         </Box>
                       </Box>
 
-                <Box
-                  display="grid"
-                  gap={formGap}
-                  padding={1}
-                  gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                  // gap="30px"
-                  sx={{
-                    "& > div": {
-                      gridColumn: isNonMobile ? undefined : "span 2",
-                    },
-                  }}
-                >
-                  <FormControl sx={{ gap: formGap }}>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      type="text"
-                      id="code"
-                      name="code"
-                      value={values.code}
-                      label="Code"
-                      focused
-                      inputProps={{ readOnly: true }}
-                         sx={{
-                                "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                      <Box
+                        display="grid"
+                        gap={formGap}
+                        padding={1}
+                        gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+                        // gap="30px"
+                        sx={{
+                          "& > div": {
+                            gridColumn: isNonMobile ? undefined : "span 2",
+                          },
+                        }}
+                      >
+                        <FormControl sx={{ gap: formGap }}>
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            id="code"
+                            name="code"
+                            value={values.code}
+                            label="Code"
+                            focused
+                            inputProps={{ readOnly: true }}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
                                 },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                              }}
-                    />
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
+                          />
 
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      type="text"
-                      id="description"
-                      name="description"
-                      value={values.description}
-                      label="Name"
-                      focused
-                      inputProps={{ readOnly: true }}
-                         sx={{
-                                "& .MuiOutlinedInput-root": {
-                                  backgroundColor: "#fff",
-                                  borderRadius: "6px",
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            id="description"
+                            name="description"
+                            value={values.description}
+                            label="Name"
+                            focused
+                            inputProps={{ readOnly: true }}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-                                  "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                    borderWidth: "1px",
-                                  },
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
                                 },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
 
-                                "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
-                                },
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
-                                },
-                              }}
-                    />
-                  </FormControl>
-                  <Stack
-                    sx={{
-                      //    width: {sm:'100%',md:'100%',lg:'100%'},
-                      //gridColumn: "span 2",
-                      alignContent: "center",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      position: "relative",
-                      right: "0px",
-                    }}
-                  >
-                    <Avatar
-                      variant="rounded"
-                      src={userimg}
-                      sx={{ width: "200px", height: "120px" }}
-                    />
-                  </Stack>
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
+                          />
+                        </FormControl>
+                        <Stack
+                          sx={{
+                            //    width: {sm:'100%',md:'100%',lg:'100%'},
+                            //gridColumn: "span 2",
+                            alignContent: "center",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            position: "relative",
+                            right: "0px",
+                          }}
+                        >
+                          <Avatar
+                            variant="rounded"
+                            src={userimg}
+                            sx={{ width: "200px", height: "120px" }}
+                          />
+                        </Stack>
 
-                  <Box
-                    m="5px 0 0 0"
-                    //height={dataGridHeight}
-                    height="50vh"
-                    width='100%'
-                    gridColumn= "span 2"
-                    sx={{
-                      "& .MuiDataGrid-root": {
-                        border: "none",
-                       
-                      },
-                      "& .MuiDataGrid-cell": {
-                        borderBottom: "none",
-                      },
-                      "& .name-column--cell": {
-                        color: colors.greenAccent[300],
-                      },
-                      "& .MuiDataGrid-columnHeaders": {
-                        backgroundColor: colors.blueAccent[800],
-                        borderBottom: "none",
-                      },
-                      "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.primary[400],
-                      },
-                      "& .MuiDataGrid-footerContainer": {
-                        borderTop: "none",
-                        backgroundColor: colors.blueAccent[800],
-                      },
-                      "& .MuiCheckbox-root": {
-                        color: `${colors.greenAccent[200]} !important`,
-                      },
-                      "& .odd-row": {
-                        backgroundColor: "",
-                        color: "", // Color for odd rows
-                      },
-                      "& .even-row": {
-                        backgroundColor: "#D3D3D3",
-                        color: "", // Color for even rows
-                      },
-                        "& .MuiDataGrid-columnHeaderTitle": {
+                        <Box
+                          m="5px 0 0 0"
+                          //height={dataGridHeight}
+                          height="50vh"
+                          width='100%'
+                          gridColumn="span 2"
+                          sx={{
+                            "& .MuiDataGrid-root": {
+                              border: "none",
+
+                            },
+                            "& .MuiDataGrid-cell": {
+                              borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              backgroundColor: "#D3D3D3",
+                              color: "", // Color for even rows
+                            },
+                            "& .MuiDataGrid-columnHeaderTitle": {
                               color: colors.blueAccent[900],
                               fontWeight: 600,
                             },
@@ -1506,309 +1506,309 @@ const Editoverhead = () => {
                             "& .MuiTablePagination-actions button": {
                               color: "#fff",
                             },
-                    }}
-                  >
-                    <DataGrid
-                      sx={{
-                        
-                        width: "100%",
-                        "& .MuiDataGrid-footerContainer": {
-                          height: dataGridHeaderFooterHeight,
-                          minHeight: dataGridHeaderFooterHeight,
-                        
-                        },
-                      }}
-                      rows={explorelistViewData}
-                      columns={columns}
-                      // columns={explorelistViewcolumn}
-                      disableSelectionOnClick
-                      getRowId={(row) => row.RecordID}
-                      rowHeight={dataGridRowHeight}
-                      headerHeight={dataGridHeaderFooterHeight}
-                      pageSize={pageSize}
-                      onPageSizeChange={(newPageSize) =>
-                        setPageSize(newPageSize)
-                      }
-                      onCellClick={(params) => {
-                        selectCellRowData({
-                          rowData: params.row,
-                          mode: "E",
-                          field: params.field,
-                          setFieldValue
-                        });
-                        setOpenOverheadModal(true);
-                      }}
-                      rowsPerPageOptions={[5, 10, 20]}
-                      pagination
-                      components={{
-                        Toolbar: Employee,
-                      }}
-                      onStateChange={(stateParams) =>
-                        setRowCount(stateParams.pagination.rowCount)
-                      }
-                      getRowClassName={(params) =>
-                        params.indexRelativeToCurrentPage % 2 === 0
-                          ? "odd-row"
-                          : "even-row"
-                      }
-                      loading={exploreLoading}
-                      componentsProps={{
-                        toolbar: {
-                          showQuickFilter: true,
-                          quickFilterProps: { debounceMs: 500 },
-                        },
-                      }}
-                    />
-                  </Box>
-
-             
-                </Box>
-           
- {/* ----- ADD/EDIT SKILL FORM CARD ----- */}
-                        <Dialog
-                          open={openoverheadModal}
-                          onClose={() => setOpenOverheadModal(false)}
-                          maxWidth="sm"
-                          fullWidth
-                          PaperProps={{
-                            sx: {
-                              borderRadius: 3,
-                            },
                           }}
                         >
-                        
-                              <>
-                                {/* Header */}
-        
-                                <DialogTitle
-                                  sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    borderBottom: "1px solid #E5E7EB",
-                                  }}
-                                >
-                                  <Typography variant="h6">
-                                    {funMode === "A"
-                                      ? "Add Additional Expense"
-                                      : "Edit Additional Expense"}
-                                  </Typography>
-        
-                                  <IconButton
-                                    onClick={() => setOpenOverheadModal(false)}
-                                  >
-                                    <CloseIcon />
-                                  </IconButton>
-                                </DialogTitle>
-        
-                                {/* Body */}
-        
-                                <DialogContent sx={{
-                                  pt: 3, "&.MuiDialogContent-root": {
-                                    paddingTop: "24px",
-                                  },
-                                }}>
-                                  <FormControl sx={{ gap: formGap }}>
-                    <CheckinAutocomplete
-                      variant="outlined"
-                      name="overhead"
-                      label={
-                        <>
-                          Overhead
-                          <span style={{ color: "red", fontSize: "20px" }}> * </span>
-                        </>
-                      }
-                      id="overhead"
-                      value={values.overhead}
-                      onChange={(newValue) => {
-                        setFieldValue("overhead", newValue);
-                      }}
-                      error={!!touched.overhead && !!errors.overhead}
-                      helperText={touched.overhead && errors.overhead}
-                      url={`${listViewurl}?data=${JSON.stringify({
-                      Query: {
-                        AccessID: "2032",
-                        ScreenName: "OverHead",
-                        VerticalLicense: Subscriptionlastthree,
-                        Filter: `companyID='${CompanyID}'`,
-                        Any: "",
-                      },
-                    })}`}
-                      // url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"OverHead",VerticalLicense: Subscriptionlastthree,"Filter":"companyID='${CompanyID}'","Any":""}}`}
-                    />
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      size="small"
-                      type="text"
-                      value={values.sortorder}
-                      id="sortorder"
-                      name="sortorder"
-                      label="Sort Order"
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      error={!!touched.sortorder && !!errors.sortorder}
-                      helperText={touched.sortorder && errors.sortorder}
-                      focused
-                      InputProps={{
-                        inputProps: {
-                          style: { textAlign: "right" },
-                        },
-                      }}
-                        sx={{
-                              "& .MuiOutlinedInput-root": {
-                                backgroundColor: "#fff",
-                                borderRadius: "6px",
+                          <DataGrid
+                            sx={{
 
-                                "& fieldset": {
-                                  borderColor: "#d1d5db", // 👈 light grey border
-                                },
-                                "&:hover fieldset": {
-                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
-                                },
-                                "&.Mui-focused fieldset": {
-                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-                                  borderWidth: "1px",
-                                },
-                              },
+                              width: "100%",
+                              "& .MuiDataGrid-footerContainer": {
+                                height: dataGridHeaderFooterHeight,
+                                minHeight: dataGridHeaderFooterHeight,
 
-                              "& .MuiInputLabel-root": {
-                                color: "#6b7280", // label grey
-                              },
-                              "& .MuiInputLabel-root.Mui-focused": {
-                                color: "#6b7280", // keep same on focus
                               },
                             }}
-                    />
-                    <Box>
-                      <Field
-                        //  size="small"
-                        type="checkbox"
-                        name="checkbox"
-                        id="checkbox"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        as={Checkbox}
-                        label="Disable"
-                      />
+                            rows={explorelistViewData}
+                            columns={columns}
+                            // columns={explorelistViewcolumn}
+                            disableSelectionOnClick
+                            getRowId={(row) => row.RecordID}
+                            rowHeight={dataGridRowHeight}
+                            headerHeight={dataGridHeaderFooterHeight}
+                            pageSize={pageSize}
+                            onPageSizeChange={(newPageSize) =>
+                              setPageSize(newPageSize)
+                            }
+                            onCellClick={(params) => {
+                              selectCellRowData({
+                                rowData: params.row,
+                                mode: "E",
+                                field: params.field,
+                                setFieldValue
+                              });
+                              setOpenOverheadModal(true);
+                            }}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            pagination
+                            components={{
+                              Toolbar: Employee,
+                            }}
+                            onStateChange={(stateParams) =>
+                              setRowCount(stateParams.pagination.rowCount)
+                            }
+                            getRowClassName={(params) =>
+                              params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row"
+                            }
+                            loading={exploreLoading}
+                            componentsProps={{
+                              toolbar: {
+                                showQuickFilter: true,
+                                quickFilterProps: { debounceMs: 500 },
+                              },
+                            }}
+                          />
+                        </Box>
 
-                      <FormLabel focused={false}>Disable</FormLabel>
-                    </Box>
-                    
-                    </FormControl>
-                                </DialogContent>
-        
-                                {/* Footer */}
-        
-                                <DialogActions
-                                  sx={{
-                                    borderTop:
-                                      "1px solid #E5E7EB",
-                                    p: 2,
-                                    // justifyContent:
-                                    //   "space-between",
-                                  }}
-                                >
-                
-        
-                                                   <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  padding={1}
-                  style={{ marginTop: "-10px" }}
-                  gap={2}
-                >
-                  <LoadingButton
-                    sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#0D9488",
-                        "&:hover": {
-                          bgcolor: "#0F766E",
-                        },
-                      }}
-                    variant="contained"
-                    type="submit"
-                    loading={isLoading}
-                    onClick={handleSubmit}
-                  >
-                    Save
-                  </LoadingButton>
 
-                  <Button
-                    color="error"
-                     sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        // bgcolor: "#F97316",
-                        // "&:hover": {
-                        //   bgcolor: "#EA580C",
-                        // },
-                      }}
-                    variant="contained"
-                    onClick={() => {
-                      Swal.fire({
-                        title: errorMsgData.Warningmsg.Delete,
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Confirm",
-                      }).then((result) => {
-                        if (result.isConfirmed) {
-                          AddexpFnsave(values, resetForm, "harddelete");
-                        } else {
-                          return;
-                        }
-                      });
-                    }}
-                  >
-                    Delete
-                  </Button>
+                      </Box>
 
-                  <Button
-                    type="reset"
-                    sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#F97316",
-                        "&:hover": {
-                          bgcolor: "#EA580C",
-                        },
-                      }}
-                    variant="contained"
-                    onClick={() => {
-                      setScreen(0);
-                    }}
-                  >
-                    Back
-                  </Button>
-                </Box>
-                                </DialogActions>
-        
-                                
-                              </>
-                      
-                        </Dialog>
-              </form>
-            )}
-          </Formik>
-        </Paper >
-        
-                       
-             </Box>
-        
-        
-                    </Box>
-      ) : (
-        false
-      )}
-           </Box>
-         
-            
+                      {/* ----- ADD/EDIT SKILL FORM CARD ----- */}
+                      <Dialog
+                        open={openoverheadModal}
+                        onClose={() => setOpenOverheadModal(false)}
+                        maxWidth="sm"
+                        fullWidth
+                        PaperProps={{
+                          sx: {
+                            borderRadius: 3,
+                          },
+                        }}
+                      >
+
+                        <>
+                          {/* Header */}
+
+                          <DialogTitle
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              borderBottom: "1px solid #E5E7EB",
+                            }}
+                          >
+                            <Typography variant="h6">
+                              {funMode === "A"
+                                ? "Add Additional Expense"
+                                : "Edit Additional Expense"}
+                            </Typography>
+
+                            <IconButton
+                              onClick={() => setOpenOverheadModal(false)}
+                            >
+                              <CloseIcon />
+                            </IconButton>
+                          </DialogTitle>
+
+                          {/* Body */}
+
+                          <DialogContent sx={{
+                            pt: 3, "&.MuiDialogContent-root": {
+                              paddingTop: "24px",
+                            },
+                          }}>
+                            <FormControl sx={{ gap: formGap }}>
+                              <CheckinAutocomplete
+                                variant="outlined"
+                                name="overhead"
+                                label={
+                                  <>
+                                    Overhead
+                                    <span style={{ color: "red", fontSize: "20px" }}> * </span>
+                                  </>
+                                }
+                                id="overhead"
+                                value={values.overhead}
+                                onChange={(newValue) => {
+                                  setFieldValue("overhead", newValue);
+                                }}
+                                error={!!touched.overhead && !!errors.overhead}
+                                helperText={touched.overhead && errors.overhead}
+                                url={`${listViewurl}?data=${JSON.stringify({
+                                  Query: {
+                                    AccessID: "2032",
+                                    ScreenName: "OverHead",
+                                    VerticalLicense: Subscriptionlastthree,
+                                    Filter: `companyID='${CompanyID}'`,
+                                    Any: "",
+                                  },
+                                })}`}
+                              // url={`${listViewurl}?data={"Query":{"AccessID":"2032","ScreenName":"OverHead",VerticalLicense: Subscriptionlastthree,"Filter":"companyID='${CompanyID}'","Any":""}}`}
+                              />
+                              <TextField
+                                fullWidth
+                                variant="outlined"
+                                size="small"
+                                type="text"
+                                value={values.sortorder}
+                                id="sortorder"
+                                name="sortorder"
+                                label="Sort Order"
+                                onBlur={handleBlur}
+                                onChange={handleChange}
+                                error={!!touched.sortorder && !!errors.sortorder}
+                                helperText={touched.sortorder && errors.sortorder}
+                                focused
+                                InputProps={{
+                                  inputProps: {
+                                    style: { textAlign: "right" },
+                                  },
+                                }}
+                                sx={{
+                                  "& .MuiOutlinedInput-root": {
+                                    backgroundColor: "#fff",
+                                    borderRadius: "6px",
+
+                                    "& fieldset": {
+                                      borderColor: "#d1d5db", // 👈 light grey border
+                                    },
+                                    "&:hover fieldset": {
+                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderWidth: "1px",
+                                    },
+                                  },
+
+                                  "& .MuiInputLabel-root": {
+                                    color: "#6b7280", // label grey
+                                  },
+                                  "& .MuiInputLabel-root.Mui-focused": {
+                                    color: "#6b7280", // keep same on focus
+                                  },
+                                }}
+                              />
+                              <Box>
+                                <Field
+                                  //  size="small"
+                                  type="checkbox"
+                                  name="checkbox"
+                                  id="checkbox"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  as={Checkbox}
+                                  label="Disable"
+                                />
+
+                                <FormLabel focused={false}>Disable</FormLabel>
+                              </Box>
+
+                            </FormControl>
+                          </DialogContent>
+
+                          {/* Footer */}
+
+                          <DialogActions
+                            sx={{
+                              borderTop:
+                                "1px solid #E5E7EB",
+                              p: 2,
+                              // justifyContent:
+                              //   "space-between",
+                            }}
+                          >
+
+
+                            <Box
+                              display="flex"
+                              justifyContent="flex-end"
+                              padding={1}
+                              style={{ marginTop: "-10px" }}
+                              gap={2}
+                            >
+                              <LoadingButton
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#0D9488",
+                                  "&:hover": {
+                                    bgcolor: "#0F766E",
+                                  },
+                                }}
+                                variant="contained"
+                                type="submit"
+                                loading={isLoading}
+                                onClick={handleSubmit}
+                              >
+                                Save
+                              </LoadingButton>
+
+                              <Button
+                                color="error"
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  // bgcolor: "#F97316",
+                                  // "&:hover": {
+                                  //   bgcolor: "#EA580C",
+                                  // },
+                                }}
+                                variant="contained"
+                                onClick={() => {
+                                  Swal.fire({
+                                    title: errorMsgData.Warningmsg.Delete,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Confirm",
+                                  }).then((result) => {
+                                    if (result.isConfirmed) {
+                                      AddexpFnsave(values, resetForm, "harddelete");
+                                    } else {
+                                      return;
+                                    }
+                                  });
+                                }}
+                              >
+                                Delete
+                              </Button>
+
+                              <Button
+                                type="reset"
+                                sx={{
+                                  textTransform: "none",
+                                  borderRadius: 2,
+                                  px: 4,
+                                  bgcolor: "#F97316",
+                                  "&:hover": {
+                                    bgcolor: "#EA580C",
+                                  },
+                                }}
+                                variant="contained"
+                                onClick={() => {
+                                  setScreen(0);
+                                }}
+                              >
+                                Back
+                              </Button>
+                            </Box>
+                          </DialogActions>
+
+
+                        </>
+
+                      </Dialog>
+                    </form>
+                  )}
+                </Formik>
+              </Paper >
+
+
+            </Box>
+
+
+          </Box>
+        ) : (
+          false
+        )}
+      </Box>
+
+
     </React.Fragment >
   );
 };

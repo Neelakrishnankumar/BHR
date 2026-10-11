@@ -413,21 +413,22 @@ export default function ContractCashMemo({ invoice = [], detailData = [], PdfBas
     return (
         <Document>
             <Page size="A4"
-                style={styles.page}
+                 style={styles.page}
 
-                style={{
+                // style={{
                     
-                    fontFamily: "Helvetica",
+                //     fontFamily: "Helvetica",
 
-                    // paddingTop: 80,
-                    // paddingBottom: footerHeight,
-                    // paddingHorizontal: 0,
+                //     // paddingTop: 80,
+                //     // paddingBottom: footerHeight,
+                //     // paddingHorizontal: 0,
 
-                    padding: 16,
-                    fontSize: 10,
-                    fontFamily: 'Helvetica',
-                    lineHeight: 1.25,
-                }}>
+                //     padding: 16,
+                //     fontSize: 10,
+                //     fontFamily: 'Helvetica',
+                //     lineHeight: 1.25,
+                // }}
+                >
                 {/* HEADER */}
                 <View style={styles.header}>
                     {headerPath ? (
@@ -778,12 +779,12 @@ export default function ContractCashMemo({ invoice = [], detailData = [], PdfBas
             {withannexure && (
                 <Page size="A4"
                     style={styles.page}
-                    style={{
-                        padding: 16,
-                        fontSize: 10,
-                        fontFamily: 'Helvetica',
-                        lineHeight: 1.25,
-                    }}
+                    // style={{
+                    //     padding: 16,
+                    //     fontSize: 10,
+                    //     fontFamily: 'Helvetica',
+                    //     lineHeight: 1.25,
+                    // }}
                 >
                     <View style={styles.header}>
                         {headerPath ? (

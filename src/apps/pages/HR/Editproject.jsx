@@ -58,6 +58,8 @@ import {
   CheckinAutocomplete,
   CheckinAutocomplete_v12,
   Employeeautocomplete,
+  MultiFormikOptimizedAutocomplete,
+  MultiFormikDocumentsAutocomplete,
   Productautocomplete,
   ProjectVendor,
   SprintEmpAutocomplete1,
@@ -91,6 +93,174 @@ import { nanoid } from "@reduxjs/toolkit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { SECTION_TYPE_GRANULARITY } from "@mui/x-date-pickers/internals/utils/getDefaultReferenceDate";
 // import CryptoJS from "crypto-js";
+
+// ─────────────────────────────────────────────────────────────────────────
+// MODULE LEVEL — declared ONCE, outside Editproject. This reference never
+// changes across renders, so DataGrid re-renders this toolbar in place
+// instead of unmounting/remounting it (which was re-triggering the
+// Milestone/Stages/Activity autocompletes' fetch-on-mount over and over,
+// and was the real cause of the page "loading forever").
+//
+// It receives everything it needs via props from componentsProps.toolbar
+// instead of closing over Editproject's state directly.
+//
+// IMPORTANT: this toolbar no longer dispatches fetchExplorelitview itself.
+// It only updates Milestone/Stages/Activity state (with cascade-clearing
+// of dependent selections). The single useEffect inside Editproject
+// (watching [Milestone, Stages, Activity, show]) is now the ONLY place
+// that dispatches the filtered fetch — using the freshly committed state,
+// not a stale closure value captured mid-render.
+// ─────────────────────────────────────────────────────────────────────────
+function DocumentGridToolbar(props) {
+  const {
+    show,
+    displayCount,
+    Milestone,
+    Stages,
+    Activity,
+    setMilestone,
+    setStages,
+    setActivity,
+    fileTypeFilter,
+    setFileTypeFilter,
+    FILE_TYPE_LABELS,
+    listViewurl,
+    recID,
+    CompanyID,
+    Subscriptionlastthree,
+  } = props;
+
+  return (
+    <GridToolbarContainer
+      sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}
+    >
+      <Box sx={{ display: "flex", flexDirection: "row" }}>
+        <Typography>
+          {show == "1" ? "List of Units" : ""}
+          {show == "2" ? "List of Documents" : ""}
+          {show == "3" ? "List of Units" : ""}
+        </Typography>
+        <Typography variant="h5">{`(${displayCount})`}</Typography>
+      </Box>
+
+      <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 1 }}>
+        {show == "2" && (
+          <>
+            <MultiFormikDocumentsAutocomplete
+              sx={{ width:"100%", marginBottom: 0.5 }}
+              name="Milestone"
+              label="Milestone"
+              id="Milestone"
+              value={Array.isArray(Milestone) ? Milestone : []}
+              onChange={(e, newValue) => {
+                setMilestone(newValue || []);
+                // Cascade-clear dependent selections — a Stage/Activity
+                // picked under the previous Milestone no longer applies.
+                setStages([]);
+                setActivity([]);
+                // No dispatch here — the parent's useEffect on
+                // [Milestone, Stages, Activity, show] fires once state
+                // actually commits, using the correct, up-to-date filter.
+              }}
+              url={`${listViewurl}?data=${encodeURIComponent(
+                JSON.stringify({
+                  Query: {
+                    AccessID: "2105",
+                    ScreenName: "Milestone",
+                    Filter: `parentID IN(${recID}) AND CompanyID='${CompanyID}'`,
+                    Any: "",
+                    VerticalLicense: Subscriptionlastthree || "",
+                  },
+                })
+              )}`}
+            />
+
+            <MultiFormikDocumentsAutocomplete
+              sx={{ width:"100%", marginBottom: 0.5 }}
+              name="Stages"
+              label="Operation Stage"
+              id="Stages"
+              value={Array.isArray(Stages) ? Stages : []}
+              onChange={(e, newValue) => {
+                setStages(newValue || []);
+                setActivity([]);
+              }}
+              url={`${listViewurl}?data=${encodeURIComponent(
+                JSON.stringify({
+                  Query: {
+                    AccessID: "2104",
+                    ScreenName: "Stages",
+                    Filter: `parentID IN(${
+                      Array.isArray(Milestone)
+                        ? Milestone.map((x) => `'${x.RecordID}'`).join(",")
+                        : "0"
+                    })`,
+                    Any: "",
+                    VerticalLicense: Subscriptionlastthree || "",
+                  },
+                })
+              )}`}
+            />
+
+            <MultiFormikDocumentsAutocomplete
+              sx={{ width:"100%", marginBottom: 0.5 }}
+              name="Activities"
+              label="Activities"
+              id="Activities"
+              value={Array.isArray(Activity) ? Activity : []}
+              onChange={(e, newValue) => {
+                setActivity(newValue || []);
+              }}
+              url={`${listViewurl}?data=${encodeURIComponent(
+                JSON.stringify({
+                  Query: {
+                    AccessID: "2103",
+                    ScreenName: "Activities",
+                    Filter: `parentID IN(${
+                      Array.isArray(Stages)
+                        ? Stages.map((x) => `'${x.RecordID}'`).join(",")
+                        : "0"
+                    })`,
+                    Any: "",
+                    VerticalLicense: Subscriptionlastthree || "",
+                  },
+                })
+              )}`}
+            />
+
+            <FormControl size="small" sx={{ minWidth: 140, marginBottom: 0.5 }}>
+              <InputLabel id="doc-file-type-label">File Type</InputLabel>
+              <Select
+                labelId="doc-file-type-label"
+                label="File Type"
+                value={fileTypeFilter}
+                onChange={(e) => setFileTypeFilter(e.target.value)}
+              >
+                {Object.entries(FILE_TYPE_LABELS).map(([key, label]) => (
+                  <MenuItem key={key} value={key}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+              
+            </FormControl>
+
+          </>
+        )}
+
+        <GridToolbarQuickFilter />
+        {show != "2" && (
+          <Tooltip title="ADD">
+            <IconButton type="reset">
+              <AddOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+      </Box>
+    </GridToolbarContainer>
+  );
+}
+
 const Editproject = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
@@ -152,6 +322,12 @@ const Editproject = () => {
   const [editedRows, setEditedRows] = useState([]);
   const [passrecid, setPassrecid] = useState(null);
   const [detailrecid, setDetailrecid] = useState(null);
+  const [Milestone, setMilestone] = useState([]);
+  const [Stages, setStages] = useState([]);
+  const [Activity, setActivity] = useState([]);
+
+
+
   const explorelistViewData = useSelector(
     (state) => state.exploreApi.explorerowData,
   );
@@ -226,46 +402,6 @@ const Editproject = () => {
       throw err;
     }
   };
-  //    const processRowUpdateTeach = async (newRow, oldRow) => {
-  //      console.log(rows, "--inside proceeess");
-  //     const error = validateRowTT(newRow);
-  //     if (error) throw new Error(error);
-
-  //     const isNew = isNaN(Number(newRow.RecordID));
-
-  //     const payload = {
-  //       ProjectTeamRecordID: isNew ? -1 : Number(newRow.RecordID),
-  //       // ProjectID: newRow.Slots?.RecordID || 0,
-  //       EmpID: newRow.Teacher?.RecordID || 0,
-  //       DeptID: newRow.Department?.RecordID || 0,
-  //      };
-  //      console.log(payload, "--passing paYload for fnSave");
-
-  // // return;
-
-  //     try {
-  //       // ✅ get new ID from API
-  //       const HeaderID = await Fnsave(payload, isNew);
-
-  //       const updatedRow = {
-  //         ...newRow,
-  //         id: HeaderID,
-  //         RecordID: HeaderID,
-  //         isNew: false,
-  //       };
-
-  //       setTeachrows((prevRows) =>
-  //         prevRows.map((row) =>
-  //           row.id === newRow.id ? updatedRow : row
-  //         )
-  //       );
-
-  //       return updatedRow;
-  //     } catch (err) {
-  //       console.error("Row save failed:", err);
-  //       throw err;
-  //     }
-  //   };
 
   const handleRowEditStopTeach = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -324,34 +460,6 @@ const Editproject = () => {
       toast.error("Error occurred while deleting.");
     }
   };
-
-  // const handleDeleteClickTeach = (RecordID) => async () => {
-  //   console.log("Deleting ID:", RecordID, typeof RecordID);
-
-  //   // ✅ Remove row from UI first
-  //   setTeachrows((prevRows) =>
-  //     prevRows.filter((row) => row.RecordID !== RecordID)
-  //   );
-
-  //   // ✅ Only call API if RecordID is numeric
-  //   if (!RecordID || isNaN(Number(RecordID))) {
-  //     // toast.success("Deleted Successfully");
-  //     return;
-  //   }
-
-  //   const numericID = Number(RecordID);
-
-  //   setDeletedRows((prev) => {
-  //     if (prev.some((d) => d.RecordID === numericID)) return prev;
-  //     return [...prev, { RecordID: numericID }];
-  //   });
-
-  //   // 🔥 REMOVE from editedRows
-  //   setEditedRows((prev) =>
-  //     prev.filter((row) => row.RecordID !== numericID)
-  //   );
-
-  // };
 
   const handleCancelClickTeach = (RecordID) => () => {
     setRowModesModelteach({
@@ -430,15 +538,112 @@ const Editproject = () => {
         onChange={handleChange}
         // url={`${listViewurl}?data={"Query":{"AccessID":"2167","ScreenName":"Teacher","Filter":"CompanyID='${compID}' AND ClassificationID IN(${classids})","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
         url={`${listViewurl}?data={"Query":{"AccessID":"2193","ScreenName":"Teacher","Filter":"CompanyID='${CompanyID}' AND DepartmentID=${subjectid}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
-      // sx={{
-      //         height: "100%",
-      //         "& .MuiOutlinedInput-root": {
-      //           height: "100%",
-      //         },
-      //       }}
       />
     );
   }
+  //Show== "2" for file type filter
+  const FILE_TYPE_EXTENSIONS = {
+    pdf: ["pdf"],
+    word: ["doc", "docx"],
+    excel: ["xls", "xlsx", "csv"],
+    image: ["jpg", "jpeg", "png", "gif", "bmp", "webp", "jfif", "svg"],
+    video: ["mp4", "mov", "avi", "mkv", "webm"],
+  };
+
+  function getFileExtension(filename) {
+    // Strip any querystring/hash a stored URL might carry, then grab the
+    // LAST segment after a dot (handles filenames with multiple dots,
+    // e.g. "20260917.100301_Planning.jfif").
+    const clean = String(filename).split(/[?#]/)[0].trim();
+    const parts = clean.split(".");
+    if (parts.length < 2) return null; // no extension at all
+    return parts.pop().toLowerCase();
+  }
+
+  function rowMatchesFileType(row, filterType) {
+    if (filterType === "all") return true;
+
+    const rawAttachments = row.Attachments ?? "";
+    const attachments = String(rawAttachments)
+      .split(",")
+      .map((f) => f.trim())
+      .filter(Boolean);
+
+    const allowedExts = FILE_TYPE_EXTENSIONS[filterType] || [];
+
+    const matched = attachments.some((filename) => {
+      const ext = getFileExtension(filename);
+      return ext && allowedExts.includes(ext);
+    });
+
+    // TEMP DEBUG — remove once confirmed working.
+    console.log(
+      `[fileFilter] row ${row.RecordID}: attachments=[${attachments.join(", ")}]`,
+      `→ filter="${filterType}" allowed=[${allowedExts.join(",")}] → match=${matched}`,
+    );
+
+    return matched;
+  }
+  const FILE_TYPE_LABELS = {
+    all: "All",
+    pdf: "PDF",
+    word: "Word",
+    excel: "Excel",
+    image: "Image",
+    video: "Video",
+  };
+
+  const [fileTypeFilter, setFileTypeFilter] = useState("all");
+
+  // Reset the filter whenever the user navigates away from the Documents tab.
+  React.useEffect(() => {
+    if (explorelistViewData?.length) {
+      console.log("Sample row keys:", Object.keys(explorelistViewData[0]));
+      console.log("Attachments value:", explorelistViewData[0].Attachments);
+    }
+  }, [explorelistViewData]);
+  React.useEffect(() => {
+    if (show != "2") setFileTypeFilter("all");
+  }, [show]);
+
+  // ── Single source of truth for the filtered "Project Documents" fetch ──
+  // Fires exactly once per genuine change to Milestone / Stages / Activity
+  // / show, always reading the freshly-committed state (no stale closures,
+  // no duplicate dispatch from screenChange or from the toolbar's onChange
+  // handlers — see DocumentGridToolbar and screenChange below).
+  useEffect(() => {
+    if (show == "2") {
+      dispatch(
+        fetchExplorelitview(
+          "TR364",
+          Subscriptionlastthree,
+          "Project Documents",
+          buildDocumentFilter(),
+          ""
+        )
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [Milestone, Stages, Activity, show]);
+  const filteredExploreRows = React.useMemo(() => {
+    console.log(
+      "[fileFilter] recompute — show:",
+      show,
+      "fileTypeFilter:",
+      fileTypeFilter,
+      "totalRows:",
+      explorelistViewData?.length,
+    );
+    if (show != "2" || fileTypeFilter === "all") return explorelistViewData;
+    //     ^^ changed !== to !=
+    const result = explorelistViewData.filter((row) =>
+      rowMatchesFileType(row, fileTypeFilter),
+    );
+    console.log("[fileFilter] result length:", result.length);
+    return result;
+  }, [explorelistViewData, show, fileTypeFilter]);
+  // --------------------------------------------------------
+
   const Teachcolumns = [
     {
       field: "Slno",
@@ -568,12 +773,6 @@ const Editproject = () => {
         }
 
         return [
-          // <GridActionsCellItem
-          //   icon={<AddIcon style={{ color: "#00563B" }} />}
-          //   label="Add"
-          //   // onClick={() => handleInsertInrow(id)}
-          //   color="inherit"
-          // />,
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
@@ -596,32 +795,6 @@ const Editproject = () => {
   };
 
   const isHeaderDisabled = teachrows.length > 0;
-
-  // State for selected subject/department
-  // const [selectedSubject, setSelectedSubject] = useState(null);
-  // const [staffList, setStaffList] = useState([]);
-
-  // When subject changes, update staffList from Department data
-  // const handleSubjectChange = (newValue) => {
-  //   setSelectedSubject(newValue);
-
-  //   if (newValue) {
-  //     // Find the selected department from Department array
-  //     const selectedDept = Department.find(
-  //       (dept) => dept.DeptrecID === newValue.DeptrecID
-  //     );
-
-  //     // Map employees with checked state
-  //     const employees = selectedDept?.Employee?.map((emp) => ({
-  //       ...emp,
-  //       checked: false,
-  //     })) || [];
-
-  //     setStaffList(employees);
-  //   } else {
-  //     setStaffList([]);
-  //   }
-  // };
 
   useEffect(() => {
     if (!explorelistViewData) return;
@@ -658,11 +831,7 @@ const Editproject = () => {
 
         let schemaFields = {
           name: Yup.string().trim().required(data.Project.name),
-          // TentativeStartDate: Yup.string().required(data.Project.TentativeStartDate),
-          // TentativeEndDate: Yup.string().required(data.Project.TentativeEndDate),
-          //budget: Yup.string().required(data.Project.budget),
           incharge: Yup.object().required(data.Project.incharge).nullable(),
-          // projectOwner: Yup.object().required(data.Project.projectOwner).nullable(),
         };
 
         if (CompanyAutoCode === "N") {
@@ -702,9 +871,6 @@ const Editproject = () => {
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
 
-  // useEffect(() => {
-  //   dispatch(getFetchData({ accessID, get: "get", recID }));
-  // }, [location.key]);
   useEffect(() => {
     if (mode !== "A" && data?.Details) {
       const formattedRows = data.Details.map((item) => ({
@@ -712,22 +878,16 @@ const Editproject = () => {
         RecordID: Number(item.ProjectTeamsID),
         Department: { RecordID: item.DepartmentID, Name: item.DeptName },
         Teacher: { RecordID: item.EmployeeID, Name: item.EmpName },
-
-        // Comments: item?.Comments,
       }));
 
-      // setTeachrows([]);              // clear old buggy state
-      // setTimeout(() => {
       setTeachrows(formattedRows); // set fresh
       setPage(0);
-      // }, 0);
     }
   }, [data]);
 
   useEffect(() => {
     if (show == "0") {
       if (recID && mode === "E") {
-        // dispatch(getFetchData({ accessID: "TR275V2", get: "get", recID }));
         {
           Subscriptionlastthree === "003"
             ? dispatch(
@@ -753,10 +913,10 @@ const Editproject = () => {
             )
             : dispatch(getFetchData({ accessID, get: "get", recID }));
         }
-        // dispatch(getFetchData({ accessID, get: "get", recID }));
       }
     }
   }, [show]);
+
   useEffect(() => {
     if (Subscriptionlastthree && accessID) {
       dispatch(
@@ -769,11 +929,6 @@ const Editproject = () => {
   }, [Subscriptionlastthree, accessID, dispatch]);
 
   // *************** INITIALVALUE  *************** //
-  // const validationSchema = Yup.object().shape({
-  //   incharge: Yup.object()
-  //     .nullable()
-  //     .required("Owner is required"),
-  // });
   //================units section ==========================
   const [rowModesModel, setRowModesModel] = React.useState({});
   const handleRowEditStop = (params, event) => {
@@ -802,7 +957,6 @@ const Editproject = () => {
 
     // ✅ Only call API if RecordID is numeric
     if (!RecordID || isNaN(Number(RecordID))) {
-      // toast.success("Deleted Successfully");
       return;
     }
 
@@ -817,17 +971,6 @@ const Editproject = () => {
     setEditedRows((prev) => prev.filter((row) => row.RecordID !== numericID));
   };
 
-  // const handleCancelClick = (RecordID) => () => {
-  //   setRowModesModel({
-  //     ...rowModesModel,
-  //     [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
-  //   });
-
-  //   const editedRow = rows.find((row) => row.RecordID === RecordID);
-  //   if (editedRow.isNew) {
-  //     setRows(rows.filter((row) => row.RecordID !== RecordID));
-  //   }
-  // };
   const handleCancelClick = (RecordID) => () => {
     setRowModesModel((prev) => ({
       ...prev,
@@ -840,52 +983,9 @@ const Editproject = () => {
     if (!row.Name) {
       return "Name is required";
     }
-    // if (!row.OwnedBy || !row.OwnedBy.Name) {
-    //   return "Owned By is required";
-    // }
-
     return null;
   };
-  // THIS RUNS WHENEVER A ROW IS EDITED AND SAVED
-  // const processRowUpdate = (newRow, oldRow) => {
-  //   //validation
-  //   const error = UnitRowSlot(newRow);
-  //   if (error) {
-  //     throw new Error(error);
-  //   }
 
-  //   const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
-  //   const updatedRow = { ...newRow, isNew: isNew };
-
-  //   setRows((prev) => {
-  //     const index = prev.findIndex((row) => row.RecordID === newRow.RecordID);
-  //     const updated = [...prev];
-  //     updated[index] = updatedRow;
-  //     return updated;
-  //   });
-
-  //   // track edited rows
-  //   if (!isNew) {
-  //     setEditedRows((prev) => {
-  //       const exists = prev.find((r) => r.RecordID === newRow.RecordID);
-
-  //       if (exists) {
-  //         return prev.map((r) =>
-  //           r.RecordID === newRow.RecordID ? updatedRow : r,
-  //         );
-  //       }
-
-  //       return [...prev, updatedRow];
-  //     });
-  //   }
-
-  //   // remove from deletedRows if it exists
-  //   setDeletedRows((prev) =>
-  //     prev.filter((d) => d.RecordID !== Number(newRow.RecordID)),
-  //   );
-
-  //   return updatedRow;
-  // };
   const processRowUpdate = (newRow, oldRow) => {
     const updatedRow = {
       ...newRow,
@@ -924,7 +1024,7 @@ const Editproject = () => {
     setRowModesModel(newRowModesModel);
   };
   const screenChange = (event) => {
-    setScreen(event.target.value);
+   setScreen(String(event.target.value));
     if (event.target.value == "0") {
       if (recID && mode === "E") {
         dispatch(getFetchData({ accessID, get: "get", recID }));
@@ -956,25 +1056,12 @@ const Editproject = () => {
       );
     }
     if (event.target.value == "2") {
-      dispatch(
-        fetchExplorelitview(
-          "TR364",
-          Subscriptionlastthree,
-          "Project Documents",
-          // `AND DOC_CMRECID = '${CompanyID}' AND (FIND_IN_SET ('${recID}', DOC_PRECID))`,
-          // `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
-          `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_PRECID))`,
-          "",
-        ),
-      );
+      // Deliberately NOT dispatching here — switching `show` to "2" is
+      // already a dependency of the useEffect above, which will fire
+      // right after this with the correct buildDocumentFilter(). Dispatching
+      // here too used to fire the SAME request twice back-to-back.
     }
   };
-  //   const subjectOptions = Department.map((dept) => ({
-  //   RecordID: dept.DeptrecID,
-  //   Code: dept.DeptCode,
-  //   Name: dept.DeptName,
-  //   Employee: dept.Employee,
-  // }));
 
   const [UnitData, SetUnitData] = useState({
     recordID: "",
@@ -999,20 +1086,11 @@ const Editproject = () => {
         ? { RecordID: data.ProjectIncharge, Name: data.ProjectInchargeName }
         : null,
     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
-    //ByProduct: data.ByProduct === "Y" ? true : false,
-    //ByProduct: false,
-
     ByProduct: is003 ? false : data.ByProduct === "Y",
     Onsiteactivities: is003 ? false : data.EnableOnsiteactivities === "Y",
-    //Onsiteactivities: data.EnableOnsiteactivities === "Y" ? true : false,
     Routine: data.RoutineTasks === "Y" ? true : false,
-    //Routine:  false,
     CurrentStatus: data.CurrentStatus,
     delete: data.DeleteFlag === "Y" ? true : false,
-    // budget: data.Budget ?? 0.00,
-    // scheduled: data.ScheduledCost ?? 0.00,
-    // actual: data.ActualCost ?? 0.00,
-    // price: data.Price ?? 0.00,
     budget: data.Budget === "" ? "0.00" : data.Budget,
     scheduled: data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
     Planned: data.PlannedCost === "" ? "0.00" : data.PlannedCost,
@@ -1027,7 +1105,6 @@ const Editproject = () => {
           Name: data.ProjectOwnerName,
         }
         : null,
-    // OtherExpenses: data.OtherExpenses ?? 0.00,
     longitude: data.Longitude || 0,
     latitude: data.Latitude || 0,
     radius: data.Radius || 0,
@@ -1036,7 +1113,6 @@ const Editproject = () => {
   };
 
   const Fnsave = async (values, del) => {
-    // let action = mode === "A" ? "insert" : "update";
     let action =
       mode === "A" && !del
         ? "insert"
@@ -1056,16 +1132,12 @@ const Editproject = () => {
       ProjectInchargeName: values.incharge.Name || "",
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
-      // RoutineTasks: "N",
       SortOrder: values.sortorder || 0,
       CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
-      //  ByProduct: values.ByProduct == true ? "Y" : "N",
-      //ByProduct: "N",
       ByProduct: is003 ? "N" : values.ByProduct ? "Y" : "N",
       EnableOnsiteactivities: is003 ? "N" : values.Onsiteactivities ? "Y" : "N",
-      //EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
       ActualCost: values.actual || 0,
       Price: values.price || 0,
       Budget: values.budget || 0,
@@ -1086,7 +1158,6 @@ const Editproject = () => {
     const response = await dispatch(postData({ accessID, action, idata }));
     if (response.payload.Status == "Y") {
       toast.success(response.payload.Msg);
-      //navigate("/Apps/TR133/Project");
       navigate(-1);
     } else {
       toast.error(response.payload.Msg);
@@ -1096,13 +1167,6 @@ const Editproject = () => {
   const FnsaveTech = async (values, del, payload, isNew) => {
     console.log(values, "--values find");
 
-    // let action = mode === "A" ? "insert" : "update";
-    // let action =
-    //   mode === "A" && !del
-    //     ? "insert"
-    //     : mode === "E" && del
-    //       ? "softdelete"
-    //       : "update";
     const action = isNew ? "insert" : "update";
 
     var isCheck = "N";
@@ -1119,17 +1183,12 @@ const Editproject = () => {
       ProjectInchargeName: values.incharge?.Name || "",
       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
       RoutineTasks: values.Routine === true ? "Y" : "N",
-      // RoutineTasks: "N",
       SortOrder: values.sortorder || 0,
-      // CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
       CurrentStatus: "",
       Disable: isCheck,
       DeleteFlag: values.delete == true ? "Y" : "N",
-      //  ByProduct: values.ByProduct == true ? "Y" : "N",
-      //ByProduct: "N",
       ByProduct: is003 ? "N" : values.ByProduct ? "Y" : "N",
       EnableOnsiteactivities: is003 ? "N" : values.Onsiteactivities ? "Y" : "N",
-      //EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
       ActualCost: values.actual || 0,
       Price: values.price || 0,
       Budget: values.budget || 0,
@@ -1142,25 +1201,16 @@ const Editproject = () => {
       Latitude: values.latitude || 0,
       Radius: values.radius || 0,
       AcademicYearID: params.filtertype || 0,
-      // TentativeStartDate: values.TentativeStartDate || "",
-      // TentativeEndDate: values.TentativeEndDate || ""
       Detail: [
         {
           DeptID: payload.DeptID?.toString() || "0",
-          // SlotID: payload.SlotID?.toString() || "0",
           EmpID: payload.EmpID?.toString() || "0",
-          // Day: payload.Day || "",
-          // Comments: payload.Comments || "",
-          // ProjectTeamRecordID: isNew ? -1 : Number(payload.ProjectTeamRecordID),
           ProjectTeamRecordID: isNew ? -1 : Number(payload.ProjectTeamRecordID),
         },
       ],
     };
 
     console.log(idata, "--idata in Overall fnSave");
-    // return;
-    // const response = await dispatch(
-    //   postData({ accessID, action, idata }));
     const response = await dispatch(
       Subscriptionlastthree === "003"
         ? postData({ accessID: "TR389", action, idata })
@@ -1175,17 +1225,13 @@ const Editproject = () => {
 
       setPassrecid(response.payload.ProjectRecordID);
       setDetailrecid(response.payload.ProjectTeamID);
-      //navigate("/Apps/TR133/Project");
-      //  dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }))
       // ✅ Only navigate away if this is a HEADER save (no payload = header-only save)
       if (!payload) {
         navigate(-1);
       }
 
       return response.payload.ProjectTeamID; // return the new ID for row update
-      // navigate(-1);
     } else {
-      // toast.error(response.payload.Msg);
       throw new Error(response.payload.Msg); // ✅ throw so processRowUpdate catches it
     }
   };
@@ -1198,8 +1244,9 @@ const Editproject = () => {
           "slno",
           "Code",
           "Documents",
-          // "Party",
-          // "Unit",
+          "Milestone",
+          "Operationstage",
+          "Activities",
           "action",
         ]
         : [];
@@ -1297,12 +1344,6 @@ const Editproject = () => {
     {
       field: "OwnedBy",
       headerName: "Owned By",
-      // (
-      //   <span>
-      //     Owned By <span style={{ color: "red" }}>*</span>
-      //   </span>
-      // ),
-
       width: 200,
       hide: false,
       editable: true,
@@ -1433,43 +1474,34 @@ const Editproject = () => {
     }
   };
 
-  function Employee() {
-    return (
-      <GridToolbarContainer
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <Typography>
-            {show == "1" ? "List of Units" : ""}
-            {show == "2" ? "List of Documents" : ""}
-            {show == "3" ? "List of Units" : ""}
-          </Typography>
-          <Typography variant="h5">{`(${rowCount})`}</Typography>
-        </Box>
+  // NOTE: the old inline `function Employee() {...}` toolbar (used to be
+  // passed as `components={{ Toolbar: Employee }}` on the Documents grid)
+  // has been removed. It was declared inside this component, so a new
+  // function identity was created on every render, causing DataGrid to
+  // unmount/remount the toolbar (and its Milestone/Stages/Activity
+  // autocompletes) constantly. It has been replaced by the module-level
+  // `DocumentGridToolbar` declared above `Editproject`.
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <GridToolbarQuickFilter />
-          {show != "2" && (
-            <Tooltip title="ADD">
-              <IconButton type="reset">
-                <AddOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-          )}
-        </Box>
-      </GridToolbarContainer>
-    );
-  }
+  const buildDocumentFilter = () => {
+    let filter = `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_PRECID))`;
+
+    if (Array.isArray(Milestone) && Milestone.length > 0) {
+      const ids = Milestone.map((m) => `'${m.RecordID}'`).join(",");
+      filter += ` AND MilestonesID IN(${ids})`;
+    }
+
+    if (Array.isArray(Stages) && Stages.length > 0) {
+      const ids = Stages.map((s) => `'${s.RecordID}'`).join(",");
+      filter += ` AND OperationstageID IN(${ids})`;
+    }
+
+    if (Array.isArray(Activity) && Activity.length > 0) {
+      const ids = Activity.map((a) => `'${a.RecordID}'`).join(",");
+      filter += ` AND ActivitiesID IN(${ids})`;
+    }
+
+    return filter;
+  };
   const UnitInitialValues = {
     code: data.Code,
     description: data.Name,
@@ -1527,18 +1559,8 @@ const Editproject = () => {
     }
   };
   const fnLogOut = (props) => {
-    //   if(Object.keys(ref.current.touched).length === 0){
-    //     if(props === 'Logout'){
-    //       navigate("/")}
-    //       if(props === 'Close'){
-    //         navigate("/Apps/TR022/Bank Master")
-    //       }
-
-    //       return
-    //  }
     Swal.fire({
       title: errorMsgData.Warningmsg[props],
-      // text:data.payload.Msg,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -1550,7 +1572,6 @@ const Editproject = () => {
           navigate("/");
         }
         if (props === "Close") {
-          // navigate("/Apps/TR133/Project");
           navigate("/");
         }
       } else {
@@ -1559,30 +1580,6 @@ const Editproject = () => {
     });
   };
 
-  // const getBusinessCaption = (VerticalID, CaptionID, defaultCaption) => {
-  //   if (VerticalID == 101) {
-  //     var captions = [{ "CAPTIONID": "ProjectOwner", "CAPTION": "PROJECT OWNER" },
-  //     { "CAPTIONID": "PROJECTTITLE", "CAPTION": "PROJECT TITLE" },
-  //     { "CAPTIONID": "PROJECTCODE", "CAPTION": "PROJECT CODE" },
-  //     { "CAPTIONID": "PROJECTDESC", "CAPTION": "PROJECT DESC" },
-  //     ];
-
-  //     var displaycaption = defaultCaption;
-  //     captions.forEach((caption) => {
-  //       if (caption.CAPTIONID == CaptionID) {
-  //         console.log(caption.CAPTION, "--caption.CAPTION");
-  //         displaycaption = caption.CAPTION;
-  //       }
-  //     });
-  //     return displaycaption;
-
-  //   }
-
-  //   else {
-  //     return defaultCaption;
-  //   }
-
-  // }
   const Customisedcaptiondata = useSelector(
     (state) => state.formApi.CustomisedCaptionGetData,
   );
@@ -1590,23 +1587,12 @@ const Editproject = () => {
   const captionArray = Array.isArray(Customisedcaptiondata)
     ? Customisedcaptiondata
     : Customisedcaptiondata?.data || [];
-  // GRID VIEW SAVE
   console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
   const getBusinessCaption = (CaptionID, defaultCaption) => {
     const match = captionArray?.find((item) => item.CAPTIONID === CaptionID);
 
     return match?.CAPTION || defaultCaption;
   };
-  // const getBusinessCaption = (CaptionID, defaultCaption) => {
-  //   if (Subscriptionlastthree === "003") {
-  //     const match = captionArray.find(
-  //       (item) => item.CAPTIONID === CaptionID
-  //     );
-  //     return match?.CAPTION || defaultCaption;
-  //   }
-
-  //   return defaultCaption;
-  // };
   const handleSaveButtonClick = async () => {
     for (let index = 0; index < rows.length; index++) {
       const row = rows[index];
@@ -1630,8 +1616,6 @@ const Editproject = () => {
       }));
 
     const updateRows = editedRows
-      // .filter((row) => !row.isNew && !isNaN(Number(row.RecordID)))
-
       .filter(
         (row) =>
           !row.isNew &&
@@ -1724,42 +1708,6 @@ const Editproject = () => {
     );
   }
 
-  //STUDENT-TEACHER MAPPING
-  // function EditToolbarteach(props) {
-  //   const { setTeachrows, setRowModesModelteach, isRowEditing } = props; // ✅ fix: was setRowModesModel
-
-  //   const handleClickteach = () => {
-  //     const id = nanoid();
-  //     setTeachrows((oldRows) => [
-  //       ...oldRows,
-  //       {
-  //         id: id,           // ✅ must match getRowId
-  //         RecordID: id,     // ✅ same value
-  //         Department: null,
-  //         Teacher: null,
-  //         isNew: true,
-  //       },
-
-  //     ]);
-  //     setRowModesModelteach((oldModel) => ({
-  //       ...oldModel,
-  //       [id]: { mode: GridRowModes.Edit, fieldToFocus: "Department" },
-  //     }));
-  //   };
-
-  //   return (
-  //     <GridToolbarContainer sx={{ marginBottom: "8px", display: "flex", justifyContent: "flex-start" }}>
-  //       <Button
-  //        disabled={isRowEditing}
-  //       color="primary" startIcon={<AddIcon />} onClick={handleClickteach}
-  //        sx={{ textTransform: "capitalize",fontSize: "14px" }}
-  //       >
-  //         Add Record
-  //       </Button>
-  //     </GridToolbarContainer>
-  //   );
-  // }
-
   function EditToolbarteach(props) {
     const {
       setTeachrows,
@@ -1816,44 +1764,6 @@ const Editproject = () => {
       </Button>
     );
   }
-  // function EditToolbarteach(props) {
-  //     const { setTeachrows, setRowModesModel } = props;
-
-  //     const handleClickteach = () => {
-  //       console.log("--calling handleClickteach");
-
-  //       const id = nanoid();
-  //       const nextSLNO =
-  //         teachrows.length > 0 ? Math.max(...teachrows.map((row) => row.SLNO || 0)) + 1 : 1;
-  //     setTeachrows((oldRows) => [
-  //   ...oldRows,
-  //   {
-  //     id: id,
-  //     RecordID: id,
-  //     Department: null,
-  //     Teacher: null,
-  //     isNew: true,
-  //   },
-  // ]);
-  //       setRowModesModelteach((oldModel) => ({
-  //         ...oldModel,
-  //         [id]: { mode: GridRowModes.Edit, fieldToFocus: "Comments" },
-  //       }));
-  //     };
-  //     return (
-  //       <GridToolbarContainer
-  //         sx={{
-  //           marginBottom: "10px",
-  //           display: "flex",
-  //           justifyContent: "flex-start",
-  //         }}
-  //       >
-  //         <Button color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
-  //           Add Record
-  //         </Button>
-  //       </GridToolbarContainer>
-  //     );
-  //   }
 
   //For side menu
   const formSections = [
@@ -1935,11 +1845,7 @@ const Editproject = () => {
                 placement="right"
               >
                 <Box
-                  onClick={() =>
-                    screenChange({
-                      target: { value: item.value },
-                    })
-                  }
+                onClick={() => screenChange({ target: { value: String(item.value) } })}
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -2020,7 +1926,6 @@ const Editproject = () => {
                     fontSize: 20,
                     fontWeight: 700,
                     color: "#111827",
-                    // mb: 0.2,
                     px: 1,
                     py: 0.2,
                   }}
@@ -2051,7 +1956,6 @@ const Editproject = () => {
                         setScreen(0);
                       }}
                     >
-                      {/* Project */}
                       {getBusinessCaption("ProjectTitle", "Project")}
                     </Typography>
                     {show == "1" ? (
@@ -2098,26 +2002,6 @@ const Editproject = () => {
               </Box>
             </Box>
             <Box display="flex">
-              {/* {mode !== "A" ? (
-              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-select-small">Explore</InputLabel>
-                <Select
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  value={show}
-                  label="Explore"
-                  onChange={screenChange}
-                >
-               
-
-                  <MenuItem value="0">{getBusinessCaption("ProjectTitle", "Project")}</MenuItem>
-                  {is003Subscription === false ? (<MenuItem value="3">Units</MenuItem>) : null}
-                  <MenuItem value="2">List Of Documents</MenuItem>
-                </Select>
-              </FormControl>
-            ) : (
-              false
-            )} */}
               <Tooltip title="Close">
                 <IconButton onClick={() => fnLogOut("Close")} color="error">
                   <ResetTvIcon />
@@ -2131,7 +2015,6 @@ const Editproject = () => {
             </Box>
           </Box>
         </Paper>
-        {/* </Box> */}
         {show == "0" ? (
           <Box
             display="flex"
@@ -2177,13 +2060,7 @@ const Editproject = () => {
                         Fnsave(values);
                       }, 100);
                     }
-                    // Fnsave(values, false, null, false); // ✅ null payload = header save = will navigate(-1)
                   }}
-                  // onSubmit={(values, setSubmitting) => {
-                  //   setTimeout(() => {
-                  //     Fnsave(values);
-                  //   }, 100);
-                  // }}
                   validationSchema={validationSchema}
                   enableReinitialize={true}
                 >
@@ -2233,7 +2110,6 @@ const Editproject = () => {
                         gap={formGap}
                         padding={1}
                         gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                        // gap="30px"
                         sx={{
                           "& > div": {
                             gridColumn: isNonMobile ? undefined : "span 2",
@@ -2246,13 +2122,11 @@ const Editproject = () => {
                             name="code"
                             type="text"
                             id="code"
-                            // label="Code"
                             label={getBusinessCaption("ProjectCode", "Code")}
                             placeholder="Auto"
                             variant="outlined"
                             size="small"
                             focused
-                            // required
                             value={values.code}
                             onBlur={handleBlur}
                             onChange={handleChange}
@@ -2268,25 +2142,24 @@ const Editproject = () => {
                                 borderRadius: "6px",
 
                                 "& fieldset": {
-                                  borderColor: "#d1d5db", // 👈 light grey border
+                                  borderColor: "#d1d5db",
                                 },
                                 "&:hover fieldset": {
-                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  borderColor: "#bfc4cc",
                                 },
                                 "&.Mui-focused fieldset": {
-                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderColor: "#d1d5db",
                                   borderWidth: "1px",
                                 },
                               },
 
                               "& .MuiInputLabel-root": {
-                                color: "#6b7280", // label grey
+                                color: "#6b7280",
                               },
                               "& .MuiInputLabel-root.Mui-focused": {
-                                color: "#6b7280", // keep same on focus
+                                color: "#6b7280",
                               },
                             }}
-                          // autoFocus
                           />
                         ) : (
                           <TextField
@@ -2307,7 +2180,6 @@ const Editproject = () => {
                             variant="outlined"
                             size="small"
                             focused
-                            // required
                             value={values.code}
                             onBlur={handleBlur}
                             onChange={handleChange}
@@ -2323,22 +2195,22 @@ const Editproject = () => {
                                 borderRadius: "6px",
 
                                 "& fieldset": {
-                                  borderColor: "#d1d5db", // 👈 light grey border
+                                  borderColor: "#d1d5db",
                                 },
                                 "&:hover fieldset": {
-                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                  borderColor: "#bfc4cc",
                                 },
                                 "&.Mui-focused fieldset": {
-                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderColor: "#d1d5db",
                                   borderWidth: "1px",
                                 },
                               },
 
                               "& .MuiInputLabel-root": {
-                                color: "#6b7280", // label grey
+                                color: "#6b7280",
                               },
                               "& .MuiInputLabel-root.Mui-focused": {
-                                color: "#6b7280", // keep same on focus
+                                color: "#6b7280",
                               },
                             }}
                           />
@@ -2349,8 +2221,6 @@ const Editproject = () => {
                           name="name"
                           type="text"
                           id="name"
-                          // label={getBusinessCaption(101, "PROJECTTITLE", "Title")}
-                          // label={getBusinessCaption("ProjectTitle", "ProjectTitle")}
                           label={
                             <>
                               {getBusinessCaption("ProjectTitle", "Project")}
@@ -2367,7 +2237,6 @@ const Editproject = () => {
                           onChange={handleChange}
                           error={!!touched.name && !!errors.name}
                           helperText={touched.name && errors.name}
-                          // required
                           autoFocus={CompanyAutoCode == "Y"}
                           InputLabelProps={{
                             shrink: true,
@@ -2378,22 +2247,22 @@ const Editproject = () => {
                               borderRadius: "6px",
 
                               "& fieldset": {
-                                borderColor: "#d1d5db", // 👈 light grey border
+                                borderColor: "#d1d5db",
                               },
                               "&:hover fieldset": {
-                                borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                borderColor: "#bfc4cc",
                               },
                               "&.Mui-focused fieldset": {
-                                borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                borderColor: "#d1d5db",
                                 borderWidth: "1px",
                               },
                             },
 
                             "& .MuiInputLabel-root": {
-                              color: "#6b7280", // label grey
+                              color: "#6b7280",
                             },
                             "& .MuiInputLabel-root.Mui-focused": {
-                              color: "#6b7280", // keep same on focus
+                              color: "#6b7280",
                             },
                           }}
                         />
@@ -2420,7 +2289,6 @@ const Editproject = () => {
                           }}
                           error={!!touched.incharge && !!errors.incharge}
                           helperText={touched.incharge && errors.incharge}
-                          // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
                           url={`${listViewurl}?data=${JSON.stringify({
                             Query: {
                               AccessID: "2111",
@@ -2430,13 +2298,11 @@ const Editproject = () => {
                               Any: "",
                             },
                           })}`}
-                        // url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
                         />
                         {is003Subscription === false ? (
                           <CheckinAutocomplete
                             disabled={isHeaderDisabled || mode == "V"}
                             name="projectOwner"
-                            // label="Project Owner"
                             label={getBusinessCaption(
                               "ProjectOwner",
                               "Project Owner",
@@ -2458,8 +2324,6 @@ const Editproject = () => {
                                 "projectOwner RecordID",
                               );
                             }}
-                            // error={!!touched.projectOwner && !!errors.projectOwner}
-                            // helperText={touched.projectOwner && errors.projectOwner}
                             url={`${listViewurl}?data=${JSON.stringify({
                               Query: {
                                 AccessID: "2102",
@@ -2469,41 +2333,8 @@ const Editproject = () => {
                                 Any: "",
                               },
                             })}`}
-                          // url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
                           />
                         ) : null}
-                        {/* {touched.incharge && errors.incharge && (
-                        <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
-                          {errors.incharge}
-                        </div>
-                      )} */}
-
-                        {/* <FormControl
-                    focused
-                    variant="standard"
-                    sx={{ backgroundColor: "#f5f5f5" }}
-                  >
-                    <InputLabel id="status">Current Status</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-filled-label"
-                      id="currentstatus"
-                      name="currentstatus"
-                      value={values.currentstatus}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                    >
-                      <MenuItem value="Current">Current</MenuItem>
-                      <MenuItem value="Completed">Completed</MenuItem>
-                      <MenuItem value="Old">Old</MenuItem>
-
-                    </Select>
-                  </FormControl> */}
-                        {/* <FormControl
-                    focused
-                    variant="standard"
-                  // sx={{ gridColumn: "span 2" }}
-                  > */}
-                        {/* <InputLabel id="CurrentStatus">Status<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
 
                         {is003Subscription === false ? (
                           <>
@@ -2511,7 +2342,6 @@ const Editproject = () => {
                               id="TentativeStartDate"
                               name="TentativeStartDate"
                               type="date"
-                              // label="Tentative Start Date"
                               label={
                                 <>
                                   {getBusinessCaption(
@@ -2526,7 +2356,6 @@ const Editproject = () => {
                                   </span>
                                 </>
                               }
-                              // required
                               focused
                               CheckinAutocomplete
                               error={
@@ -2538,7 +2367,6 @@ const Editproject = () => {
                                 errors.TentativeStartDate
                               }
                               value={values.TentativeStartDate}
-                              // value={values.CurrentStatus}
                               onBlur={handleBlur}
                               onChange={handleChange}
                               variant="outlined"
@@ -2549,22 +2377,22 @@ const Editproject = () => {
                                   borderRadius: "6px",
 
                                   "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
+                                    borderColor: "#d1d5db",
                                   },
                                   "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    borderColor: "#bfc4cc",
                                   },
                                   "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderColor: "#d1d5db",
                                     borderWidth: "1px",
                                   },
                                 },
 
                                 "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
+                                  color: "#6b7280",
                                 },
                                 "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
+                                  color: "#6b7280",
                                 },
                               }}
                             />
@@ -2572,7 +2400,6 @@ const Editproject = () => {
                               id="TentativeEndDate"
                               name="TentativeEndDate"
                               type="date"
-                              // label="Tentative End Date"
                               label={
                                 <>
                                   {getBusinessCaption(
@@ -2587,7 +2414,6 @@ const Editproject = () => {
                                   </span>
                                 </>
                               }
-                              // required
                               focused
                               variant="outlined"
                               size="small"
@@ -2600,7 +2426,6 @@ const Editproject = () => {
                                 errors.TentativeEndDate
                               }
                               value={values.TentativeEndDate}
-                              // value={values.CurrentStatus}
                               onBlur={handleBlur}
                               onChange={handleChange}
                               sx={{
@@ -2609,22 +2434,22 @@ const Editproject = () => {
                                   borderRadius: "6px",
 
                                   "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
+                                    borderColor: "#d1d5db",
                                   },
                                   "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    borderColor: "#bfc4cc",
                                   },
                                   "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderColor: "#d1d5db",
                                     borderWidth: "1px",
                                   },
                                 },
 
                                 "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
+                                  color: "#6b7280",
                                 },
                                 "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
+                                  color: "#6b7280",
                                 },
                               }}
                             />
@@ -2639,22 +2464,22 @@ const Editproject = () => {
                                   borderRadius: "6px",
 
                                   "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
+                                    borderColor: "#d1d5db",
                                   },
                                   "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    borderColor: "#bfc4cc",
                                   },
                                   "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderColor: "#d1d5db",
                                     borderWidth: "1px",
                                   },
                                 },
 
                                 "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
+                                  color: "#6b7280",
                                 },
                                 "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
+                                  color: "#6b7280",
                                 },
                               }}
                               disabled={isHeaderDisabled || mode == "V"}
@@ -2663,16 +2488,6 @@ const Editproject = () => {
                               name="CurrentStatus"
                               type="text"
                               label="Status"
-                              // label={
-                              //   <>
-                              //     Status
-                              //     <span style={{ color: "red", fontSize: "20px" }}>
-                              //       {" "}
-                              //       *{" "}
-                              //     </span>
-                              //   </>
-                              // }
-                              // required
                               focused
                               select
                               variant="outlined"
@@ -2685,7 +2500,6 @@ const Editproject = () => {
                                 touched.CurrentStatus && errors.CurrentStatus
                               }
                               value={mode == "A" ? "CU" : values.CurrentStatus}
-                              // value={values.CurrentStatus}
                               onBlur={handleBlur}
                               onChange={(e) => {
                                 setFieldValue("CurrentStatus", e.target.value);
@@ -2743,30 +2557,27 @@ const Editproject = () => {
                               borderRadius: "6px",
 
                               "& fieldset": {
-                                borderColor: "#d1d5db", // 👈 light grey border
+                                borderColor: "#d1d5db",
                               },
                               "&:hover fieldset": {
-                                borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                borderColor: "#bfc4cc",
                               },
                               "&.Mui-focused fieldset": {
-                                borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                borderColor: "#d1d5db",
                                 borderWidth: "1px",
                               },
                             },
 
                             "& .MuiInputLabel-root": {
-                              color: "#6b7280", // label grey
+                              color: "#6b7280",
                             },
                             "& .MuiInputLabel-root.Mui-focused": {
-                              color: "#6b7280", // keep same on focus
+                              color: "#6b7280",
                             },
                           }}
                         />
                       </Box>
                       <Box>
-                        {/* <Box display="flex" flexDirection="row" gap={formGap}>
-                    <Box display="flex" alignItems="center"> */}
-
                         <Field
                           disabled={isHeaderDisabled || mode == "V"}
                           type="checkbox"
@@ -2776,27 +2587,9 @@ const Editproject = () => {
                           onBlur={handleBlur}
                           as={Checkbox}
                         />
-                        <FormLabel
-                          focused={false}
-                        // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
-                        >
+                        <FormLabel focused={false}>
                           Routine Tasks
                         </FormLabel>
-                        {/* <Field
-                      type="checkbox"
-                      name="ServiceMaintenance"
-                      id="ServiceMaintenance"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      as={Checkbox}
-                    />
-                    <FormLabel
-                      focused={false}
-                      // htmlFor="ServiceMaintenance"
-                      // sx={{ ml: 1,marginLeft:0}}
-                    >
-                      Service & Maintenance
-                    </FormLabel> */}
                         {!is003Subscription && (
                           <>
                             <Field
@@ -2808,11 +2601,7 @@ const Editproject = () => {
                               onBlur={handleBlur}
                               as={Checkbox}
                             />
-                            <FormLabel
-                              focused={false}
-                            // htmlFor="ServiceMaintenance"
-                            // sx={{ ml: 1,marginLeft:0}}
-                            >
+                            <FormLabel focused={false}>
                               Product
                             </FormLabel>
 
@@ -2831,7 +2620,6 @@ const Editproject = () => {
                           </>
                         )}
                         <Field
-                          //  size="small"
                           disabled={isHeaderDisabled || mode == "V"}
                           type="checkbox"
                           name="delete"
@@ -2844,7 +2632,6 @@ const Editproject = () => {
 
                         <FormLabel focused={false}>Delete</FormLabel>
                         <Field
-                          //  size="small"
                           disabled={isHeaderDisabled || mode == "V"}
                           type="checkbox"
                           name="disable"
@@ -2875,7 +2662,6 @@ const Editproject = () => {
                               gap={formGap}
                               padding={1}
                               gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                              // gap="30px"
                               sx={{
                                 "& > div": {
                                   gridColumn: isNonMobile
@@ -2885,7 +2671,6 @@ const Editproject = () => {
                               }}
                             >
                               <TextField
-                                //fullWidth
                                 disabled={mode == "V"}
                                 type="number"
                                 id="price"
@@ -2902,22 +2687,22 @@ const Editproject = () => {
                                     borderRadius: "6px",
 
                                     "& fieldset": {
-                                      borderColor: "#d1d5db", // 👈 light grey border
+                                      borderColor: "#d1d5db",
                                     },
                                     "&:hover fieldset": {
-                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                      borderColor: "#bfc4cc",
                                     },
                                     "&.Mui-focused fieldset": {
-                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderColor: "#d1d5db",
                                       borderWidth: "1px",
                                     },
                                   },
 
                                   "& .MuiInputLabel-root": {
-                                    color: "#6b7280", // label grey
+                                    color: "#6b7280",
                                   },
                                   "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#6b7280", // keep same on focus
+                                    color: "#6b7280",
                                   },
                                 }}
                                 focused
@@ -2937,7 +2722,6 @@ const Editproject = () => {
                               initialValues={InitialValue}
                               padding={1}
                               gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                              // gap="30px"
                               sx={{
                                 "& > div": {
                                   gridColumn: isNonMobile
@@ -2957,22 +2741,22 @@ const Editproject = () => {
                                     borderRadius: "6px",
 
                                     "& fieldset": {
-                                      borderColor: "#d1d5db", // 👈 light grey border
+                                      borderColor: "#d1d5db",
                                     },
                                     "&:hover fieldset": {
-                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                      borderColor: "#bfc4cc",
                                     },
                                     "&.Mui-focused fieldset": {
-                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderColor: "#d1d5db",
                                       borderWidth: "1px",
                                     },
                                   },
 
                                   "& .MuiInputLabel-root": {
-                                    color: "#6b7280", // label grey
+                                    color: "#6b7280",
                                   },
                                   "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#6b7280", // keep same on focus
+                                    color: "#6b7280",
                                   },
                                 }}
                                 type="number"
@@ -2981,14 +2765,9 @@ const Editproject = () => {
                                 value={values.budget}
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                // label="Budget"
                                 label={
                                   <>
                                     Budget
-                                    {/* <span style={{ color: "red", fontSize: "20px" }}>
-                          {" "}
-                          *{" "}
-                        </span> */}
                                   </>
                                 }
                                 error={!!touched.budget && !!errors.budget}
@@ -3020,22 +2799,22 @@ const Editproject = () => {
                                     borderRadius: "6px",
 
                                     "& fieldset": {
-                                      borderColor: "#d1d5db", // 👈 light grey border
+                                      borderColor: "#d1d5db",
                                     },
                                     "&:hover fieldset": {
-                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                      borderColor: "#bfc4cc",
                                     },
                                     "&.Mui-focused fieldset": {
-                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderColor: "#d1d5db",
                                       borderWidth: "1px",
                                     },
                                   },
 
                                   "& .MuiInputLabel-root": {
-                                    color: "#6b7280", // label grey
+                                    color: "#6b7280",
                                   },
                                   "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#6b7280", // keep same on focus
+                                    color: "#6b7280",
                                   },
                                 }}
                                 focused
@@ -3066,22 +2845,22 @@ const Editproject = () => {
                                     borderRadius: "6px",
 
                                     "& fieldset": {
-                                      borderColor: "#d1d5db", // 👈 light grey border
+                                      borderColor: "#d1d5db",
                                     },
                                     "&:hover fieldset": {
-                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                      borderColor: "#bfc4cc",
                                     },
                                     "&.Mui-focused fieldset": {
-                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderColor: "#d1d5db",
                                       borderWidth: "1px",
                                     },
                                   },
 
                                   "& .MuiInputLabel-root": {
-                                    color: "#6b7280", // label grey
+                                    color: "#6b7280",
                                   },
                                   "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#6b7280", // keep same on focus
+                                    color: "#6b7280",
                                   },
                                 }}
                                 focused
@@ -3113,22 +2892,22 @@ const Editproject = () => {
                                     borderRadius: "6px",
 
                                     "& fieldset": {
-                                      borderColor: "#d1d5db", // 👈 light grey border
+                                      borderColor: "#d1d5db",
                                     },
                                     "&:hover fieldset": {
-                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                      borderColor: "#bfc4cc",
                                     },
                                     "&.Mui-focused fieldset": {
-                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderColor: "#d1d5db",
                                       borderWidth: "1px",
                                     },
                                   },
 
                                   "& .MuiInputLabel-root": {
-                                    color: "#6b7280", // label grey
+                                    color: "#6b7280",
                                   },
                                   "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#6b7280", // keep same on focus
+                                    color: "#6b7280",
                                   },
                                 }}
                                 focused
@@ -3159,22 +2938,22 @@ const Editproject = () => {
                                     borderRadius: "6px",
 
                                     "& fieldset": {
-                                      borderColor: "#d1d5db", // 👈 light grey border
+                                      borderColor: "#d1d5db",
                                     },
                                     "&:hover fieldset": {
-                                      borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                      borderColor: "#bfc4cc",
                                     },
                                     "&.Mui-focused fieldset": {
-                                      borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                      borderColor: "#d1d5db",
                                       borderWidth: "1px",
                                     },
                                   },
 
                                   "& .MuiInputLabel-root": {
-                                    color: "#6b7280", // label grey
+                                    color: "#6b7280",
                                   },
                                   "& .MuiInputLabel-root.Mui-focused": {
-                                    color: "#6b7280", // keep same on focus
+                                    color: "#6b7280",
                                   },
                                 }}
                                 focused
@@ -3187,8 +2966,6 @@ const Editproject = () => {
                                   },
                                 }}
                               />
-
-                              {/* </FormControl> */}
                             </Box>
                           )}
                           <Typography
@@ -3203,7 +2980,6 @@ const Editproject = () => {
                             gap={formGap}
                             padding={1}
                             gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                            // gap="30px"
                             sx={{
                               "& > div": {
                                 gridColumn: isNonMobile ? undefined : "span 2",
@@ -3221,7 +2997,6 @@ const Editproject = () => {
                               onChange={(e) => {
                                 const value = e.target.value;
 
-                                // Allow - and one decimal only
                                 if (/^-?\d*\.?\d*$/.test(value)) {
                                   handleChange(e);
                                 }
@@ -3238,22 +3013,22 @@ const Editproject = () => {
                                   borderRadius: "6px",
 
                                   "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
+                                    borderColor: "#d1d5db",
                                   },
                                   "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    borderColor: "#bfc4cc",
                                   },
                                   "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderColor: "#d1d5db",
                                     borderWidth: "1px",
                                   },
                                 },
 
                                 "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
+                                  color: "#6b7280",
                                 },
                                 "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
+                                  color: "#6b7280",
                                 },
                               }}
                             />
@@ -3284,22 +3059,22 @@ const Editproject = () => {
                                   borderRadius: "6px",
 
                                   "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
+                                    borderColor: "#d1d5db",
                                   },
                                   "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    borderColor: "#bfc4cc",
                                   },
                                   "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderColor: "#d1d5db",
                                     borderWidth: "1px",
                                   },
                                 },
 
                                 "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
+                                  color: "#6b7280",
                                 },
                                 "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
+                                  color: "#6b7280",
                                 },
                               }}
                             />
@@ -3331,52 +3106,25 @@ const Editproject = () => {
                                   borderRadius: "6px",
 
                                   "& fieldset": {
-                                    borderColor: "#d1d5db", // 👈 light grey border
+                                    borderColor: "#d1d5db",
                                   },
                                   "&:hover fieldset": {
-                                    borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                    borderColor: "#bfc4cc",
                                   },
                                   "&.Mui-focused fieldset": {
-                                    borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                    borderColor: "#d1d5db",
                                     borderWidth: "1px",
                                   },
                                 },
 
                                 "& .MuiInputLabel-root": {
-                                  color: "#6b7280", // label grey
+                                  color: "#6b7280",
                                 },
                                 "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "#6b7280", // keep same on focus
+                                  color: "#6b7280",
                                 },
                               }}
                             />
-                            {/* <TextField
-                    fullWidth
-                    variant="standard"
-                    focused
-                    label="Radius (m)"
-                    name="radius"
-                    value={values.radius}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    type="text"
-                    inputProps={{
-                      step: "any",
-                      min: 0,
-                      style: { textAlign: "right" },
-                      onKeyDown: (e) => {
-                        if (["e", "E", "+", "-"].includes(e.key)) {
-                          e.preventDefault();
-                        }
-                      },
-                      onInput: (e) => {
-                        e.target.value = e.target.value.replace(
-                          /[eE+\-]/g,
-                          ""
-                        );
-                      },
-                    }}
-                  /> */}
                           </Box>
                         </>
                       ) : null}
@@ -3423,38 +3171,6 @@ const Editproject = () => {
                                 Save
                               </Button>
                             )}
-                            {/* {YearFlag == "true" && mode == "E" ? (
-                    <Button
-                      color="error"
-                      variant="contained"
-                      onClick={() => {
-                        Swal.fire({
-                          title: errorMsgData.Warningmsg.Delete,
-                          icon: "warning",
-                          showCancelButton: true,
-                          confirmButtonColor: "#3085d6",
-                          cancelButtonColor: "#d33",
-                          confirmButtonText: "Confirm",
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            Fnsave(values, "harddelete");
-                            // navigate(-1);
-                          } else {
-                            return;
-                          }
-                        });
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  ) : // <Button
-                    //   color="error"
-                    //   variant="contained"
-                    //   disabled={true}
-                    // >
-                    //   Delete
-                    // </Button>
-                    null} */}
                             <Button
                               sx={{
                                 textTransform: "none",
@@ -3467,7 +3183,6 @@ const Editproject = () => {
                               }}
                               variant="contained"
                               onClick={() => {
-                                // navigate("/Apps/TR133/Project");
                                 navigate(-1);
                               }}
                             >
@@ -3490,13 +3205,11 @@ const Editproject = () => {
                                 backgroundColor: "#009688",
                                 color: "#FFFFFF",
                                 "&:hover": {
-                                  backgroundColor: "#009688", // same color on hover
+                                  backgroundColor: "#009688",
                                 },
                               }}
-                              // color="success"
                               variant="contained"
                               onClick={() => {
-                                // navigate("/Apps/TR133/Project");
                                 navigate(-1);
                               }}
                             >
@@ -3509,8 +3222,6 @@ const Editproject = () => {
                       {Subscriptionlastthree === "003" && (
                         <>
                           <Box
-                            // m="5px 0 0 0"
-                            // height={dataGridHeightExplore}
                             height="60vh"
                             m={1}
                             sx={{
@@ -3540,11 +3251,11 @@ const Editproject = () => {
                               },
                               "& .odd-row": {
                                 backgroundColor: "",
-                                color: "", // Color for odd rows
+                                color: "",
                               },
                               "& .even-row": {
                                 backgroundColor: "#D3D3D3",
-                                color: "", // Color for even rows
+                                color: "",
                               },
                             }}
                           >
@@ -3556,7 +3267,6 @@ const Editproject = () => {
                                 },
                               }}
                               rowHeight={35}
-                              // rowHeight={dataGridRowHeight}
                               headerHeight={dataGridHeaderFooterHeight}
                               rows={teachrows}
                               columns={Teachcolumns}
@@ -3570,14 +3280,7 @@ const Editproject = () => {
                               onRowEditStop={handleRowEditStopTeach}
                               processRowUpdate={processRowUpdateTeach}
                               getRowId={(row) => row.RecordID}
-                              // getRowId={(row) => row.ProjectTeamRecordID}
-                              //  getRowId={(row) => row.id}
                               disableRowSelectionOnClick
-                              // isCellEditable={(params) => {
-                              //     if (params.field === "SlotCode") return false;
-                              //     return true;
-                              // }}
-
                               experimentalFeatures={{ newEditingApi: true }}
                               onProcessRowUpdateError={(error) => {
                                 console.error(
@@ -3596,7 +3299,7 @@ const Editproject = () => {
                                   isRowEditing,
                                   setPage,
                                   pageSize,
-                                }, // ✅ was setRowModesModel (wrong one)
+                                },
                               }}
                               rowsPerPageOptions={[5, 10, 20]}
                               getRowClassName={(params) =>
@@ -3624,415 +3327,6 @@ const Editproject = () => {
         ) : (
           false
         )}
-
-        {/* {show == "1" ? (
-        <Paper elevation={3} sx={{ margin: "10px" }}>
-          <Formik
-            initialValues={UnitInitialValues}
-            validationSchema={validationSchema2}
-            enableReinitialize={true}
-            onSubmit={(values, { resetForm, setFieldValue }) => {
-              setTimeout(() => {
-                FnAttachment(values, resetForm, false, setFieldValue);
-              }, 100);
-            }}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleBlur,
-              handleSubmit,
-              handleChange,
-              setFieldValue,
-              resetForm,
-            }) => (
-              <form
-                onSubmit={handleSubmit}
-                onReset={() => {
-                  selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                  resetForm();
-                }}
-              >
-                <Box>
-                  <Box
-                    display="grid"
-                    gap={formGap}
-                    padding={1}
-                    gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                    sx={{
-                      "& > div": {
-                        gridColumn: isNonMobile ? undefined : "span 2",
-                      },
-                    }}
-                  >
-
-                    <FormControl sx={{ gap: formGap }}>
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="code"
-                        name="code"
-                        value={values.code}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Code"
-                        focused
-                        InputProps={{
-                          readOnly: true
-                        }}
-                      />
-
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="text"
-                        id="description"
-                        name="description"
-                        value={values.description}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Description"
-                        focused
-                        InputProps={{
-                          readOnly: true
-                        }}
-                      />
-
-                      <Box
-                        m="5px 0 0 0"
-                        height="50vh"
-                        sx={{
-                          "& .MuiDataGrid-root": {
-                            border: "none",
-                          },
-                          "& .MuiDataGrid-cell": {
-                            borderBottom: "none",
-                          },
-                          "& .name-column--cell": {
-                            color: colors.greenAccent[300],
-                          },
-                          "& .MuiDataGrid-columnHeaders": {
-                            backgroundColor: colors.blueAccent[800],
-                            borderBottom: "none",
-                          },
-                          "& .MuiDataGrid-virtualScroller": {
-                            backgroundColor: colors.primary[400],
-                          },
-                          "& .MuiDataGrid-footerContainer": {
-                            borderTop: "none",
-                            backgroundColor: colors.blueAccent[800],
-                          },
-                          "& .MuiCheckbox-root": {
-                            color: `${colors.greenAccent[200]} !important`,
-                          },
-                          "& .odd-row": {
-                            backgroundColor: "",
-                            color: "", // Color for odd rows
-                          },
-                          "& .even-row": {
-                            backgroundColor: "#D3D3D3",
-                            color: "", // Color for even rows
-                          },
-                        }}
-                      >
-                        <DataGrid
-                          sx={{
-                            "& .MuiDataGrid-footerContainer": {
-                              height: dataGridHeaderFooterHeight,
-                              minHeight: dataGridHeaderFooterHeight,
-                            },
-                          }}
-                          rows={explorelistViewData}
-                          columns={columns}
-                          disableSelectionOnClick
-                          getRowId={(row) => row.RecordID}
-                          rowHeight={dataGridRowHeight}
-                          headerHeight={dataGridHeaderFooterHeight}
-                          pageSize={pageSize}
-                          onPageSizeChange={(newPageSize) =>
-                            setPageSize(newPageSize)
-                          }
-                          onCellClick={(params) => {
-                            selectCellRowData({
-                              rowData: params.row,
-                              mode: "E",
-                              field: params.field,
-                            });
-                          }}
-                          rowsPerPageOptions={[5, 10, 20]}
-                          pagination
-                          components={{
-                            Toolbar: Employee,
-                          }}
-                          onStateChange={(stateParams) =>
-                            setRowCount(stateParams.pagination.rowCount)
-                          }
-                          loading={exploreLoading}
-                          componentsProps={{
-                            toolbar: {
-                              showQuickFilter: true,
-                              quickFilterProps: { debounceMs: 500 },
-                            },
-                          }}
-                          getRowClassName={(params) =>
-                            params.indexRelativeToCurrentPage % 2 === 0
-                              ? "odd-row"
-                              : "even-row"
-                          }
-                        />
-                      </Box>
-                    </FormControl>
-
-                    <FormControl
-                      sx={{
-                        gap: formGap,
-                        mt: { xs: "opx", md: "150px" },
-                      }}
-                    >
-
-                      {CompanyAutoCode == "Y" ? (
-                        <TextField
-                          name="Code"
-                          type="text"
-                          id="Code"
-                          label="Code"
-                          placeholder="Auto"
-                          variant="standard"
-                          focused
-                          // required
-                          value={values.Code}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.Code && !!errors.Code}
-                          helperText={touched.Code && errors.Code}
-                          sx={{
-                            backgroundColor: "#ffffff",
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5 ",
-                            },
-                          }}
-                          InputProps={{ readOnly: true }}
-                        // autoFocus
-                        />
-                      ) : (
-                        <TextField
-                          name="Code"
-                          type="text"
-                          id="Code"
-                          label={
-                            <>
-                              Code
-                              <span style={{ color: "red", fontSize: "20px" }}>
-                                *
-                              </span>
-                            </>
-                          }
-                          variant="standard"
-                          focused
-                          // required
-                          value={values.Code}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.Code && !!errors.Code}
-                          helperText={touched.Code && errors.Code}
-                          sx={{
-                            backgroundColor: "#ffffff",
-                            "& .MuiFilledInput-root": {
-                              backgroundColor: "#f5f5f5 ",
-                            },
-                          }}
-                          autoFocus
-                        />
-                      )}
-
-                      <TextField
-                        disabled={mode == "V"}
-                        name="Name"
-                        type="text"
-                        id="Name"
-                        label={
-                          <>
-                            Name
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="standard"
-                        focused
-                        value={values.Name}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Name && !!errors.Name}
-                        helperText={touched.Name && errors.Name}
-                        autoFocus
-                      />
-                      <ProjectVendor
-                        name="OwnedBy"
-                        // label="Owned By"
-                        label={
-                          <>
-
-                            Owned By
-                            <span style={{ color: "red", fontSize: "20px" }}>
-                              *
-                            </span>
-                          </>
-                        }
-                        variant="outlined"
-                        id="OwnedBy"
-                        value={values.OwnedBy}
-                        onChange={(newValue) => {
-                          setFieldValue(
-                            "OwnedBy",
-                            newValue
-                              ? {
-                                RecordID: newValue.RecordID,
-                                Code: newValue.Code,
-                                Name: newValue.Name,
-                              }
-                              : null
-                          );
-                        }}
-                        error={!!touched.OwnedBy && !!errors.OwnedBy}
-                        helperText={touched.OwnedBy && errors.OwnedBy}
-
-                        url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Vendor","Filter":"parentID='${CompanyID}'","Any":""}}`}
-                      />
-                      <TextField
-                        label="Comments"
-                        id="Comments"
-                        name="Comments"
-                        focused
-                        variant="standard"
-                        value={values.Comments}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        error={!!touched.Comments && !!errors.Comments}
-                        helperText={touched.Comments && errors.Comments}
-                      />
-                      <TextField
-                        fullWidth
-                        variant="standard"
-                        type="number"
-                        label="Sort Order"
-                        value={values.sortOrder}
-                        id="sortOrder"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        name="sortOrder"
-                        sx={{ background: "" }}
-                        focused
-                        onWheel={(e) => e.target.blur()}
-                        onInput={(e) => {
-                          e.target.value = Math.max(0, parseInt(e.target.value))
-                            .toString()
-                            .slice(0, 8);
-                        }}
-                        InputProps={{
-                          inputProps: {
-                            style: { textAlign: "right" },
-                          },
-                        }}
-                      />
-
-                      <Box>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              name="disable"
-                              checked={values.disable}
-                              onChange={handleChange}
-                            />
-                          }
-                          label="Disable"
-
-                        />
-                      </Box>
-                      <Box
-                        display="flex"
-                        justifyContent="end"
-                        padding={1}
-                        gap={2}
-                      >
-                        {YearFlag == "true" ? (
-                          <LoadingButton
-                            color="secondary"
-                            variant="contained"
-                            type="submit"
-                            loading={isLoading}
-                          >
-                            Save
-                          </LoadingButton>
-                        ) : (
-                          <Button
-                            color="secondary"
-                            variant="contained"
-                            disabled={true}
-                          >
-                            Save
-                          </Button>
-                        )}
-                        {YearFlag == "true" ? (
-                          <Button
-                            color="error"
-                            variant="contained"
-                            disabled={funMode == "A"}
-                            onClick={() => {
-                              Swal.fire({
-                                title: errorMsgData.Warningmsg.Delete,
-                                icon: "warning",
-                                showCancelButton: true,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Confirm",
-                              }).then((result) => {
-                                if (result.isConfirmed) {
-                                  FnAttachment(
-                                    values,
-                                    resetForm,
-                                    "harddelete"
-                                  );
-                                } else {
-                                  return;
-                                }
-                              });
-                            }}
-                          >
-                            Delete
-                          </Button>
-                        ) : (
-                          <Button
-                            color="error"
-                            variant="contained"
-                            disabled={true}
-                          >
-                            Delete
-                          </Button>
-                        )}
-                        <Button
-                          type="reset"
-                          color="warning"
-                          variant="contained"
-                          onClick={() => {
-                            setScreen(0);
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                      </Box>
-                    </FormControl>
-                  </Box>
-                </Box>
-              </form>
-            )}
-          </Formik>
-        </Paper>
-      ) : (
-        false
-      )} */}
 
         {show == "3" ? (
           <Box
@@ -4070,13 +3364,7 @@ const Editproject = () => {
               >
                 <Formik
                   initialValues={UnitInitialValues}
-                  // validationSchema={validationSchema2}
                   enableReinitialize={true}
-                  // onSubmit={(values, { resetForm, setFieldValue }) => {
-                  //   setTimeout(() => {
-                  //     FnAttachment(values, resetForm, false, setFieldValue);
-                  //   }, 100);
-                  // }}
                   onSubmit={(values, { resetForm }) => {
                     handleSaveButtonClick(values, resetForm);
                   }}
@@ -4093,10 +3381,6 @@ const Editproject = () => {
                   }) => (
                     <form
                       onSubmit={handleSubmit}
-                    // onReset={() => {
-                    //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
-                    //   resetForm();
-                    // }}
                     >
                       {/* ----- CARD HEADER ----- */}
                       <Box display="flex" alignItems="center" gap={1} mb={0.5}>
@@ -4138,7 +3422,6 @@ const Editproject = () => {
                           },
                         }}
                       >
-                        {/* <FormControl sx={{ gap: formGap }}> */}
                         <TextField
                           fullWidth
                           variant="outlined"
@@ -4160,22 +3443,22 @@ const Editproject = () => {
                               borderRadius: "6px",
 
                               "& fieldset": {
-                                borderColor: "#d1d5db", // 👈 light grey border
+                                borderColor: "#d1d5db",
                               },
                               "&:hover fieldset": {
-                                borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                borderColor: "#bfc4cc",
                               },
                               "&.Mui-focused fieldset": {
-                                borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                borderColor: "#d1d5db",
                                 borderWidth: "1px",
                               },
                             },
 
                             "& .MuiInputLabel-root": {
-                              color: "#6b7280", // label grey
+                              color: "#6b7280",
                             },
                             "& .MuiInputLabel-root.Mui-focused": {
-                              color: "#6b7280", // keep same on focus
+                              color: "#6b7280",
                             },
                           }}
                         />
@@ -4201,29 +3484,28 @@ const Editproject = () => {
                               borderRadius: "6px",
 
                               "& fieldset": {
-                                borderColor: "#d1d5db", // 👈 light grey border
+                                borderColor: "#d1d5db",
                               },
                               "&:hover fieldset": {
-                                borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                borderColor: "#bfc4cc",
                               },
                               "&.Mui-focused fieldset": {
-                                borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                borderColor: "#d1d5db",
                                 borderWidth: "1px",
                               },
                             },
 
                             "& .MuiInputLabel-root": {
-                              color: "#6b7280", // label grey
+                              color: "#6b7280",
                             },
                             "& .MuiInputLabel-root.Mui-focused": {
-                              color: "#6b7280", // keep same on focus
+                              color: "#6b7280",
                             },
                           }}
                         />
                       </Box>
                       <Box
                         padding={1}
-                        // height="500px"
                         height={dataGridHeightExplore}
                         marginTop={2}
                         sx={{
@@ -4246,7 +3528,6 @@ const Editproject = () => {
                           },
                           "& .MuiDataGrid-columnHeaders": {
                             backgroundColor: colors.blueAccent[800],
-                            // backgroundColor: "#25adad",
                             borderBottom: "none",
                           },
                           "& .MuiDataGrid-virtualScroller": {
@@ -4255,20 +3536,17 @@ const Editproject = () => {
                           "& .MuiDataGrid-footerContainer": {
                             borderTop: "none",
                             backgroundColor: colors.blueAccent[800],
-                            // borderColor: "#d0edec",
-                            // backgroundColor: "",
                           },
                           "& .MuiCheckbox-root": {
                             color: `${colors.greenAccent[200]} !important`,
                           },
                           "& .odd-row": {
                             backgroundColor: "",
-                            color: "", // Color for odd rows
+                            color: "",
                           },
                           "& .even-row": {
-                            // backgroundColor: "#d0edec",
                             backgroundColor: "",
-                            color: "", // Color for even rows
+                            color: "",
                           },
 
                           "& .MuiDataGrid-columnHeaderTitle": {
@@ -4278,7 +3556,6 @@ const Editproject = () => {
                           "& .MuiTablePagination-root": {
                             color: colors.blueAccent[900],
                           },
-                          /* ✅ PAGINATION STYLES (WHITE COLOR) */
                           "& .MuiTablePagination-root": {
                             color: "#fff",
                           },
@@ -4291,12 +3568,10 @@ const Editproject = () => {
                             color: "#fff",
                           },
 
-                          /* Dropdown icon */
                           "& .MuiTablePagination-selectIcon": {
                             color: "#fff",
                           },
 
-                          /* Left & Right arrow buttons */
                           "& .MuiTablePagination-actions button": {
                             color: "#fff",
                           },
@@ -4359,7 +3634,6 @@ const Editproject = () => {
                         />
                       </Box>
 
-                      {/* </FormControl> */}
                       <Box
                         display="flex"
                         justifyContent="space-between"
@@ -4489,13 +3763,7 @@ const Editproject = () => {
               >
                 <Formik
                   initialValues={DocInitialValues}
-                  // validationSchema={validationSchema2}
                   enableReinitialize={true}
-                // onSubmit={(values, { resetForm, setFieldValue }) => {
-                //   setTimeout(() => {
-                //     FnAttachment(values, resetForm, false, setFieldValue);
-                //   }, 100);
-                // }}
                 >
                   {({
                     values,
@@ -4558,7 +3826,6 @@ const Editproject = () => {
                           },
                         }}
                       >
-                        {/* <FormControl sx={{ gap: formGap }}> */}
                         <TextField
                           fullWidth
                           variant="outlined"
@@ -4580,22 +3847,22 @@ const Editproject = () => {
                               borderRadius: "6px",
 
                               "& fieldset": {
-                                borderColor: "#d1d5db", // 👈 light grey border
+                                borderColor: "#d1d5db",
                               },
                               "&:hover fieldset": {
-                                borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                borderColor: "#bfc4cc",
                               },
                               "&.Mui-focused fieldset": {
-                                borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                borderColor: "#d1d5db",
                                 borderWidth: "1px",
                               },
                             },
 
                             "& .MuiInputLabel-root": {
-                              color: "#6b7280", // label grey
+                              color: "#6b7280",
                             },
                             "& .MuiInputLabel-root.Mui-focused": {
-                              color: "#6b7280", // keep same on focus
+                              color: "#6b7280",
                             },
                           }}
                         />
@@ -4621,33 +3888,30 @@ const Editproject = () => {
                               borderRadius: "6px",
 
                               "& fieldset": {
-                                borderColor: "#d1d5db", // 👈 light grey border
+                                borderColor: "#d1d5db",
                               },
                               "&:hover fieldset": {
-                                borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                borderColor: "#bfc4cc",
                               },
                               "&.Mui-focused fieldset": {
-                                borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                borderColor: "#d1d5db",
                                 borderWidth: "1px",
                               },
                             },
 
                             "& .MuiInputLabel-root": {
-                              color: "#6b7280", // label grey
+                              color: "#6b7280",
                             },
                             "& .MuiInputLabel-root.Mui-focused": {
-                              color: "#6b7280", // keep same on focus
+                              color: "#6b7280",
                             },
                           }}
                         />
-                        {/* </FormControl> */}
                       </Box>
 
                       <Box
                         padding={1}
                         m="5px 0 0 0"
-                        // height="50vh"
-                        // height={dataGridHeight}
                         height={dataGridHeightExplore}
                         sx={{
                           "& .MuiDataGrid-root": {
@@ -4669,7 +3933,6 @@ const Editproject = () => {
                           },
                           "& .MuiDataGrid-columnHeaders": {
                             backgroundColor: colors.blueAccent[800],
-                            // backgroundColor: "#25adad",
                             borderBottom: "none",
                           },
                           "& .MuiDataGrid-virtualScroller": {
@@ -4678,20 +3941,17 @@ const Editproject = () => {
                           "& .MuiDataGrid-footerContainer": {
                             borderTop: "none",
                             backgroundColor: colors.blueAccent[800],
-                            // borderColor: "#d0edec",
-                            // backgroundColor: "",
                           },
                           "& .MuiCheckbox-root": {
                             color: `${colors.greenAccent[200]} !important`,
                           },
                           "& .odd-row": {
                             backgroundColor: "",
-                            color: "", // Color for odd rows
+                            color: "",
                           },
                           "& .even-row": {
-                            // backgroundColor: "#d0edec",
                             backgroundColor: "",
-                            color: "", // Color for even rows
+                            color: "",
                           },
 
                           "& .MuiDataGrid-columnHeaderTitle": {
@@ -4701,7 +3961,6 @@ const Editproject = () => {
                           "& .MuiTablePagination-root": {
                             color: colors.blueAccent[900],
                           },
-                          /* ✅ PAGINATION STYLES (WHITE COLOR) */
                           "& .MuiTablePagination-root": {
                             color: "#fff",
                           },
@@ -4714,12 +3973,10 @@ const Editproject = () => {
                             color: "#fff",
                           },
 
-                          /* Dropdown icon */
                           "& .MuiTablePagination-selectIcon": {
                             color: "#fff",
                           },
 
-                          /* Left & Right arrow buttons */
                           "& .MuiTablePagination-actions button": {
                             color: "#fff",
                           },
@@ -4732,7 +3989,7 @@ const Editproject = () => {
                               minHeight: dataGridHeaderFooterHeight,
                             },
                           }}
-                          rows={explorelistViewData}
+                          rows={filteredExploreRows}
                           columns={columns}
                           disableSelectionOnClick
                           getRowId={(row) => row.RecordID}
@@ -4749,24 +4006,37 @@ const Editproject = () => {
                               field: params.field,
                             });
                           }}
-                          // rowsPerPageOptions={[5, 10, 20]}
                           pagination
                           components={{
-                            Toolbar: Employee,
+                            // Stable, module-level toolbar — see the top of
+                            // this file. Fixes the "page loading so long"
+                            // remount loop.
+                            Toolbar: DocumentGridToolbar,
                           }}
                           onStateChange={(stateParams) =>
                             setRowCount(stateParams.pagination.rowCount)
                           }
                           componentsProps={{
-                            toolbar: { setRows, setRowModesModel },
+                            toolbar: {
+                              show,
+                              displayCount:
+                                show == "2" ? filteredExploreRows.length : rowCount,
+                              Milestone,
+                              Stages,
+                              Activity,
+                              setMilestone,
+                              setStages,
+                              setActivity,
+                              fileTypeFilter,
+                              setFileTypeFilter,
+                              FILE_TYPE_LABELS,
+                              listViewurl,
+                              recID,
+                              CompanyID,
+                              Subscriptionlastthree,
+                            },
                           }}
                           loading={exploreLoading}
-                          // componentsProps={{
-                          //   toolbar: {
-                          //     showQuickFilter: true,
-                          //     quickFilterProps: { debounceMs: 500 },
-                          //   },
-                          // }}
                           getRowClassName={(params) =>
                             params.indexRelativeToCurrentPage % 2 === 0
                               ? "odd-row"
@@ -4831,10 +4101,4997 @@ const Editproject = () => {
         ) : (
           false
         )}
-        {/* </Box> */}
       </Box>
     </React.Fragment>
   );
 };
 
 export default Editproject;
+
+
+// import {
+//   TextField,
+//   Box,
+//   Typography,
+//   FormControl,
+//   FormLabel,
+//   Button,
+//   IconButton,
+//   FormControlLabel,
+//   Tooltip,
+//   Checkbox,
+//   LinearProgress,
+//   Paper,
+//   InputLabel,
+//   Select,
+//   MenuItem,
+//   CircularProgress,
+//   Breadcrumbs,
+//   Chip,
+//   InputAdornment,
+//   List,
+//   ListItemButton,
+//   ListItemText,
+//   Stack,
+// } from "@mui/material";
+// import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+// import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+// import SearchIcon from "@mui/icons-material/Search";
+// import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+// import PersonIcon from "@mui/icons-material/Person";
+// import MenuBookIcon from "@mui/icons-material/MenuBook";
+// import useMediaQuery from "@mui/material/useMediaQuery";
+// import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+// import ResetTvIcon from "@mui/icons-material/ResetTv";
+// import { Field, Formik } from "formik";
+// import { CheckBox, Schedule } from "@mui/icons-material";
+// import { useParams, useNavigate, useLocation } from "react-router-dom";
+// import { gradeSchema } from "../../Security/validation";
+// import { useDispatch, useSelector } from "react-redux";
+// import { toast } from "react-hot-toast";
+// import {
+//   CustomisedCaptionGet,
+//   explorePostData,
+//   fetchApidata,
+//   getFetchData,
+//   getFetchData_v1,
+//   postApidata,
+//   postData,
+// } from "../../../store/reducers/Formapireducer";
+// import * as Yup from "yup";
+// import React, { useState, useEffect, useRef, useMemo } from "react";
+// import { LoadingButton } from "@mui/lab";
+// import Swal from "sweetalert2";
+// import { useProSidebar } from "react-pro-sidebar";
+// import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+// import { formGap } from "../../../ui-components/global/utils";
+// import {
+//   CheckinAutocomplete,
+//   CheckinAutocomplete_v12,
+//   Employeeautocomplete,
+//   Productautocomplete,
+//   ProjectVendor,
+//   SprintEmpAutocomplete1,
+// } from "../../../ui-components/global/Autocomplete";
+// import {
+//   DataGrid,
+//   GridActionsCellItem,
+//   GridRowModes,
+//   GridToolbarQuickFilter,
+// } from "@mui/x-data-grid";
+// import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
+// import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+// import { GridToolbarContainer } from "@mui/x-data-grid";
+// import { breadcrumbStyles, tokens } from "../../../Theme";
+// import {
+//   dataGridHeaderFooterHeight,
+//   dataGridHeight,
+//   dataGridHeightExplore,
+//   dataGridRowHeight,
+//   menuHeight,
+// } from "../../../ui-components/utils";
+// import { useTheme } from "@emotion/react";
+// import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+// import SaveIcon from "@mui/icons-material/Save";
+// import CancelIcon from "@mui/icons-material/Cancel";
+// import EditIcon from "@mui/icons-material/Edit";
+// import DeleteIcon from "@mui/icons-material/Delete";
+// import AddIcon from "@mui/icons-material/Add";
+// import { GridRowEditStopReasons } from "@mui/x-data-grid";
+// import { nanoid } from "@reduxjs/toolkit";
+// import VisibilityIcon from "@mui/icons-material/Visibility";
+// import { SECTION_TYPE_GRANULARITY } from "@mui/x-date-pickers/internals/utils/getDefaultReferenceDate";
+// // import CryptoJS from "crypto-js";
+// const Editproject = () => {
+//   const isNonMobile = useMediaQuery("(min-width:600px)");
+//   const navigate = useNavigate();
+//   let params = useParams();
+//   const dispatch = useDispatch();
+//   const theme = useTheme();
+//   var recID = params.id;
+//   var mode = params.Mode;
+//   // var accessID = params.accessID;
+//   var accessID = params.accessID;
+
+//   const data = useSelector((state) => state.formApi.Data) || {};
+//   const Department =
+//     useSelector((state) => state.formApi.Department.Department) || [];
+//   console.log(Department, "---Department in Autocomplete");
+//   // const departmentEmp = useSelector((state) => state.formApi.Department.Department.Employee) || [];
+
+//   const Status = useSelector((state) => state.formApi.Status);
+//   const Msg = useSelector((state) => state.formApi.msg);
+//   const isLoading = useSelector((state) => state.formApi.postLoading);
+//   const getLoading = useSelector((state) => state.formApi.getLoading);
+//   const listViewurl = useSelector((state) => state.globalurl.listViewurl);
+
+//   const YearFlag = sessionStorage.getItem("YearFlag");
+//   const Year = sessionStorage.getItem("year");
+//   const Finyear = sessionStorage.getItem("YearRecorid");
+//   const CompanyID = sessionStorage.getItem("compID");
+//   const CompanyAutoCode = sessionStorage.getItem("CompanyAutoCode");
+//   const { toggleSidebar, broken, rtl } = useProSidebar();
+//   const [employee, setEmployee] = useState("");
+//   console.log(employee, "employeelookup");
+//   const location = useLocation();
+//   const [errorMsgData, setErrorMsgData] = useState(null);
+//   const [validationSchema, setValidationSchema] = useState(null);
+//   const [validationSchema2, setValidationSchema2] = useState(null);
+//   const [sectionsOpen, setSectionsOpen] = useState(true);
+//   let secondaryCurrentPage = parseInt(
+//     sessionStorage.getItem("secondaryCurrentPage"),
+//   );
+//   const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+//   console.log(SubscriptionCode, "--SubscriptionCode");
+
+//   const lastThree = SubscriptionCode?.slice(-3) || "";
+//   const Subscriptionlastthree = ["001", "002", "003", "004"].includes(lastThree)
+//     ? lastThree
+//     : "";
+//   console.log(SubscriptionCode, Subscriptionlastthree, "SubscriptionCode");
+//   const is003Subscription = SubscriptionCode.endsWith("003");
+//   const sliceSubscriptionCode = SubscriptionCode.slice(-3);
+//   const [show, setScreen] = React.useState("0");
+//   const [funMode, setFunMode] = useState("A");
+//   const [laomode, setLaoMode] = useState("A");
+//   const colors = tokens(theme.palette.mode);
+//   const [page, setPage] = React.useState(secondaryCurrentPage);
+//   const [pageSize, setPageSize] = useState(7);
+//   const [rowCount, setRowCount] = useState(0);
+//   const [rowLoading, setRowLoading] = useState(false);
+//   const [deletedRows, setDeletedRows] = useState([]);
+//   const [editedRows, setEditedRows] = useState([]);
+//   const [passrecid, setPassrecid] = useState(null);
+//   const [detailrecid, setDetailrecid] = useState(null);
+//   const explorelistViewData = useSelector(
+//     (state) => state.exploreApi.explorerowData,
+//   );
+//   const explorelistViewcolumn = useSelector(
+//     (state) => state.exploreApi.explorecolumnData,
+//   );
+//   const exploreLoading = useSelector((state) => state.exploreApi.loading);
+//   const [rows, setRows] = useState([]);
+//   const rowData = location.state || {};
+
+//   console.log(rowData, "--rowData statehii");
+//   // var screenName1 = params.screenName;
+//   var screenName = rowData.name;
+
+//   //STUDENT-TEACHER MAPPING
+
+//   const [teachrows, setTeachrows] = useState([]);
+//   const [rowModesModelteach, setRowModesModelteach] = React.useState({});
+
+//   const isRowEditing = Object.values(rowModesModelteach).some(
+//     (row) => row.mode === GridRowModes.Edit,
+//   );
+//   const validateRowTT = (row) => {
+//     if (!row.Department) {
+//       return "Please Select the Subject";
+//     }
+//     if (!row.Teacher) {
+//       return "Please Select the Teacher";
+//     }
+//     return null;
+//   };
+
+//   const processRowUpdateTeach = async (newRow, oldRow) => {
+//     console.log(newRow, InitialValue, "--inside process");
+//     const currentFormikValues = formikRef.current.values;
+
+//     console.log(currentFormikValues, "currentFormikValues");
+
+//     const error = validateRowTT(newRow);
+
+//     if (error) throw new Error(error);
+
+//     const isNew = isNaN(Number(newRow.RecordID));
+
+//     const payload = {
+//       ProjectTeamRecordID: isNew ? -1 : Number(newRow.RecordID),
+//       EmpID: newRow.Teacher?.RecordID || 0,
+//       DeptID: newRow.Department?.RecordID || 0,
+//     };
+//     try {
+//       // const HeaderID = await Fnsave(payload, isNew);
+//       const HeaderID = await FnsaveTech(
+//         currentFormikValues, // values (header form data)
+//         false, // del
+//         payload, // payload
+//         isNew, // isNew
+//       );
+//       const updatedRow = {
+//         ...newRow,
+//         id: HeaderID,
+//         RecordID: HeaderID,
+//         isNew: false,
+//       };
+
+//       setTeachrows((prevRows) =>
+//         prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
+//       );
+
+//       return updatedRow;
+//     } catch (err) {
+//       console.error("Row save failed:", err);
+//       throw err;
+//     }
+//   };
+//   //    const processRowUpdateTeach = async (newRow, oldRow) => {
+//   //      console.log(rows, "--inside proceeess");
+//   //     const error = validateRowTT(newRow);
+//   //     if (error) throw new Error(error);
+
+//   //     const isNew = isNaN(Number(newRow.RecordID));
+
+//   //     const payload = {
+//   //       ProjectTeamRecordID: isNew ? -1 : Number(newRow.RecordID),
+//   //       // ProjectID: newRow.Slots?.RecordID || 0,
+//   //       EmpID: newRow.Teacher?.RecordID || 0,
+//   //       DeptID: newRow.Department?.RecordID || 0,
+//   //      };
+//   //      console.log(payload, "--passing paYload for fnSave");
+
+//   // // return;
+
+//   //     try {
+//   //       // ✅ get new ID from API
+//   //       const HeaderID = await Fnsave(payload, isNew);
+
+//   //       const updatedRow = {
+//   //         ...newRow,
+//   //         id: HeaderID,
+//   //         RecordID: HeaderID,
+//   //         isNew: false,
+//   //       };
+
+//   //       setTeachrows((prevRows) =>
+//   //         prevRows.map((row) =>
+//   //           row.id === newRow.id ? updatedRow : row
+//   //         )
+//   //       );
+
+//   //       return updatedRow;
+//   //     } catch (err) {
+//   //       console.error("Row save failed:", err);
+//   //       throw err;
+//   //     }
+//   //   };
+
+//   const handleRowEditStopTeach = (params, event) => {
+//     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+//       event.defaultMuiPrevented = true;
+//     }
+//   };
+//   const handleEditClickTeach = (RecordID) => () => {
+//     setRowModesModelteach({
+//       ...rowModesModelteach,
+//       [RecordID]: { mode: GridRowModes.Edit },
+//     });
+//   };
+
+//   const handleSaveClickTeach = (RecordID) => () => {
+//     setRowModesModelteach({
+//       ...rowModesModelteach,
+//       [RecordID]: { mode: GridRowModes.View },
+//     });
+//   };
+//   const handleDeleteClickTeach = (id) => async () => {
+//     try {
+//       const targetRow = teachrows.find((row) => row.id === id);
+//       console.log(targetRow, "---targetRow find in delete");
+
+//       const RecordID = targetRow?.RecordID;
+
+//       // Remove from UI
+//       setTeachrows((prevRows) => prevRows.filter((row) => row.id !== id));
+
+//       // Only call API if it's a real (numeric) RecordID
+//       if (!RecordID || isNaN(Number(RecordID))) {
+//         toast.success("Deleted Successfully");
+//         return;
+//       }
+//       // return;
+//       const response = await dispatch(
+//         postData({
+//           accessID: "TR389",
+//           action: "harddelete",
+//           idata: {
+//             ProjectTeamRecordID: Number(RecordID),
+//           },
+//         }),
+//       );
+
+//       if (response?.payload?.Status === "Y") {
+//         toast.success(response.payload.Msg);
+//         dispatch(
+//           getFetchData_v1({ accessID: "TR389", get: "get", recID, CompanyID }),
+//         );
+//       } else {
+//         toast.error(response?.payload?.Msg || "Delete failed");
+//       }
+//     } catch (error) {
+//       console.error("Delete Error:", error);
+//       toast.error("Error occurred while deleting.");
+//     }
+//   };
+
+//   // const handleDeleteClickTeach = (RecordID) => async () => {
+//   //   console.log("Deleting ID:", RecordID, typeof RecordID);
+
+//   //   // ✅ Remove row from UI first
+//   //   setTeachrows((prevRows) =>
+//   //     prevRows.filter((row) => row.RecordID !== RecordID)
+//   //   );
+
+//   //   // ✅ Only call API if RecordID is numeric
+//   //   if (!RecordID || isNaN(Number(RecordID))) {
+//   //     // toast.success("Deleted Successfully");
+//   //     return;
+//   //   }
+
+//   //   const numericID = Number(RecordID);
+
+//   //   setDeletedRows((prev) => {
+//   //     if (prev.some((d) => d.RecordID === numericID)) return prev;
+//   //     return [...prev, { RecordID: numericID }];
+//   //   });
+
+//   //   // 🔥 REMOVE from editedRows
+//   //   setEditedRows((prev) =>
+//   //     prev.filter((row) => row.RecordID !== numericID)
+//   //   );
+
+//   // };
+
+//   const handleCancelClickTeach = (RecordID) => () => {
+//     setRowModesModelteach({
+//       ...rowModesModelteach,
+//       [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
+//     });
+
+//     const editedRow = teachrows.find((row) => row.RecordID === RecordID);
+//     if (editedRow.isNew) {
+//       setTeachrows(teachrows.filter((row) => row.RecordID !== RecordID));
+//     }
+//   };
+//   const [subjectid, setSubjectid] = useState(null);
+
+//   function EditdeptAutocompleteCell(props) {
+//     const { id, value, field, api, row } = props;
+
+//     const handleChange = async (newValue) => {
+//       console.log(
+//         "🚀 ~ Department handleChange ~ Department newValue:",
+//         newValue,
+//       );
+//       if (!newValue) return;
+
+//       setDeptlookup(newValue);
+//       setSubjectid(newValue.RecordID);
+
+//       await api.setEditCellValue({
+//         id,
+//         field: "Department",
+//         value: newValue,
+//       });
+
+//       api.stopCellEditMode({ id, field });
+//     };
+//     const [deptlookup, setDeptlookup] = useState(
+//       row.Department ? row.Department : null,
+//     );
+//     return (
+//       <SprintEmpAutocomplete1
+//         name="Department"
+//         label="Department"
+//         id="Department"
+//         value={deptlookup}
+//         onChange={handleChange}
+//         url={`${listViewurl}?data={"Query":{"AccessID":"2187","ScreenName":"Department","Filter":"CompanyID='${CompanyID}'","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+//       />
+//     );
+//   }
+
+//   function EditTeacherAutocomplete(props) {
+//     const { id, value, field, api, row } = props;
+
+//     const handleChange = async (newValue) => {
+//       console.log("🚀 ~ Teacher handleChange ~ Teacher newValue:", newValue);
+//       if (!newValue) return;
+
+//       setTeachlookup(newValue);
+//       await api.setEditCellValue({
+//         id,
+//         field: "Teacher",
+//         value: newValue,
+//       });
+
+//       api.stopCellEditMode({ id, field });
+//     };
+//     const [Teachlookup, setTeachlookup] = useState(
+//       row.Teacher ? row.Teacher : null,
+//     );
+//     return (
+//       <SprintEmpAutocomplete1
+//         name="Teacher"
+//         label="Teacher"
+//         id="Teacher"
+//         value={Teachlookup}
+//         onChange={handleChange}
+//         // url={`${listViewurl}?data={"Query":{"AccessID":"2167","ScreenName":"Teacher","Filter":"CompanyID='${compID}' AND ClassificationID IN(${classids})","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+//         url={`${listViewurl}?data={"Query":{"AccessID":"2193","ScreenName":"Teacher","Filter":"CompanyID='${CompanyID}' AND DepartmentID=${subjectid}","Any":"","VerticalLicense":"${is003Subscription ? sliceSubscriptionCode : ""}"}}`}
+//       // sx={{
+//       //         height: "100%",
+//       //         "& .MuiOutlinedInput-root": {
+//       //           height: "100%",
+//       //         },
+//       //       }}
+//       />
+//     );
+//   }
+//   //Show== "2" for file type filter
+//   const FILE_TYPE_EXTENSIONS = {
+//     pdf: ["pdf"],
+//     word: ["doc", "docx"],
+//     excel: ["xls", "xlsx", "csv"],
+//     image: ["jpg", "jpeg", "png", "gif", "bmp", "webp", "jfif", "svg"],
+//     video: ["mp4", "mov", "avi", "mkv", "webm"],
+//   };
+
+//   function getFileExtension(filename) {
+//     // Strip any querystring/hash a stored URL might carry, then grab the
+//     // LAST segment after a dot (handles filenames with multiple dots,
+//     // e.g. "20260917.100301_Planning.jfif").
+//     const clean = String(filename).split(/[?#]/)[0].trim();
+//     const parts = clean.split(".");
+//     if (parts.length < 2) return null; // no extension at all
+//     return parts.pop().toLowerCase();
+//   }
+
+//   function rowMatchesFileType(row, filterType) {
+//     if (filterType === "all") return true;
+
+//     const rawAttachments = row.Attachments ?? "";
+//     const attachments = String(rawAttachments)
+//       .split(",")
+//       .map((f) => f.trim())
+//       .filter(Boolean);
+
+//     const allowedExts = FILE_TYPE_EXTENSIONS[filterType] || [];
+
+//     const matched = attachments.some((filename) => {
+//       const ext = getFileExtension(filename);
+//       return ext && allowedExts.includes(ext);
+//     });
+
+//     // TEMP DEBUG — remove once confirmed working.
+//     console.log(
+//       `[fileFilter] row ${row.RecordID}: attachments=[${attachments.join(", ")}]`,
+//       `→ filter="${filterType}" allowed=[${allowedExts.join(",")}] → match=${matched}`,
+//     );
+
+//     return matched;
+//   }
+//   const FILE_TYPE_LABELS = {
+//     all: "All",
+//     pdf: "PDF",
+//     word: "Word",
+//     excel: "Excel",
+//     image: "Image",
+//     video: "Video",
+//   };
+
+//   const [fileTypeFilter, setFileTypeFilter] = useState("all");
+
+//   // Reset the filter whenever the user navigates away from the Documents tab.
+//   React.useEffect(() => {
+//     if (explorelistViewData?.length) {
+//       console.log("Sample row keys:", Object.keys(explorelistViewData[0]));
+//       console.log("Attachments value:", explorelistViewData[0].Attachments);
+//     }
+//   }, [explorelistViewData]);
+//   React.useEffect(() => {
+//     if (show != "2") setFileTypeFilter("all");
+//   }, [show]);
+
+// const filteredExploreRows = React.useMemo(() => {
+//   console.log(
+//     "[fileFilter] recompute — show:",
+//     show,
+//     "fileTypeFilter:",
+//     fileTypeFilter,
+//     "totalRows:",
+//     explorelistViewData?.length,
+//   );
+//   if (show != "2" || fileTypeFilter === "all") return explorelistViewData;
+//   //     ^^ changed !== to !=
+//   const result = explorelistViewData.filter((row) =>
+//     rowMatchesFileType(row, fileTypeFilter),
+//   );
+//   console.log("[fileFilter] result length:", result.length);
+//   return result;
+// }, [explorelistViewData, show, fileTypeFilter]);
+//   // --------------------------------------------------------
+
+//   const Teachcolumns = [
+//     {
+//       field: "Slno",
+//       headerName: "SL#",
+//       align: "right",
+//       headerAlign: "center",
+//       width: 60,
+//       sortable: false,
+//       filterable: false,
+//       disableColumnMenu: true,
+//       valueGetter: (params) => {
+//         const index = params.api.getRowIndexRelativeToVisibleRows(params.id);
+
+//         const totalVisibleRows = params.api.getAllRowIds().length;
+//         const totalAllRows = params.api.getRowsCount();
+
+//         if (totalVisibleRows < totalAllRows) {
+//           return index + 1;
+//         } else {
+//           return page * pageSize + index + 1;
+//         }
+//       },
+//     },
+//     {
+//       headerName: "RecordID",
+//       field: "RecordID",
+//       width: 100,
+//       align: "left",
+//       headerAlign: "center",
+//       hide: true,
+//     },
+//     {
+//       headerName: "ProjectTeamRecordID",
+//       field: "ProjectTeamsID",
+//       width: 100,
+//       align: "left",
+//       headerAlign: "center",
+//       hide: true,
+//     },
+//     {
+//       field: "Department",
+//       headerName: (
+//         <span>
+//           Subjects <span style={{ color: "red" }}>*</span>
+//         </span>
+//       ),
+//       headerAlign: "center",
+//       width: 230,
+//       hide: false,
+//       editable: true,
+//       sortable: false,
+//       renderCell: (params) => {
+//         return params.value?.Name || ""; // show only the name
+//       },
+//       renderEditCell: (params) => {
+//         return <EditdeptAutocompleteCell {...params} />;
+//       },
+//     },
+//     {
+//       field: "Teacher",
+//       headerName: (
+//         <span>
+//           Teacher <span style={{ color: "red" }}>*</span>
+//         </span>
+//       ),
+
+//       headerAlign: "center",
+//       width: 620,
+//       hide: false,
+//       editable: true,
+//       sortable: false,
+//       // renderCell: (params) => {
+//       //   return params.value?.Name || ""; // show only the name
+//       // },
+//       renderCell: (params) => (
+//         <div
+//           style={{
+//             height: "100%",
+//             maxHeight: "38px", // same as row height
+//             overflowY: "auto",
+//             overflowX: "hidden",
+//             width: "100%",
+//             whiteSpace: "normal",
+//             wordBreak: "break-word",
+//             lineHeight: "18px",
+//             // textAlign: "center",
+//             paddingTop: "5px",
+//           }}
+//         >
+//           {params.value?.Name || ""}
+//         </div>
+//       ),
+//       renderEditCell: (params) => {
+//         return <EditTeacherAutocomplete {...params} />;
+//       },
+//     },
+
+//     {
+//       field: "actions",
+//       type: "actions",
+//       headerName: "Actions",
+//       width: 165,
+//       cellClassName: "actions",
+//       getActions: ({ id }) => {
+//         const isInEditMode = rowModesModelteach[id]?.mode === GridRowModes.Edit;
+
+//         if (isInEditMode) {
+//           return [
+//             <GridActionsCellItem
+//               icon={<SaveIcon />}
+//               label="Save"
+//               material={{
+//                 sx: {
+//                   color: "primary.main",
+//                 },
+//               }}
+//               onClick={handleSaveClickTeach(id)}
+//             />,
+//             <GridActionsCellItem
+//               icon={<CancelIcon />}
+//               label="Cancel"
+//               className="textPrimary"
+//               onClick={handleCancelClickTeach(id)}
+//               color="inherit"
+//             />,
+//           ];
+//         }
+
+//         return [
+//           // <GridActionsCellItem
+//           //   icon={<AddIcon style={{ color: "#00563B" }} />}
+//           //   label="Add"
+//           //   // onClick={() => handleInsertInrow(id)}
+//           //   color="inherit"
+//           // />,
+//           <GridActionsCellItem
+//             icon={<EditIcon />}
+//             label="Edit"
+//             className="textPrimary"
+//             onClick={handleEditClickTeach(id)}
+//             color="primary"
+//           />,
+//           <GridActionsCellItem
+//             icon={<DeleteIcon />}
+//             label="Delete"
+//             onClick={handleDeleteClickTeach(id)}
+//             color="error"
+//           />,
+//         ];
+//       },
+//     },
+//   ];
+//   const handleRowModesModelChangeTeach = (newRowModesModel) => {
+//     setRowModesModelteach(newRowModesModel);
+//   };
+
+//   const isHeaderDisabled = teachrows.length > 0;
+
+//   // State for selected subject/department
+//   // const [selectedSubject, setSelectedSubject] = useState(null);
+//   // const [staffList, setStaffList] = useState([]);
+
+//   // When subject changes, update staffList from Department data
+//   // const handleSubjectChange = (newValue) => {
+//   //   setSelectedSubject(newValue);
+
+//   //   if (newValue) {
+//   //     // Find the selected department from Department array
+//   //     const selectedDept = Department.find(
+//   //       (dept) => dept.DeptrecID === newValue.DeptrecID
+//   //     );
+
+//   //     // Map employees with checked state
+//   //     const employees = selectedDept?.Employee?.map((emp) => ({
+//   //       ...emp,
+//   //       checked: false,
+//   //     })) || [];
+
+//   //     setStaffList(employees);
+//   //   } else {
+//   //     setStaffList([]);
+//   //   }
+//   // };
+
+//   useEffect(() => {
+//     if (!explorelistViewData) return;
+
+//     // const rowLoading = exploreLoading ? exploreLoading : false;
+
+//     const formattedRows = explorelistViewData.map((row) => ({
+//       ...row,
+//       OwnedBy: row.OwnedByRecordID
+//         ? {
+//           RecordID: row.OwnedByRecordID,
+//           Code: row.OwnedByCode,
+//           Name: row.OwnedByName,
+//         }
+//         : null,
+//     }));
+
+//     setRows(formattedRows);
+
+//     // 🔧 reset tracking states
+//     setDeletedRows([]);
+//     setEditedRows([]);
+//     // setRowLoading(rowLoading);
+//   }, [explorelistViewData]);
+
+//   useEffect(() => {
+//     fetch(process.env.PUBLIC_URL + "/validationcms.json")
+//       .then((res) => {
+//         if (!res.ok) throw new Error("Failed to fetch validationcms.json");
+//         return res.json();
+//       })
+//       .then((data) => {
+//         setErrorMsgData(data);
+
+//         let schemaFields = {
+//           name: Yup.string().trim().required(data.Project.name),
+//           // TentativeStartDate: Yup.string().required(data.Project.TentativeStartDate),
+//           // TentativeEndDate: Yup.string().required(data.Project.TentativeEndDate),
+//           //budget: Yup.string().required(data.Project.budget),
+//           incharge: Yup.object().required(data.Project.incharge).nullable(),
+//           // projectOwner: Yup.object().required(data.Project.projectOwner).nullable(),
+//         };
+
+//         if (CompanyAutoCode === "N") {
+//           schemaFields.code = Yup.string().required(data.Project.code);
+//         }
+
+//         if (Subscriptionlastthree === "003") {
+//           schemaFields.name = Yup.string()
+//             .trim()
+//             .required(data.Project.StandardActivities);
+//           schemaFields.incharge = Yup.object()
+//             .required(data.Project.ClassTeacher)
+//             .nullable();
+//         }
+//         if (Subscriptionlastthree !== "003") {
+//           schemaFields.TentativeStartDate = Yup.string().required(
+//             data.Project.TentativeStartDate,
+//           );
+//           schemaFields.TentativeEndDate = Yup.string().required(
+//             data.Project.TentativeEndDate,
+//           );
+//         }
+
+//         const schema = Yup.object().shape(schemaFields);
+//         let schemaFields2 = {
+//           Name: Yup.string().trim().required(data.ProjectUnit.Name),
+//           OwnedBy: Yup.object().required(data.ProjectUnit.OwnedBy).nullable(),
+//         };
+//         if (CompanyAutoCode === "N") {
+//           schemaFields2.Code = Yup.string().required(data.ProjectUnit.Code);
+//         }
+//         const schema2 = Yup.object().shape(schemaFields2);
+
+//         setValidationSchema(schema);
+//         setValidationSchema2(schema2);
+//       })
+//       .catch((err) => console.error("Error loading validationcms.json:", err));
+//   }, [CompanyAutoCode]);
+
+//   // useEffect(() => {
+//   //   dispatch(getFetchData({ accessID, get: "get", recID }));
+//   // }, [location.key]);
+//   useEffect(() => {
+//     if (mode !== "A" && data?.Details) {
+//       const formattedRows = data.Details.map((item) => ({
+//         id: Number(item.ProjectTeamsID),
+//         RecordID: Number(item.ProjectTeamsID),
+//         Department: { RecordID: item.DepartmentID, Name: item.DeptName },
+//         Teacher: { RecordID: item.EmployeeID, Name: item.EmpName },
+
+//         // Comments: item?.Comments,
+//       }));
+
+//       // setTeachrows([]);              // clear old buggy state
+//       // setTimeout(() => {
+//       setTeachrows(formattedRows); // set fresh
+//       setPage(0);
+//       // }, 0);
+//     }
+//   }, [data]);
+
+//   useEffect(() => {
+//     if (show == "0") {
+//       if (recID && mode === "E") {
+//         // dispatch(getFetchData({ accessID: "TR275V2", get: "get", recID }));
+//         {
+//           Subscriptionlastthree === "003"
+//             ? dispatch(
+//               getFetchData_v1({
+//                 accessID: "TR389",
+//                 get: "get",
+//                 recID,
+//                 CompanyID,
+//               }),
+//             )
+//             : dispatch(getFetchData({ accessID, get: "get", recID }));
+//         }
+//       } else {
+//         {
+//           Subscriptionlastthree === "003"
+//             ? dispatch(
+//               getFetchData_v1({
+//                 accessID: "TR389",
+//                 get: "get",
+//                 recID,
+//                 CompanyID,
+//               }),
+//             )
+//             : dispatch(getFetchData({ accessID, get: "get", recID }));
+//         }
+//         // dispatch(getFetchData({ accessID, get: "get", recID }));
+//       }
+//     }
+//   }, [show]);
+//   useEffect(() => {
+//     if (Subscriptionlastthree && accessID) {
+//       dispatch(
+//         CustomisedCaptionGet({
+//           Vertical: Subscriptionlastthree,
+//           AccessID: accessID,
+//         }),
+//       );
+//     }
+//   }, [Subscriptionlastthree, accessID, dispatch]);
+
+//   // *************** INITIALVALUE  *************** //
+//   // const validationSchema = Yup.object().shape({
+//   //   incharge: Yup.object()
+//   //     .nullable()
+//   //     .required("Owner is required"),
+//   // });
+//   //================units section ==========================
+//   const [rowModesModel, setRowModesModel] = React.useState({});
+//   const handleRowEditStop = (params, event) => {
+//     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+//       event.defaultMuiPrevented = true;
+//     }
+//   };
+//   const handleEditClick = (RecordID) => () => {
+//     setRowModesModel({
+//       ...rowModesModel,
+//       [RecordID]: { mode: GridRowModes.Edit },
+//     });
+//   };
+
+//   const handleSaveClick = (RecordID) => () => {
+//     setRowModesModel({
+//       ...rowModesModel,
+//       [RecordID]: { mode: GridRowModes.View },
+//     });
+//   };
+//   const handleDeleteClick = (RecordID) => async () => {
+//     console.log("Deleting ID:", RecordID, typeof RecordID);
+
+//     // ✅ Remove row from UI first
+//     setRows((prevRows) => prevRows.filter((row) => row.RecordID !== RecordID));
+
+//     // ✅ Only call API if RecordID is numeric
+//     if (!RecordID || isNaN(Number(RecordID))) {
+//       // toast.success("Deleted Successfully");
+//       return;
+//     }
+
+//     const numericID = Number(RecordID);
+
+//     setDeletedRows((prev) => {
+//       if (prev.some((d) => d.RecordID === numericID)) return prev;
+//       return [...prev, { RecordID: numericID }];
+//     });
+
+//     // 🔥 REMOVE from editedRows
+//     setEditedRows((prev) => prev.filter((row) => row.RecordID !== numericID));
+//   };
+
+//   // const handleCancelClick = (RecordID) => () => {
+//   //   setRowModesModel({
+//   //     ...rowModesModel,
+//   //     [RecordID]: { mode: GridRowModes.View, ignoreModifications: true },
+//   //   });
+
+//   //   const editedRow = rows.find((row) => row.RecordID === RecordID);
+//   //   if (editedRow.isNew) {
+//   //     setRows(rows.filter((row) => row.RecordID !== RecordID));
+//   //   }
+//   // };
+//   const handleCancelClick = (RecordID) => () => {
+//     setRowModesModel((prev) => ({
+//       ...prev,
+//       [RecordID]: {
+//         mode: GridRowModes.View,
+//       },
+//     }));
+//   };
+//   const UnitRowSlot = (row) => {
+//     if (!row.Name) {
+//       return "Name is required";
+//     }
+//     // if (!row.OwnedBy || !row.OwnedBy.Name) {
+//     //   return "Owned By is required";
+//     // }
+
+//     return null;
+//   };
+//   // THIS RUNS WHENEVER A ROW IS EDITED AND SAVED
+//   // const processRowUpdate = (newRow, oldRow) => {
+//   //   //validation
+//   //   const error = UnitRowSlot(newRow);
+//   //   if (error) {
+//   //     throw new Error(error);
+//   //   }
+
+//   //   const isNew = oldRow?.RecordID && isNaN(Number(oldRow.RecordID));
+//   //   const updatedRow = { ...newRow, isNew: isNew };
+
+//   //   setRows((prev) => {
+//   //     const index = prev.findIndex((row) => row.RecordID === newRow.RecordID);
+//   //     const updated = [...prev];
+//   //     updated[index] = updatedRow;
+//   //     return updated;
+//   //   });
+
+//   //   // track edited rows
+//   //   if (!isNew) {
+//   //     setEditedRows((prev) => {
+//   //       const exists = prev.find((r) => r.RecordID === newRow.RecordID);
+
+//   //       if (exists) {
+//   //         return prev.map((r) =>
+//   //           r.RecordID === newRow.RecordID ? updatedRow : r,
+//   //         );
+//   //       }
+
+//   //       return [...prev, updatedRow];
+//   //     });
+//   //   }
+
+//   //   // remove from deletedRows if it exists
+//   //   setDeletedRows((prev) =>
+//   //     prev.filter((d) => d.RecordID !== Number(newRow.RecordID)),
+//   //   );
+
+//   //   return updatedRow;
+//   // };
+//   const processRowUpdate = (newRow, oldRow) => {
+//     const updatedRow = {
+//       ...newRow,
+//       OwnedBy: newRow.OwnedBy || null,
+//     };
+
+//     // Update actual rows
+//     setRows((prevRows) =>
+//       prevRows.map((row) =>
+//         String(row.RecordID) === String(updatedRow.RecordID)
+//           ? updatedRow
+//           : row
+//       )
+//     );
+
+//     // Update editedRows
+//     setEditedRows((prev) => {
+//       const exists = prev.some(
+//         (row) => String(row.RecordID) === String(updatedRow.RecordID)
+//       );
+
+//       if (exists) {
+//         return prev.map((row) =>
+//           String(row.RecordID) === String(updatedRow.RecordID)
+//             ? updatedRow
+//             : row
+//         );
+//       }
+
+//       return [...prev, updatedRow];
+//     });
+
+//     return updatedRow;
+//   };
+//   const handleRowModesModelChange = (newRowModesModel) => {
+//     setRowModesModel(newRowModesModel);
+//   };
+//   const screenChange = (event) => {
+//     setScreen(event.target.value);
+//     if (event.target.value == "0") {
+//       if (recID && mode === "E") {
+//         dispatch(getFetchData({ accessID, get: "get", recID }));
+//       } else {
+//         dispatch(getFetchData({ accessID, get: "", recID }));
+//       }
+//     }
+//     if (event.target.value == "1") {
+//       dispatch(
+//         fetchExplorelitview(
+//           "TR363",
+//           Subscriptionlastthree,
+//           "Project Unit",
+//           `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+//           "",
+//         ),
+//       );
+//       selectCellRowData({ rowData: {}, mode: "A", field: "" });
+//     }
+//     if (event.target.value == "3") {
+//       dispatch(
+//         fetchExplorelitview(
+//           "TR363",
+//           Subscriptionlastthree,
+//           "Project Unit",
+//           `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+//           "",
+//         ),
+//       );
+//     }
+//     if (event.target.value == "2") {
+//       dispatch(
+//         fetchExplorelitview(
+//           "TR364",
+//           Subscriptionlastthree,
+//           "Project Documents",
+//           // `AND DOC_CMRECID = '${CompanyID}' AND (FIND_IN_SET ('${recID}', DOC_PRECID))`,
+//           // `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+//           `CompanyID='${CompanyID}' AND (FIND_IN_SET('${recID}', DOC_PRECID))`,
+//           "",
+//         ),
+//       );
+//     }
+//   };
+//   //   const subjectOptions = Department.map((dept) => ({
+//   //   RecordID: dept.DeptrecID,
+//   //   Code: dept.DeptCode,
+//   //   Name: dept.DeptName,
+//   //   Employee: dept.Employee,
+//   // }));
+
+//   const [UnitData, SetUnitData] = useState({
+//     recordID: "",
+//     description: "",
+//     OwnedBy: null,
+//     Comments: "",
+//     sortOrder: 0,
+//     disable: false,
+//     Code: "",
+//     Name: "",
+//   });
+
+//   const is003 = SubscriptionCode?.endsWith("003");
+//   const formikRef = useRef();
+//   const InitialValue = {
+//     code: data.Code,
+//     name: data.Name,
+//     sortorder: data.SortOrder,
+//     disable: data.Disable === "Y" ? true : false,
+//     incharge:
+//       data.ProjectIncharge && data.ProjectIncharge !== "0"
+//         ? { RecordID: data.ProjectIncharge, Name: data.ProjectInchargeName }
+//         : null,
+//     ServiceMaintenance: data.ServiceMaintenanceProject === "Y" ? true : false,
+//     //ByProduct: data.ByProduct === "Y" ? true : false,
+//     //ByProduct: false,
+
+//     ByProduct: is003 ? false : data.ByProduct === "Y",
+//     Onsiteactivities: is003 ? false : data.EnableOnsiteactivities === "Y",
+//     //Onsiteactivities: data.EnableOnsiteactivities === "Y" ? true : false,
+//     Routine: data.RoutineTasks === "Y" ? true : false,
+//     //Routine:  false,
+//     CurrentStatus: data.CurrentStatus,
+//     delete: data.DeleteFlag === "Y" ? true : false,
+//     // budget: data.Budget ?? 0.00,
+//     // scheduled: data.ScheduledCost ?? 0.00,
+//     // actual: data.ActualCost ?? 0.00,
+//     // price: data.Price ?? 0.00,
+//     budget: data.Budget === "" ? "0.00" : data.Budget,
+//     scheduled: data.ScheduledCost === "" ? "0.00" : data.ScheduledCost,
+//     Planned: data.PlannedCost === "" ? "0.00" : data.PlannedCost,
+//     actual: data.ActualCost === "" ? "0.00" : data.ActualCost,
+//     price: data.Price === "" ? "0.00" : data.Price,
+//     OtherExpenses: data.OtherExpenses === "" ? "0.00" : data.OtherExpenses,
+//     projectOwner:
+//       data.ProjectOwnerID && data.ProjectOwnerID !== "0"
+//         ? {
+//           RecordID: data.ProjectOwnerID,
+//           Code: data.ProjectOwnerCode,
+//           Name: data.ProjectOwnerName,
+//         }
+//         : null,
+//     // OtherExpenses: data.OtherExpenses ?? 0.00,
+//     longitude: data.Longitude || 0,
+//     latitude: data.Latitude || 0,
+//     radius: data.Radius || 0,
+//     TentativeEndDate: data.TentativeEndDate || "",
+//     TentativeStartDate: data.TentativeStartDate || "",
+//   };
+
+//   const Fnsave = async (values, del) => {
+//     // let action = mode === "A" ? "insert" : "update";
+//     let action =
+//       mode === "A" && !del
+//         ? "insert"
+//         : mode === "E" && del
+//           ? "softdelete"
+//           : "update";
+//     var isCheck = "N";
+//     if (values.disable == true) {
+//       isCheck = "Y";
+//     }
+
+//     const idata = {
+//       RecordID: recID,
+//       Code: values.code,
+//       Name: values.name,
+//       ProjectIncharge: values.incharge.RecordID || 0,
+//       ProjectInchargeName: values.incharge.Name || "",
+//       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
+//       RoutineTasks: values.Routine === true ? "Y" : "N",
+//       // RoutineTasks: "N",
+//       SortOrder: values.sortorder || 0,
+//       CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
+//       Disable: isCheck,
+//       DeleteFlag: values.delete == true ? "Y" : "N",
+//       //  ByProduct: values.ByProduct == true ? "Y" : "N",
+//       //ByProduct: "N",
+//       ByProduct: is003 ? "N" : values.ByProduct ? "Y" : "N",
+//       EnableOnsiteactivities: is003 ? "N" : values.Onsiteactivities ? "Y" : "N",
+//       //EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
+//       ActualCost: values.actual || 0,
+//       Price: values.price || 0,
+//       Budget: values.budget || 0,
+//       ScheduledCost: values.scheduled || 0,
+//       Planned: values.Planned || 0,
+//       Finyear,
+//       CompanyID,
+//       ProjectOwnerID: values.projectOwner?.RecordID || 0,
+//       Longitude: values.longitude || 0,
+//       Latitude: values.latitude || 0,
+//       Radius: values.radius || 0,
+//       AcademicYearID: params.filtertype || 0,
+//       TentativeStartDate: values.TentativeStartDate || "",
+//       TentativeEndDate: values.TentativeEndDate || "",
+//       SlotGroupID: 0,
+//     };
+
+//     const response = await dispatch(postData({ accessID, action, idata }));
+//     if (response.payload.Status == "Y") {
+//       toast.success(response.payload.Msg);
+//       //navigate("/Apps/TR133/Project");
+//       navigate(-1);
+//     } else {
+//       toast.error(response.payload.Msg);
+//     }
+//   };
+
+//   const FnsaveTech = async (values, del, payload, isNew) => {
+//     console.log(values, "--values find");
+
+//     // let action = mode === "A" ? "insert" : "update";
+//     // let action =
+//     //   mode === "A" && !del
+//     //     ? "insert"
+//     //     : mode === "E" && del
+//     //       ? "softdelete"
+//     //       : "update";
+//     const action = isNew ? "insert" : "update";
+
+//     var isCheck = "N";
+//     if (values.disable == true) {
+//       isCheck = "Y";
+//     }
+//     console.log(passrecid, "--find inside fnsave");
+
+//     const idata = {
+//       RecordID: passrecid ? passrecid : recID,
+//       Code: values.code,
+//       Name: values.name,
+//       ProjectIncharge: values.incharge?.RecordID || 0,
+//       ProjectInchargeName: values.incharge?.Name || "",
+//       ServiceMaintenanceProject: values.ServiceMaintenance === true ? "Y" : "N",
+//       RoutineTasks: values.Routine === true ? "Y" : "N",
+//       // RoutineTasks: "N",
+//       SortOrder: values.sortorder || 0,
+//       // CurrentStatus: mode == "A" ? "CU" : values.CurrentStatus,
+//       CurrentStatus: "",
+//       Disable: isCheck,
+//       DeleteFlag: values.delete == true ? "Y" : "N",
+//       //  ByProduct: values.ByProduct == true ? "Y" : "N",
+//       //ByProduct: "N",
+//       ByProduct: is003 ? "N" : values.ByProduct ? "Y" : "N",
+//       EnableOnsiteactivities: is003 ? "N" : values.Onsiteactivities ? "Y" : "N",
+//       //EnableOnsiteactivities: values.Onsiteactivities == true ? "Y" : "N",
+//       ActualCost: values.actual || 0,
+//       Price: values.price || 0,
+//       Budget: values.budget || 0,
+//       ScheduledCost: values.scheduled || 0,
+//       Planned: values.Planned || 0,
+//       Finyear,
+//       CompanyID,
+//       ProjectOwnerID: values.projectOwner?.RecordID || 0,
+//       Longitude: values.longitude || 0,
+//       Latitude: values.latitude || 0,
+//       Radius: values.radius || 0,
+//       AcademicYearID: params.filtertype || 0,
+//       // TentativeStartDate: values.TentativeStartDate || "",
+//       // TentativeEndDate: values.TentativeEndDate || ""
+//       Detail: [
+//         {
+//           DeptID: payload.DeptID?.toString() || "0",
+//           // SlotID: payload.SlotID?.toString() || "0",
+//           EmpID: payload.EmpID?.toString() || "0",
+//           // Day: payload.Day || "",
+//           // Comments: payload.Comments || "",
+//           // ProjectTeamRecordID: isNew ? -1 : Number(payload.ProjectTeamRecordID),
+//           ProjectTeamRecordID: isNew ? -1 : Number(payload.ProjectTeamRecordID),
+//         },
+//       ],
+//     };
+
+//     console.log(idata, "--idata in Overall fnSave");
+//     // return;
+//     // const response = await dispatch(
+//     //   postData({ accessID, action, idata }));
+//     const response = await dispatch(
+//       Subscriptionlastthree === "003"
+//         ? postData({ accessID: "TR389", action, idata })
+//         : postData({ accessID, action, idata }),
+//     );
+//     if (response.payload.Status == "Y") {
+//       toast.success(response.payload.Msg);
+//       console.log(
+//         response.payload.ProjectRecordID,
+//         "--find response.payload.ProjectRecordID",
+//       );
+
+//       setPassrecid(response.payload.ProjectRecordID);
+//       setDetailrecid(response.payload.ProjectTeamID);
+//       //navigate("/Apps/TR133/Project");
+//       //  dispatch(getFetchData_v1({ accessID: "TR389", get: "get", recID,CompanyID }))
+//       // ✅ Only navigate away if this is a HEADER save (no payload = header-only save)
+//       if (!payload) {
+//         navigate(-1);
+//       }
+
+//       return response.payload.ProjectTeamID; // return the new ID for row update
+//       // navigate(-1);
+//     } else {
+//       // toast.error(response.payload.Msg);
+//       throw new Error(response.payload.Msg); // ✅ throw so processRowUpdate catches it
+//     }
+//   };
+
+//   const VISIBLE_FIELDS =
+//     show == "1"
+//       ? ["slno", "Code", "Name", "OwnedBy", "Comments", "action"]
+//       : show == "2"
+//         ? [
+//           "slno",
+//           "Code",
+//           "Documents",
+//           // "Party",
+//           // "Unit",
+//           "action",
+//         ]
+//         : [];
+
+//   function EditOwnedByAutocomplete(props) {
+//     const { id, value, field, api } = props;
+
+//     const [ownedBylookup, setOwnedBylookup] = useState(value || null);
+
+//     const handleChange = async (newValue) => {
+//       // Allow clearing Owned By
+//       setOwnedBylookup(newValue || null);
+
+//       await api.setEditCellValue({
+//         id,
+//         field: "OwnedBy",
+//         value: newValue || null,
+//       });
+
+//       api.stopCellEditMode({
+//         id,
+//         field,
+//       });
+//     };
+
+//     return (
+//       <ProjectVendor
+//         name="OwnedBy"
+//         label="Owned By"
+//         id="OwnedBy"
+//         value={ownedBylookup}
+//         onChange={handleChange}
+//         url={`${listViewurl}?data=${JSON.stringify({
+//           Query: {
+//             AccessID: "2102",
+//             ScreenName: "Customer",
+//             VerticalLicense: Subscriptionlastthree,
+//             Filter: `parentID=${CompanyID}`,
+//             Any: "",
+//           },
+//         })}`}
+//       />
+//     );
+//   }
+//   const TTColumns = [
+//     {
+//       field: "RecordID",
+//       headerName: "Record ID",
+//       width: 120,
+//       hide: true,
+//     },
+//     {
+//       field: "SLNO",
+//       headerName: "SL#",
+//       width: 50,
+//       hide: false,
+//       headerAlign: "center",
+//       align: "right",
+//       sortable: false,
+//       filterable: false,
+//       valueGetter: (params) => {
+//         return params.api.getRowIndexRelativeToVisibleRows(params.id) + 1;
+//       },
+//     },
+
+//     {
+//       headerName: "Code",
+//       field: "Code",
+//       width: 150,
+//       hide: false,
+//       editable: true,
+//       headerAlign: "center",
+//       renderCell: (params) => {
+//         // show "Auto Code" only for new rows OR empty code
+//         if (YearFlag == "true" && (!params.value || params.row.isNew)) {
+//           return "Auto Code";
+//         }
+
+//         return params.value;
+//       },
+//     },
+//     {
+//       headerName: (
+//         <span>
+//           Name <span style={{ color: "red" }}>*</span>
+//         </span>
+//       ),
+
+//       field: "Name",
+//       width: 150,
+//       hide: false,
+//       editable: true,
+//       headerAlign: "center",
+//     },
+//     {
+//       field: "OwnedBy",
+//       headerName: "Owned By",
+//       // (
+//       //   <span>
+//       //     Owned By <span style={{ color: "red" }}>*</span>
+//       //   </span>
+//       // ),
+
+//       width: 200,
+//       hide: false,
+//       editable: true,
+//       headerAlign: "center",
+//       sortable: false,
+//       renderCell: (params) => {
+//         return params.value
+//           ? `${params.value.Code || ""} || ${params.value.Name || ""}`
+//           : null;
+//       },
+//       renderEditCell: (params) => {
+//         return <EditOwnedByAutocomplete {...params} />;
+//       },
+//     },
+//     {
+//       headerName: "Comments",
+//       field: "Comments",
+//       width: "320",
+//       hide: false,
+//       editable: true,
+//       headerAlign: "center",
+//     },
+//     {
+//       field: "actions",
+//       type: "actions",
+//       headerName: "Actions",
+//       width: 100,
+//       cellClassName: "actions",
+//       getActions: ({ id }) => {
+//         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+//         if (isInEditMode) {
+//           return [
+//             <GridActionsCellItem
+//               icon={<SaveIcon />}
+//               label="Save"
+//               material={{
+//                 sx: {
+//                   color: "primary.main",
+//                 },
+//               }}
+//               onClick={handleSaveClick(id)}
+//             />,
+//             <GridActionsCellItem
+//               icon={<CancelIcon />}
+//               label="Cancel"
+//               className="textPrimary"
+//               onClick={handleCancelClick(id)}
+//               color="info"
+//             />,
+//           ];
+//         }
+
+//         return [
+//           <GridActionsCellItem
+//             icon={<EditIcon />}
+//             label="Edit"
+//             className="textPrimary"
+//             onClick={handleEditClick(id)}
+//             color="info"
+//           />,
+//           <GridActionsCellItem
+//             icon={<DeleteIcon />}
+//             label="Delete"
+//             onClick={handleDeleteClick(id)}
+//             color="error"
+//           />,
+//         ];
+//       },
+//     },
+//   ];
+//   const columns = React.useMemo(() => {
+//     let visibleColumns = explorelistViewcolumn.filter((column) =>
+//       VISIBLE_FIELDS.includes(column.field),
+//     );
+
+//     if (VISIBLE_FIELDS.includes("slno")) {
+//       const slnoColumn = {
+//         field: "slno",
+//         headerName: "SL#",
+//         width: 50,
+//         sortable: false,
+//         filterable: false,
+//         valueGetter: (params) =>
+//           page * pageSize +
+//           params.api.getRowIndexRelativeToVisibleRows(params.id) +
+//           1,
+//       };
+//       visibleColumns = [slnoColumn, ...visibleColumns];
+//     }
+
+//     return visibleColumns;
+//   }, [explorelistViewcolumn, VISIBLE_FIELDS]);
+//   const selectCellRowData = ({ rowData, mode, field, setFieldValue }) => {
+//     setFunMode(mode);
+//     setLaoMode(mode);
+
+//     if (mode == "A") {
+//       SetUnitData({
+//         recordID: "",
+//         description: "",
+//         OwnedBy: null,
+//         Comments: "",
+//         Code: "",
+//         Name: "",
+//         sortOrder: 0,
+//         disable: false,
+//       });
+//     } else {
+//       if (field == "action") {
+//         SetUnitData({
+//           recordID: rowData.RecordID,
+//           description: rowData.description,
+//           OwnedBy: rowData.OwnedByRecordID
+//             ? {
+//               RecordID: rowData.OwnedByRecordID,
+//               Code: rowData.OwnedByCode,
+//               Name: rowData.OwnedByName,
+//             }
+//             : null,
+//           sortOrder: rowData.SortOrder,
+//           Comments: rowData.Comments,
+//           disable: rowData.Disable,
+//           Code: rowData.Code,
+//           Name: rowData.Name,
+//         });
+//       }
+//     }
+//   };
+
+//   // function Employee() {
+//   //   return (
+//   //     <GridToolbarContainer
+//   //       sx={{
+//   //         display: "flex",
+//   //         flexDirection: "row",
+//   //         justifyContent: "space-between",
+//   //       }}
+//   //     >
+//   //       <Box sx={{ display: "flex", flexDirection: "row" }}>
+//   //         <Typography>
+//   //           {show == "1" ? "List of Units" : ""}
+//   //           {show == "2" ? "List of Documents" : ""}
+//   //           {show == "3" ? "List of Units" : ""}
+//   //         </Typography>
+//   //         <Typography variant="h5">{`(${rowCount})`}</Typography>
+//   //       </Box>
+
+//   //       <Box
+//   //         sx={{
+//   //           display: "flex",
+//   //           flexDirection: "row",
+//   //           justifyContent: "space-between",
+//   //         }}
+//   //       >
+//   //         <GridToolbarQuickFilter />
+//   //         {show != "2" && (
+//   //           <Tooltip title="ADD">
+//   //             <IconButton type="reset">
+//   //               <AddOutlinedIcon />
+//   //             </IconButton>
+//   //           </Tooltip>
+//   //         )}
+//   //       </Box>
+//   //     </GridToolbarContainer>
+//   //   );
+//   // }
+//   function Employee() {
+//    const displayCount = show == "2" ? filteredExploreRows.length : rowCount;
+//     return (
+//       <GridToolbarContainer
+//         sx={{
+//           display: "flex",
+//           flexDirection: "row",
+//           justifyContent: "space-between",
+//         }}
+//       >
+//         <Box sx={{ display: "flex", flexDirection: "row" }}>
+//           <Typography>
+//             {show == "1" ? "List of Units" : ""}
+//             {show == "2" ? "List of Documents" : ""}
+//             {show == "3" ? "List of Units" : ""}
+//           </Typography>
+//           <Typography variant="h5">{`(${displayCount})`}</Typography>
+//         </Box>
+
+//         <Box
+//           sx={{
+//             display: "flex",
+//             flexDirection: "row",
+//             alignItems: "center",
+//             gap: 1,
+//             justifyContent: "space-between",
+//           }}
+//         >
+//           {show == "2" && (
+//             <FormControl size="small" sx={{ minWidth: 140,marginBottom: 0.5 }}>
+//               <InputLabel id="doc-file-type-label">File Type</InputLabel>
+//               <Select
+//                 labelId="doc-file-type-label"
+//                 label="File Type"
+//                 value={fileTypeFilter}
+//                 onChange={(e) => {
+//                   console.log("[fileFilter] dropdown changed to:", e.target.value);
+//                   setFileTypeFilter(e.target.value);
+//                 }}
+//               >
+//                 {Object.entries(FILE_TYPE_LABELS).map(([key, label]) => (
+//                   <MenuItem key={key} value={key}>
+//                     {label}
+//                   </MenuItem>
+//                 ))}
+//               </Select>
+//             </FormControl>
+//           )}
+
+//           <GridToolbarQuickFilter />
+//           {show != "2" && (
+//             <Tooltip title="ADD">
+//               <IconButton type="reset">
+//                 <AddOutlinedIcon />
+//               </IconButton>
+//             </Tooltip>
+//           )}
+//         </Box>
+//       </GridToolbarContainer>
+//     );
+//   }
+//   const UnitInitialValues = {
+//     code: data.Code,
+//     description: data.Name,
+//     Code: UnitData.Code || "",
+//     Name: UnitData.Name || "",
+//     Comments: UnitData.Comments || "",
+//     OwnedBy: UnitData.OwnedBy || null,
+//     sortOrder: UnitData.sortOrder || 0,
+//     disable: UnitData.disable === "Y" ? true : false,
+//   };
+//   const DocInitialValues = {
+//     code: data.Code,
+//     description: data.Name,
+//   };
+//   const FnAttachment = async (values, resetForm, del) => {
+//     let action =
+//       laomode === "A" && !del
+//         ? "insert"
+//         : laomode === "E" && del
+//           ? "harddelete"
+//           : "update";
+
+//     console.log(values);
+
+//     const idata = {
+//       ProjectID: recID || 0,
+//       RecordID: UnitData.recordID || "-1",
+//       CompanyID,
+//       OwnedBy: values.OwnedBy ? values.OwnedBy.RecordID : 0 || null,
+//       Code: values.Code || "",
+//       Name: values.Name || "",
+//       SortOrder: values.sortOrder || 0,
+//       Comments: values.Comments || "",
+//       Disable: values.disable === true ? "Y" : "N",
+//       DeleteFlag: "N",
+//     };
+//     const response = await dispatch(
+//       explorePostData({ accessID: "TR363", action, idata }),
+//     );
+//     if (response.payload.Status == "Y") {
+//       toast.success(response.payload.Msg);
+//       dispatch(
+//         fetchExplorelitview(
+//           "TR363",
+//           Subscriptionlastthree,
+//           "Project Unit",
+//           `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+//           "",
+//         ),
+//       );
+//       resetForm();
+//       selectCellRowData({ rowData: {}, mode: "A", field: "" });
+//     } else {
+//       toast.error(response.payload.Msg);
+//     }
+//   };
+//   const fnLogOut = (props) => {
+//     //   if(Object.keys(ref.current.touched).length === 0){
+//     //     if(props === 'Logout'){
+//     //       navigate("/")}
+//     //       if(props === 'Close'){
+//     //         navigate("/Apps/TR022/Bank Master")
+//     //       }
+
+//     //       return
+//     //  }
+//     Swal.fire({
+//       title: errorMsgData.Warningmsg[props],
+//       // text:data.payload.Msg,
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonColor: "#3085d6",
+//       cancelButtonColor: "#d33",
+//       confirmButtonText: props,
+//     }).then((result) => {
+//       if (result.isConfirmed) {
+//         if (props === "Logout") {
+//           navigate("/");
+//         }
+//         if (props === "Close") {
+//           // navigate("/Apps/TR133/Project");
+//           navigate("/");
+//         }
+//       } else {
+//         return;
+//       }
+//     });
+//   };
+
+//   // const getBusinessCaption = (VerticalID, CaptionID, defaultCaption) => {
+//   //   if (VerticalID == 101) {
+//   //     var captions = [{ "CAPTIONID": "ProjectOwner", "CAPTION": "PROJECT OWNER" },
+//   //     { "CAPTIONID": "PROJECTTITLE", "CAPTION": "PROJECT TITLE" },
+//   //     { "CAPTIONID": "PROJECTCODE", "CAPTION": "PROJECT CODE" },
+//   //     { "CAPTIONID": "PROJECTDESC", "CAPTION": "PROJECT DESC" },
+//   //     ];
+
+//   //     var displaycaption = defaultCaption;
+//   //     captions.forEach((caption) => {
+//   //       if (caption.CAPTIONID == CaptionID) {
+//   //         console.log(caption.CAPTION, "--caption.CAPTION");
+//   //         displaycaption = caption.CAPTION;
+//   //       }
+//   //     });
+//   //     return displaycaption;
+
+//   //   }
+
+//   //   else {
+//   //     return defaultCaption;
+//   //   }
+
+//   // }
+//   const Customisedcaptiondata = useSelector(
+//     (state) => state.formApi.CustomisedCaptionGetData,
+//   );
+//   // Ensure it's always an array
+//   const captionArray = Array.isArray(Customisedcaptiondata)
+//     ? Customisedcaptiondata
+//     : Customisedcaptiondata?.data || [];
+//   // GRID VIEW SAVE
+//   console.log(Customisedcaptiondata, captionArray, "Customisedcaptiondata");
+//   const getBusinessCaption = (CaptionID, defaultCaption) => {
+//     const match = captionArray?.find((item) => item.CAPTIONID === CaptionID);
+
+//     return match?.CAPTION || defaultCaption;
+//   };
+//   // const getBusinessCaption = (CaptionID, defaultCaption) => {
+//   //   if (Subscriptionlastthree === "003") {
+//   //     const match = captionArray.find(
+//   //       (item) => item.CAPTIONID === CaptionID
+//   //     );
+//   //     return match?.CAPTION || defaultCaption;
+//   //   }
+
+//   //   return defaultCaption;
+//   // };
+//   const handleSaveButtonClick = async () => {
+//     for (let index = 0; index < rows.length; index++) {
+//       const row = rows[index];
+//       const error = UnitRowSlot(row);
+
+//       if (error) {
+//         toast.error(`${error}`);
+//         return; // ✅ stops entire save function
+//       }
+//     }
+//     const insertRows = rows
+//       .filter((row) => row.isNew || isNaN(Number(row.RecordID)))
+//       .map((row) => ({
+//         RecordID: "",
+//         Code: row.Code || "",
+//         Name: row.Name || "",
+//         OwnedBy: row.OwnedBy?.RecordID ?? 0,
+//         Comments: row.Comments || "",
+//         SortOrder: row.SortOrder || 0,
+//         Disable: row.Disable || "N",
+//       }));
+
+//     const updateRows = editedRows
+//       // .filter((row) => !row.isNew && !isNaN(Number(row.RecordID)))
+
+//       .filter(
+//         (row) =>
+//           !row.isNew &&
+//           !isNaN(Number(row.RecordID)) &&
+//           !deletedRows.some((d) => d.RecordID === Number(row.RecordID)),
+//       )
+//       .map((row) => ({
+//         RecordID: row.RecordID,
+//         Code: row.Code || "",
+//         Name: row.Name || "",
+//         OwnedBy: row.OwnedBy?.RecordID ?? 0,
+//         Comments: row.Comments || "",
+//         SortOrder: row.SortOrder || 0,
+//         Disable: row.Disable || "N",
+//       }));
+
+//     const payload = {
+//       CompanyID: CompanyID?.toString(),
+//       ProjectID: recID || 0,
+//       insert: insertRows,
+//       update: updateRows,
+//       harddelete: deletedRows,
+//     };
+
+//     try {
+//       const response = await dispatch(
+//         postData({
+//           accessID: "TR363",
+//           action: "batchsave",
+//           idata: payload,
+//         }),
+//       );
+
+//       if (response.payload.Status === "Y") {
+//         toast.success(response.payload.Msg);
+
+//         dispatch(
+//           fetchExplorelitview(
+//             "TR363",
+//             Subscriptionlastthree,
+//             "Project Unit",
+//             `ProjectID='${recID}' AND CompanyID='${CompanyID}'`,
+//             "",
+//           ),
+//         );
+//       } else {
+//         toast.error(response.payload.Msg);
+//       }
+//     } catch (error) {
+//       toast.error("Error occurred during save.");
+//     }
+//   };
+
+//   function EditToolbar(props) {
+//     const { setRows, setRowModesModel } = props;
+
+//     const handleClick = () => {
+//       const id = nanoid();
+//       const nextSLNO =
+//         rows.length > 0 ? Math.max(...rows.map((row) => row.SLNO || 0)) + 1 : 1;
+//       setRows((oldRows) => [
+//         ...oldRows,
+
+//         {
+//           id: id,
+//           RecordID: id,
+//           OwnedBy: null,
+//           Name: "",
+//           Code: "",
+//           Comments: "",
+//         },
+//       ]);
+//       setRowModesModel((oldModel) => ({
+//         ...oldModel,
+//         [id]: { mode: GridRowModes.Edit, fieldToFocus: "Name" },
+//       }));
+//     };
+//     return (
+//       <GridToolbarContainer
+//         sx={{
+//           marginBottom: "10px",
+//           display: "flex",
+//           justifyContent: "flex-start",
+//         }}
+//       >
+//         <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+//           Add Record
+//         </Button>
+//       </GridToolbarContainer>
+//     );
+//   }
+
+//   //STUDENT-TEACHER MAPPING
+//   // function EditToolbarteach(props) {
+//   //   const { setTeachrows, setRowModesModelteach, isRowEditing } = props; // ✅ fix: was setRowModesModel
+
+//   //   const handleClickteach = () => {
+//   //     const id = nanoid();
+//   //     setTeachrows((oldRows) => [
+//   //       ...oldRows,
+//   //       {
+//   //         id: id,           // ✅ must match getRowId
+//   //         RecordID: id,     // ✅ same value
+//   //         Department: null,
+//   //         Teacher: null,
+//   //         isNew: true,
+//   //       },
+
+//   //     ]);
+//   //     setRowModesModelteach((oldModel) => ({
+//   //       ...oldModel,
+//   //       [id]: { mode: GridRowModes.Edit, fieldToFocus: "Department" },
+//   //     }));
+//   //   };
+
+//   //   return (
+//   //     <GridToolbarContainer sx={{ marginBottom: "8px", display: "flex", justifyContent: "flex-start" }}>
+//   //       <Button
+//   //        disabled={isRowEditing}
+//   //       color="primary" startIcon={<AddIcon />} onClick={handleClickteach}
+//   //        sx={{ textTransform: "capitalize",fontSize: "14px" }}
+//   //       >
+//   //         Add Record
+//   //       </Button>
+//   //     </GridToolbarContainer>
+//   //   );
+//   // }
+
+//   function EditToolbarteach(props) {
+//     const {
+//       setTeachrows,
+//       setRowModesModelteach,
+//       isRowEditing,
+//       pageSize,
+//       setPage,
+//     } = props;
+//     const [isAdding, setIsAdding] = useState(false); // ← ADD THIS
+//     const handleClickteach = () => {
+//       setIsAdding(true); // ← DISABLE BUTTON
+//       const id = nanoid();
+
+//       const newRow = {
+//         id,
+//         RecordID: id,
+//         Department: null,
+//         Teacher: null,
+//         isNew: true,
+//       };
+
+//       setTeachrows((oldRows) => {
+//         const updatedRows = [...oldRows, newRow];
+
+//         // Navigate to page containing new row
+//         const newPage = Math.floor((updatedRows.length - 1) / pageSize);
+
+//         setPage(newPage);
+
+//         return updatedRows;
+//       });
+
+//       // Wait for page change, then enter edit mode
+//       setTimeout(() => {
+//         setRowModesModelteach((oldModel) => ({
+//           ...oldModel,
+//           [id]: {
+//             mode: GridRowModes.Edit,
+//             fieldToFocus: "Department",
+//           },
+//         }));
+//         setIsAdding(false); // ← ENABLE BUTTON BACK
+//       }, 100);
+//     };
+
+//     return (
+//       <Button
+//         disabled={isRowEditing}
+//         color="primary"
+//         startIcon={<AddIcon />}
+//         onClick={handleClickteach}
+//       >
+//         Add Record
+//       </Button>
+//     );
+//   }
+//   // function EditToolbarteach(props) {
+//   //     const { setTeachrows, setRowModesModel } = props;
+
+//   //     const handleClickteach = () => {
+//   //       console.log("--calling handleClickteach");
+
+//   //       const id = nanoid();
+//   //       const nextSLNO =
+//   //         teachrows.length > 0 ? Math.max(...teachrows.map((row) => row.SLNO || 0)) + 1 : 1;
+//   //     setTeachrows((oldRows) => [
+//   //   ...oldRows,
+//   //   {
+//   //     id: id,
+//   //     RecordID: id,
+//   //     Department: null,
+//   //     Teacher: null,
+//   //     isNew: true,
+//   //   },
+//   // ]);
+//   //       setRowModesModelteach((oldModel) => ({
+//   //         ...oldModel,
+//   //         [id]: { mode: GridRowModes.Edit, fieldToFocus: "Comments" },
+//   //       }));
+//   //     };
+//   //     return (
+//   //       <GridToolbarContainer
+//   //         sx={{
+//   //           marginBottom: "10px",
+//   //           display: "flex",
+//   //           justifyContent: "flex-start",
+//   //         }}
+//   //       >
+//   //         <Button color="primary" startIcon={<AddIcon />} onClick={handleClickteach}>
+//   //           Add Record
+//   //         </Button>
+//   //       </GridToolbarContainer>
+//   //     );
+//   //   }
+
+//   //For side menu
+//   const formSections = [
+//     {
+//       value: 0,
+//       label: getBusinessCaption("ProjectTitle", "Project"),
+//       desc: "Basic details about the Project",
+//       icon: "📁",
+//     },
+//     {
+//       value: 2,
+//       label: "List Of Documents",
+//       desc: "Attachments documents for the Project",
+//       icon: "📄",
+//     },
+//     ...(is003Subscription === false
+//       ? [
+//         {
+//           value: 3,
+//           label: "Units",
+//           desc: "Unit / block details linked to the Project",
+//           icon: "🏢",
+//         },
+//       ]
+//       : []),
+//   ];
+//   function FormSectionsSidebar({
+//     show,
+//     screenChange,
+//     sections,
+//     open,
+//     onToggle,
+//   }) {
+//     return (
+//       <Box
+//         sx={{
+//           width: open ? 250 : 70,
+//           transition: "all .3s",
+//           background: "#fff",
+//           border: "1px solid #E5E7EB",
+//           borderRadius: 3,
+//           position: "sticky",
+//           top: 10,
+//           height: "calc(100vh - 20px)",
+//           overflowY: "auto",
+
+//           // Hide scrollbar
+//           scrollbarWidth: "none", // Firefox
+//           msOverflowStyle: "none", // IE
+
+//           "&::-webkit-scrollbar": {
+//             display: "none", // Chrome, Safari
+//           },
+//         }}
+//       >
+//         {/* Header */}
+//         <Box
+//           display="flex"
+//           justifyContent={open ? "space-between" : "center"}
+//           alignItems="center"
+//           p={2}
+//           borderBottom="1px solid #E5E7EB"
+//         >
+//           {open && <Typography fontWeight={700}>Explore</Typography>}
+
+//           <IconButton size="small" onClick={onToggle}>
+//             {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+//           </IconButton>
+//         </Box>
+
+//         <Stack spacing={0.5} p={1}>
+//           {sections.map((item) => {
+//             const active = Number(show) === Number(item.value);
+
+//             return (
+//               <Tooltip
+//                 key={item.value}
+//                 title={!open ? item.label : ""}
+//                 placement="right"
+//               >
+//                 <Box
+//                   onClick={() =>
+//                     screenChange({
+//                       target: { value: item.value },
+//                     })
+//                   }
+//                   sx={{
+//                     display: "flex",
+//                     alignItems: "center",
+//                     gap: 1.5,
+//                     p: 1.25,
+//                     cursor: "pointer",
+//                     borderRadius: 2,
+//                     bgcolor: active ? "#EEF2FF" : "transparent",
+//                     "&:hover": {
+//                       bgcolor: "#F3F4F6",
+//                     },
+//                   }}
+//                 >
+//                   <Box
+//                     sx={{
+//                       width: 36,
+//                       height: 36,
+//                       borderRadius: "50%",
+//                       bgcolor: active ? "#E0E7FF" : "#F3F4F6",
+//                       display: "flex",
+//                       justifyContent: "center",
+//                       alignItems: "center",
+//                       fontSize: 18,
+//                     }}
+//                   >
+//                     {item.icon}
+//                   </Box>
+
+//                   {open && (
+//                     <Box>
+//                       <Typography
+//                         fontWeight={active ? 700 : 500}
+//                         color={active ? "#4F46E5" : "inherit"}
+//                       >
+//                         {item.label}
+//                       </Typography>
+
+//                       <Typography variant="caption" color="text.secondary">
+//                         {item.desc}
+//                       </Typography>
+//                     </Box>
+//                   )}
+//                 </Box>
+//               </Tooltip>
+//             );
+//           })}
+//         </Stack>
+//       </Box>
+//     );
+//   }
+
+//   return (
+//     <React.Fragment>
+//       {getLoading ? <LinearProgress /> : false}
+//       <Box sx={{ height: "100vh", overflow: "auto" }}>
+//         <Paper
+//           elevation={0}
+//           sx={{
+//             mx: 2,
+//             mt: 1,
+//             mb: 1,
+//             p: 1,
+//             borderRadius: 3,
+//             border: "1px solid #E5E7EB",
+//             bgcolor: "#fff",
+//           }}
+//         >
+//           <Box display="flex" justifyContent="space-between" p={2}>
+//             <Box display="flex" borderRadius="3px" alignItems="center">
+//               {broken && !rtl && (
+//                 <IconButton onClick={() => toggleSidebar()}>
+//                   <MenuOutlinedIcon />
+//                 </IconButton>
+//               )}
+//               <Box>
+//                 <Typography
+//                   sx={{
+//                     fontSize: 20,
+//                     fontWeight: 700,
+//                     color: "#111827",
+//                     // mb: 0.2,
+//                     px: 1,
+//                     py: 0.2,
+//                   }}
+//                 >
+//                   {mode === "A"
+//                     ? `New ${getBusinessCaption("ProjectTitle", "Project")}`
+//                     : `Edit ${getBusinessCaption("ProjectTitle", "Project")}`}{" "}
+//                 </Typography>
+
+//                 <Box
+//                   display={isNonMobile ? "flex" : "none"}
+//                   borderRadius="3px"
+//                   alignItems="center"
+//                 >
+//                   <Breadcrumbs
+//                     maxItems={3}
+//                     aria-label="breadcrumb"
+//                     separator={<NavigateNextIcon sx={{ fontSize: 18 }} />}
+//                     sx={breadcrumbStyles.separator}
+//                   >
+//                     <Typography
+//                       sx={
+//                         show == "0"
+//                           ? breadcrumbStyles.active
+//                           : breadcrumbStyles.item
+//                       }
+//                       onClick={() => {
+//                         setScreen(0);
+//                       }}
+//                     >
+//                       {/* Project */}
+//                       {getBusinessCaption("ProjectTitle", "Project")}
+//                     </Typography>
+//                     {show == "1" ? (
+//                       <Typography
+//                         sx={
+//                           show == "1"
+//                             ? breadcrumbStyles.active
+//                             : breadcrumbStyles.item
+//                         }
+//                       >
+//                         Units
+//                       </Typography>
+//                     ) : (
+//                       false
+//                     )}
+//                     {show == "3" ? (
+//                       <Typography
+//                         sx={
+//                           show == "3"
+//                             ? breadcrumbStyles.active
+//                             : breadcrumbStyles.item
+//                         }
+//                       >
+//                         Units
+//                       </Typography>
+//                     ) : (
+//                       false
+//                     )}
+//                     {show == "2" ? (
+//                       <Typography
+//                         sx={
+//                           show == "2"
+//                             ? breadcrumbStyles.active
+//                             : breadcrumbStyles.item
+//                         }
+//                       >
+//                         List Of Documents
+//                       </Typography>
+//                     ) : (
+//                       false
+//                     )}
+//                   </Breadcrumbs>
+//                 </Box>
+//               </Box>
+//             </Box>
+//             <Box display="flex">
+//               {/* {mode !== "A" ? (
+//               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+//                 <InputLabel id="demo-select-small">Explore</InputLabel>
+//                 <Select
+//                   labelId="demo-select-small"
+//                   id="demo-select-small"
+//                   value={show}
+//                   label="Explore"
+//                   onChange={screenChange}
+//                 >
+               
+
+//                   <MenuItem value="0">{getBusinessCaption("ProjectTitle", "Project")}</MenuItem>
+//                   {is003Subscription === false ? (<MenuItem value="3">Units</MenuItem>) : null}
+//                   <MenuItem value="2">List Of Documents</MenuItem>
+//                 </Select>
+//               </FormControl>
+//             ) : (
+//               false
+//             )} */}
+//               <Tooltip title="Close">
+//                 <IconButton onClick={() => fnLogOut("Close")} color="error">
+//                   <ResetTvIcon />
+//                 </IconButton>
+//               </Tooltip>
+//               <Tooltip title="Logout">
+//                 <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+//                   <LogoutOutlinedIcon />
+//                 </IconButton>
+//               </Tooltip>
+//             </Box>
+//           </Box>
+//         </Paper>
+//         {/* </Box> */}
+//         {show == "0" ? (
+//           <Box
+//             display="flex"
+//             gap={3}
+//             alignItems="flex-start"
+//             flexWrap="wrap"
+//             sx={{ p: 1 }}
+//           >
+//             {/* LEFT: Form Sections sidebar */}
+//             {mode !== "A" && (
+//               <FormSectionsSidebar
+//                 show={show}
+//                 screenChange={screenChange}
+//                 sections={formSections}
+//                 open={sectionsOpen}
+//                 onToggle={() => setSectionsOpen((p) => !p)}
+//               />
+//             )}
+//             <Box
+//               flex={1}
+//               minWidth={0}
+//               display="flex"
+//               flexDirection="column"
+//               gap={3}
+//             >
+//               <Paper
+//                 elevation={0}
+//                 sx={{
+//                   backgroundColor: "#fff",
+//                   border: "1px solid #E5E7EB",
+//                   borderRadius: 3,
+//                   p: 3,
+//                 }}
+//               >
+//                 <Formik
+//                   innerRef={formikRef}
+//                   initialValues={InitialValue}
+//                   onSubmit={(values, { resetForm }) => {
+//                     if (Subscriptionlastthree === "003") {
+//                       FnsaveTech(values, false, null, false);
+//                     } else {
+//                       setTimeout(() => {
+//                         Fnsave(values);
+//                       }, 100);
+//                     }
+//                     // Fnsave(values, false, null, false); // ✅ null payload = header save = will navigate(-1)
+//                   }}
+//                   // onSubmit={(values, setSubmitting) => {
+//                   //   setTimeout(() => {
+//                   //     Fnsave(values);
+//                   //   }, 100);
+//                   // }}
+//                   validationSchema={validationSchema}
+//                   enableReinitialize={true}
+//                 >
+//                   {({
+//                     errors,
+//                     touched,
+//                     handleBlur,
+//                     handleChange,
+//                     isSubmitting,
+//                     values,
+//                     handleSubmit,
+//                     setFieldValue,
+//                   }) => (
+//                     <form onSubmit={handleSubmit}>
+//                       {/* ----- CARD HEADER ----- */}
+//                       <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+//                         <Box
+//                           sx={{
+//                             width: 32,
+//                             height: 32,
+//                             borderRadius: "50%",
+//                             backgroundColor: "#EFF6FF",
+//                             display: "flex",
+//                             alignItems: "center",
+//                             justifyContent: "center",
+//                           }}
+//                         >
+//                           <Typography sx={{ fontSize: 16 }}>📁</Typography>
+//                         </Box>
+//                         <Box>
+//                           <Typography
+//                             variant="subtitle1"
+//                             fontWeight={700}
+//                             color="#0D94885"
+//                           >
+//                             {getBusinessCaption("ProjectTitle", "Project")}
+//                           </Typography>
+
+//                           <Typography variant="body2" color="text.secondary">
+//                             Basic details about the Project
+//                           </Typography>
+//                         </Box>
+//                       </Box>
+
+//                       <Box
+//                         display="grid"
+//                         gap={formGap}
+//                         padding={1}
+//                         gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+//                         // gap="30px"
+//                         sx={{
+//                           "& > div": {
+//                             gridColumn: isNonMobile ? undefined : "span 2",
+//                           },
+//                         }}
+//                       >
+//                         {CompanyAutoCode == "Y" ? (
+//                           <TextField
+//                             disabled={isHeaderDisabled || mode == "V"}
+//                             name="code"
+//                             type="text"
+//                             id="code"
+//                             // label="Code"
+//                             label={getBusinessCaption("ProjectCode", "Code")}
+//                             placeholder="Auto"
+//                             variant="outlined"
+//                             size="small"
+//                             focused
+//                             // required
+//                             value={values.code}
+//                             onBlur={handleBlur}
+//                             onChange={handleChange}
+//                             error={!!touched.code && !!errors.code}
+//                             helperText={touched.code && errors.code}
+//                             InputProps={{ readOnly: true }}
+//                             InputLabelProps={{
+//                               shrink: true,
+//                             }}
+//                             sx={{
+//                               "& .MuiOutlinedInput-root": {
+//                                 backgroundColor: "#fff",
+//                                 borderRadius: "6px",
+
+//                                 "& fieldset": {
+//                                   borderColor: "#d1d5db", // 👈 light grey border
+//                                 },
+//                                 "&:hover fieldset": {
+//                                   borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                 },
+//                                 "&.Mui-focused fieldset": {
+//                                   borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                   borderWidth: "1px",
+//                                 },
+//                               },
+
+//                               "& .MuiInputLabel-root": {
+//                                 color: "#6b7280", // label grey
+//                               },
+//                               "& .MuiInputLabel-root.Mui-focused": {
+//                                 color: "#6b7280", // keep same on focus
+//                               },
+//                             }}
+//                           // autoFocus
+//                           />
+//                         ) : (
+//                           <TextField
+//                             disabled={isHeaderDisabled || mode == "V"}
+//                             name="code"
+//                             type="text"
+//                             id="code"
+//                             label={
+//                               <>
+//                                 Code
+//                                 <span
+//                                   style={{ color: "red", fontSize: "20px" }}
+//                                 >
+//                                   *
+//                                 </span>
+//                               </>
+//                             }
+//                             variant="outlined"
+//                             size="small"
+//                             focused
+//                             // required
+//                             value={values.code}
+//                             onBlur={handleBlur}
+//                             onChange={handleChange}
+//                             error={!!touched.code && !!errors.code}
+//                             helperText={touched.code && errors.code}
+//                             autoFocus
+//                             InputLabelProps={{
+//                               shrink: true,
+//                             }}
+//                             sx={{
+//                               "& .MuiOutlinedInput-root": {
+//                                 backgroundColor: "#fff",
+//                                 borderRadius: "6px",
+
+//                                 "& fieldset": {
+//                                   borderColor: "#d1d5db", // 👈 light grey border
+//                                 },
+//                                 "&:hover fieldset": {
+//                                   borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                 },
+//                                 "&.Mui-focused fieldset": {
+//                                   borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                   borderWidth: "1px",
+//                                 },
+//                               },
+
+//                               "& .MuiInputLabel-root": {
+//                                 color: "#6b7280", // label grey
+//                               },
+//                               "& .MuiInputLabel-root.Mui-focused": {
+//                                 color: "#6b7280", // keep same on focus
+//                               },
+//                             }}
+//                           />
+//                         )}
+
+//                         <TextField
+//                           disabled={isHeaderDisabled || mode == "V"}
+//                           name="name"
+//                           type="text"
+//                           id="name"
+//                           // label={getBusinessCaption(101, "PROJECTTITLE", "Title")}
+//                           // label={getBusinessCaption("ProjectTitle", "ProjectTitle")}
+//                           label={
+//                             <>
+//                               {getBusinessCaption("ProjectTitle", "Project")}
+//                               <span style={{ color: "red", fontSize: "20px" }}>
+//                                 *
+//                               </span>
+//                             </>
+//                           }
+//                           variant="outlined"
+//                           size="small"
+//                           focused
+//                           value={values.name}
+//                           onBlur={handleBlur}
+//                           onChange={handleChange}
+//                           error={!!touched.name && !!errors.name}
+//                           helperText={touched.name && errors.name}
+//                           // required
+//                           autoFocus={CompanyAutoCode == "Y"}
+//                           InputLabelProps={{
+//                             shrink: true,
+//                           }}
+//                           sx={{
+//                             "& .MuiOutlinedInput-root": {
+//                               backgroundColor: "#fff",
+//                               borderRadius: "6px",
+
+//                               "& fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 light grey border
+//                               },
+//                               "&:hover fieldset": {
+//                                 borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                               },
+//                               "&.Mui-focused fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                 borderWidth: "1px",
+//                               },
+//                             },
+
+//                             "& .MuiInputLabel-root": {
+//                               color: "#6b7280", // label grey
+//                             },
+//                             "& .MuiInputLabel-root.Mui-focused": {
+//                               color: "#6b7280", // keep same on focus
+//                             },
+//                           }}
+//                         />
+
+//                         <CheckinAutocomplete
+//                           disabled={isHeaderDisabled || mode == "V"}
+//                           name="incharge"
+//                           label={
+//                             <>
+//                               {getBusinessCaption(
+//                                 "AccountableIncharge",
+//                                 "Accountable Incharge",
+//                               )}
+//                               <span style={{ color: "red", fontSize: "20px" }}>
+//                                 {" "}
+//                                 *{" "}
+//                               </span>
+//                             </>
+//                           }
+//                           id="incharge"
+//                           value={values.incharge}
+//                           onChange={async (newValue) => {
+//                             setFieldValue("incharge", newValue);
+//                           }}
+//                           error={!!touched.incharge && !!errors.incharge}
+//                           helperText={touched.incharge && errors.incharge}
+//                           // "Filter":"parentID='${compID}' AND EmployeeID='${EMPID}'" ,
+//                           url={`${listViewurl}?data=${JSON.stringify({
+//                             Query: {
+//                               AccessID: "2111",
+//                               ScreenName: "Project Incharge",
+//                               VerticalLicense: Subscriptionlastthree,
+//                               Filter: `parentID=${CompanyID}`,
+//                               Any: "",
+//                             },
+//                           })}`}
+//                         // url={`${listViewurl}?data={"Query":{"AccessID":"2111","ScreenName":"Project Incharge","Filter":"parentID='${CompanyID}'","Any":""}}`}
+//                         />
+//                         {is003Subscription === false ? (
+//                           <CheckinAutocomplete
+//                             disabled={isHeaderDisabled || mode == "V"}
+//                             name="projectOwner"
+//                             // label="Project Owner"
+//                             label={getBusinessCaption(
+//                               "ProjectOwner",
+//                               "Project Owner",
+//                             )}
+//                             variant="outlined"
+//                             size="small"
+//                             id="projectOwner"
+//                             value={values.projectOwner}
+//                             onChange={(newValue) => {
+//                               setFieldValue("projectOwner", {
+//                                 RecordID: newValue.RecordID,
+//                                 Code: newValue.Code,
+//                                 Name: newValue.Name,
+//                               });
+//                               console.log(newValue, "--newvalue projectOwner");
+
+//                               console.log(
+//                                 newValue.RecordID,
+//                                 "projectOwner RecordID",
+//                               );
+//                             }}
+//                             // error={!!touched.projectOwner && !!errors.projectOwner}
+//                             // helperText={touched.projectOwner && errors.projectOwner}
+//                             url={`${listViewurl}?data=${JSON.stringify({
+//                               Query: {
+//                                 AccessID: "2102",
+//                                 ScreenName: "Customer",
+//                                 VerticalLicense: Subscriptionlastthree,
+//                                 Filter: `parentID=${CompanyID}`,
+//                                 Any: "",
+//                               },
+//                             })}`}
+//                           // url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Customer","Filter":"parentID=${CompanyID}","Any":""}}`}
+//                           />
+//                         ) : null}
+//                         {/* {touched.incharge && errors.incharge && (
+//                         <div style={{ color: "red", fontSize: "12px", marginTop: "2px" }}>
+//                           {errors.incharge}
+//                         </div>
+//                       )} */}
+
+//                         {/* <FormControl
+//                     focused
+//                     variant="standard"
+//                     sx={{ backgroundColor: "#f5f5f5" }}
+//                   >
+//                     <InputLabel id="status">Current Status</InputLabel>
+//                     <Select
+//                       labelId="demo-simple-select-filled-label"
+//                       id="currentstatus"
+//                       name="currentstatus"
+//                       value={values.currentstatus}
+//                       onBlur={handleBlur}
+//                       onChange={handleChange}
+//                     >
+//                       <MenuItem value="Current">Current</MenuItem>
+//                       <MenuItem value="Completed">Completed</MenuItem>
+//                       <MenuItem value="Old">Old</MenuItem>
+
+//                     </Select>
+//                   </FormControl> */}
+//                         {/* <FormControl
+//                     focused
+//                     variant="standard"
+//                   // sx={{ gridColumn: "span 2" }}
+//                   > */}
+//                         {/* <InputLabel id="CurrentStatus">Status<span style={{ color: 'red', fontSize: '20px' }}>*</span></InputLabel> */}
+
+//                         {is003Subscription === false ? (
+//                           <>
+//                             <TextField
+//                               id="TentativeStartDate"
+//                               name="TentativeStartDate"
+//                               type="date"
+//                               // label="Tentative Start Date"
+//                               label={
+//                                 <>
+//                                   {getBusinessCaption(
+//                                     "TentativeStartDate",
+//                                     "Tentative Start Date",
+//                                   )}
+//                                   <span
+//                                     style={{ color: "red", fontSize: "20px" }}
+//                                   >
+//                                     {" "}
+//                                     *{" "}
+//                                   </span>
+//                                 </>
+//                               }
+//                               // required
+//                               focused
+//                               CheckinAutocomplete
+//                               error={
+//                                 !!touched.TentativeStartDate &&
+//                                 !!errors.TentativeStartDate
+//                               }
+//                               helperText={
+//                                 touched.TentativeStartDate &&
+//                                 errors.TentativeStartDate
+//                               }
+//                               value={values.TentativeStartDate}
+//                               // value={values.CurrentStatus}
+//                               onBlur={handleBlur}
+//                               onChange={handleChange}
+//                               variant="outlined"
+//                               size="small"
+//                               sx={{
+//                                 "& .MuiOutlinedInput-root": {
+//                                   backgroundColor: "#fff",
+//                                   borderRadius: "6px",
+
+//                                   "& fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 light grey border
+//                                   },
+//                                   "&:hover fieldset": {
+//                                     borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                   },
+//                                   "&.Mui-focused fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                     borderWidth: "1px",
+//                                   },
+//                                 },
+
+//                                 "& .MuiInputLabel-root": {
+//                                   color: "#6b7280", // label grey
+//                                 },
+//                                 "& .MuiInputLabel-root.Mui-focused": {
+//                                   color: "#6b7280", // keep same on focus
+//                                 },
+//                               }}
+//                             />
+//                             <TextField
+//                               id="TentativeEndDate"
+//                               name="TentativeEndDate"
+//                               type="date"
+//                               // label="Tentative End Date"
+//                               label={
+//                                 <>
+//                                   {getBusinessCaption(
+//                                     "TentativeEndDate",
+//                                     "Tentative End Date",
+//                                   )}
+//                                   <span
+//                                     style={{ color: "red", fontSize: "20px" }}
+//                                   >
+//                                     {" "}
+//                                     *{" "}
+//                                   </span>
+//                                 </>
+//                               }
+//                               // required
+//                               focused
+//                               variant="outlined"
+//                               size="small"
+//                               error={
+//                                 !!touched.TentativeEndDate &&
+//                                 !!errors.TentativeEndDate
+//                               }
+//                               helperText={
+//                                 touched.TentativeEndDate &&
+//                                 errors.TentativeEndDate
+//                               }
+//                               value={values.TentativeEndDate}
+//                               // value={values.CurrentStatus}
+//                               onBlur={handleBlur}
+//                               onChange={handleChange}
+//                               sx={{
+//                                 "& .MuiOutlinedInput-root": {
+//                                   backgroundColor: "#fff",
+//                                   borderRadius: "6px",
+
+//                                   "& fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 light grey border
+//                                   },
+//                                   "&:hover fieldset": {
+//                                     borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                   },
+//                                   "&.Mui-focused fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                     borderWidth: "1px",
+//                                   },
+//                                 },
+
+//                                 "& .MuiInputLabel-root": {
+//                                   color: "#6b7280", // label grey
+//                                 },
+//                                 "& .MuiInputLabel-root.Mui-focused": {
+//                                   color: "#6b7280", // keep same on focus
+//                                 },
+//                               }}
+//                             />
+//                           </>
+//                         ) : null}
+//                         {Subscriptionlastthree != "003" ? (
+//                           <>
+//                             <TextField
+//                               sx={{
+//                                 "& .MuiOutlinedInput-root": {
+//                                   backgroundColor: "#fff",
+//                                   borderRadius: "6px",
+
+//                                   "& fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 light grey border
+//                                   },
+//                                   "&:hover fieldset": {
+//                                     borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                   },
+//                                   "&.Mui-focused fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                     borderWidth: "1px",
+//                                   },
+//                                 },
+
+//                                 "& .MuiInputLabel-root": {
+//                                   color: "#6b7280", // label grey
+//                                 },
+//                                 "& .MuiInputLabel-root.Mui-focused": {
+//                                   color: "#6b7280", // keep same on focus
+//                                 },
+//                               }}
+//                               disabled={isHeaderDisabled || mode == "V"}
+//                               labelId="demo"
+//                               id="CurrentStatus"
+//                               name="CurrentStatus"
+//                               type="text"
+//                               label="Status"
+//                               // label={
+//                               //   <>
+//                               //     Status
+//                               //     <span style={{ color: "red", fontSize: "20px" }}>
+//                               //       {" "}
+//                               //       *{" "}
+//                               //     </span>
+//                               //   </>
+//                               // }
+//                               // required
+//                               focused
+//                               select
+//                               variant="outlined"
+//                               size="small"
+//                               error={
+//                                 !!touched.CurrentStatus &&
+//                                 !!errors.CurrentStatus
+//                               }
+//                               helperText={
+//                                 touched.CurrentStatus && errors.CurrentStatus
+//                               }
+//                               value={mode == "A" ? "CU" : values.CurrentStatus}
+//                               // value={values.CurrentStatus}
+//                               onBlur={handleBlur}
+//                               onChange={(e) => {
+//                                 setFieldValue("CurrentStatus", e.target.value);
+//                                 if (e.target.value == "CU") {
+//                                   setFieldValue("disable", false);
+//                                 } else {
+//                                   setFieldValue("disable", true);
+//                                 }
+//                               }}
+//                               InputLabelProps={{
+//                                 shrink: true,
+//                               }}
+//                             >
+//                               <MenuItem value="CU">Current</MenuItem>
+//                               <MenuItem value="CO">Completed</MenuItem>
+//                               <MenuItem value="H">Hold</MenuItem>
+//                             </TextField>
+//                           </>
+//                         ) : null}
+
+//                         <TextField
+//                           disabled={isHeaderDisabled || mode == "V"}
+//                           name="sortorder"
+//                           type="number"
+//                           id="sortorder"
+//                           label="Sort Order"
+//                           variant="outlined"
+//                           size="small"
+//                           focused
+//                           value={values.sortorder}
+//                           onBlur={handleBlur}
+//                           onChange={handleChange}
+//                           error={!!touched.sortorder && !!errors.sortorder}
+//                           helperText={touched.sortorder && errors.sortorder}
+//                           InputProps={{
+//                             inputProps: {
+//                               style: { textAlign: "right" },
+//                             },
+//                           }}
+//                           InputLabelProps={{
+//                             shrink: true,
+//                           }}
+//                           onWheel={(e) => e.target.blur()}
+//                           onInput={(e) => {
+//                             e.target.value = Math.max(
+//                               0,
+//                               parseInt(e.target.value),
+//                             )
+//                               .toString()
+//                               .slice(0, 8);
+//                           }}
+//                           sx={{
+//                             "& .MuiOutlinedInput-root": {
+//                               backgroundColor: "#fff",
+//                               borderRadius: "6px",
+
+//                               "& fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 light grey border
+//                               },
+//                               "&:hover fieldset": {
+//                                 borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                               },
+//                               "&.Mui-focused fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                 borderWidth: "1px",
+//                               },
+//                             },
+
+//                             "& .MuiInputLabel-root": {
+//                               color: "#6b7280", // label grey
+//                             },
+//                             "& .MuiInputLabel-root.Mui-focused": {
+//                               color: "#6b7280", // keep same on focus
+//                             },
+//                           }}
+//                         />
+//                       </Box>
+//                       <Box>
+//                         {/* <Box display="flex" flexDirection="row" gap={formGap}>
+//                     <Box display="flex" alignItems="center"> */}
+
+//                         <Field
+//                           disabled={isHeaderDisabled || mode == "V"}
+//                           type="checkbox"
+//                           name="Routine"
+//                           id="Routine"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           as={Checkbox}
+//                         />
+//                         <FormLabel
+//                           focused={false}
+//                         // htmlFor="Routine" sx={{ ml: 1,marginLeft:0 }}
+//                         >
+//                           Routine Tasks
+//                         </FormLabel>
+//                         {/* <Field
+//                       type="checkbox"
+//                       name="ServiceMaintenance"
+//                       id="ServiceMaintenance"
+//                       onChange={handleChange}
+//                       onBlur={handleBlur}
+//                       as={Checkbox}
+//                     />
+//                     <FormLabel
+//                       focused={false}
+//                       // htmlFor="ServiceMaintenance"
+//                       // sx={{ ml: 1,marginLeft:0}}
+//                     >
+//                       Service & Maintenance
+//                     </FormLabel> */}
+//                         {!is003Subscription && (
+//                           <>
+//                             <Field
+//                               disabled={isHeaderDisabled || mode == "V"}
+//                               type="checkbox"
+//                               name="ByProduct"
+//                               id="ByProduct"
+//                               onChange={handleChange}
+//                               onBlur={handleBlur}
+//                               as={Checkbox}
+//                             />
+//                             <FormLabel
+//                               focused={false}
+//                             // htmlFor="ServiceMaintenance"
+//                             // sx={{ ml: 1,marginLeft:0}}
+//                             >
+//                               Product
+//                             </FormLabel>
+
+//                             <Field
+//                               disabled={isHeaderDisabled || mode == "V"}
+//                               type="checkbox"
+//                               name="Onsiteactivities"
+//                               id="Onsiteactivities"
+//                               onChange={handleChange}
+//                               onBlur={handleBlur}
+//                               as={Checkbox}
+//                             />
+//                             <FormLabel focused={false}>
+//                               Enable Onsite Activities
+//                             </FormLabel>
+//                           </>
+//                         )}
+//                         <Field
+//                           //  size="small"
+//                           disabled={isHeaderDisabled || mode == "V"}
+//                           type="checkbox"
+//                           name="delete"
+//                           id="delete"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           as={Checkbox}
+//                           label="Delete"
+//                         />
+
+//                         <FormLabel focused={false}>Delete</FormLabel>
+//                         <Field
+//                           //  size="small"
+//                           disabled={isHeaderDisabled || mode == "V"}
+//                           type="checkbox"
+//                           name="disable"
+//                           id="disable"
+//                           onChange={handleChange}
+//                           onBlur={handleBlur}
+//                           as={Checkbox}
+//                           label="Disable"
+//                         />
+
+//                         <FormLabel focused={false}>Disable</FormLabel>
+//                       </Box>
+
+//                       {Subscriptionlastthree != "003" ? (
+//                         <>
+//                           <Typography
+//                             variant="h6"
+//                             fontWeight={700}
+//                             sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+//                           >
+//                             Costing
+//                           </Typography>
+
+//                           {values.ByProduct === true ? (
+//                             <Box
+//                               display="grid"
+//                               initialValues={InitialValue}
+//                               gap={formGap}
+//                               padding={1}
+//                               gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+//                               // gap="30px"
+//                               sx={{
+//                                 "& > div": {
+//                                   gridColumn: isNonMobile
+//                                     ? undefined
+//                                     : "span 2",
+//                                 },
+//                               }}
+//                             >
+//                               <TextField
+//                                 //fullWidth
+//                                 disabled={mode == "V"}
+//                                 type="number"
+//                                 id="price"
+//                                 name="price"
+//                                 value={values.price}
+//                                 onBlur={handleBlur}
+//                                 onChange={handleChange}
+//                                 label="Price (If it is a product)"
+//                                 variant="outlined"
+//                                 size="small"
+//                                 sx={{
+//                                   "& .MuiOutlinedInput-root": {
+//                                     backgroundColor: "#fff",
+//                                     borderRadius: "6px",
+
+//                                     "& fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 light grey border
+//                                     },
+//                                     "&:hover fieldset": {
+//                                       borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                     },
+//                                     "&.Mui-focused fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                       borderWidth: "1px",
+//                                     },
+//                                   },
+
+//                                   "& .MuiInputLabel-root": {
+//                                     color: "#6b7280", // label grey
+//                                   },
+//                                   "& .MuiInputLabel-root.Mui-focused": {
+//                                     color: "#6b7280", // keep same on focus
+//                                   },
+//                                 }}
+//                                 focused
+//                                 InputProps={{
+//                                   inputProps: {
+//                                     style: {
+//                                       textAlign: "right",
+//                                     },
+//                                   },
+//                                 }}
+//                               />{" "}
+//                             </Box>
+//                           ) : (
+//                             <Box
+//                               display="grid"
+//                               gap={formGap}
+//                               initialValues={InitialValue}
+//                               padding={1}
+//                               gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+//                               // gap="30px"
+//                               sx={{
+//                                 "& > div": {
+//                                   gridColumn: isNonMobile
+//                                     ? undefined
+//                                     : "span 2",
+//                                 },
+//                               }}
+//                             >
+//                               <TextField
+//                                 disabled={mode == "V"}
+//                                 fullWidth
+//                                 variant="outlined"
+//                                 size="small"
+//                                 sx={{
+//                                   "& .MuiOutlinedInput-root": {
+//                                     backgroundColor: "#fff",
+//                                     borderRadius: "6px",
+
+//                                     "& fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 light grey border
+//                                     },
+//                                     "&:hover fieldset": {
+//                                       borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                     },
+//                                     "&.Mui-focused fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                       borderWidth: "1px",
+//                                     },
+//                                   },
+
+//                                   "& .MuiInputLabel-root": {
+//                                     color: "#6b7280", // label grey
+//                                   },
+//                                   "& .MuiInputLabel-root.Mui-focused": {
+//                                     color: "#6b7280", // keep same on focus
+//                                   },
+//                                 }}
+//                                 type="number"
+//                                 id="budget"
+//                                 name="budget"
+//                                 value={values.budget}
+//                                 onBlur={handleBlur}
+//                                 onChange={handleChange}
+//                                 // label="Budget"
+//                                 label={
+//                                   <>
+//                                     Budget
+//                                     {/* <span style={{ color: "red", fontSize: "20px" }}>
+//                           {" "}
+//                           *{" "}
+//                         </span> */}
+//                                   </>
+//                                 }
+//                                 error={!!touched.budget && !!errors.budget}
+//                                 helperText={touched.budget && errors.budget}
+//                                 focused
+//                                 InputProps={{
+//                                   inputProps: {
+//                                     style: {
+//                                       textAlign: "right",
+//                                     },
+//                                   },
+//                                 }}
+//                               />
+//                               <TextField
+//                                 fullWidth
+//                                 disabled={mode == "V"}
+//                                 type="number"
+//                                 id="Planned"
+//                                 name="Planned"
+//                                 value={values.Planned}
+//                                 onBlur={handleBlur}
+//                                 onChange={handleChange}
+//                                 label="Planned Cost"
+//                                 variant="outlined"
+//                                 size="small"
+//                                 sx={{
+//                                   "& .MuiOutlinedInput-root": {
+//                                     backgroundColor: "#fff",
+//                                     borderRadius: "6px",
+
+//                                     "& fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 light grey border
+//                                     },
+//                                     "&:hover fieldset": {
+//                                       borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                     },
+//                                     "&.Mui-focused fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                       borderWidth: "1px",
+//                                     },
+//                                   },
+
+//                                   "& .MuiInputLabel-root": {
+//                                     color: "#6b7280", // label grey
+//                                   },
+//                                   "& .MuiInputLabel-root.Mui-focused": {
+//                                     color: "#6b7280", // keep same on focus
+//                                   },
+//                                 }}
+//                                 focused
+//                                 InputProps={{
+//                                   readOnly: true,
+//                                   inputProps: {
+//                                     style: {
+//                                       textAlign: "right",
+//                                     },
+//                                   },
+//                                 }}
+//                               />
+//                               <TextField
+//                                 fullWidth
+//                                 disabled={mode == "V"}
+//                                 type="number"
+//                                 id="scheduled"
+//                                 name="scheduled"
+//                                 value={values.scheduled}
+//                                 onBlur={handleBlur}
+//                                 onChange={handleChange}
+//                                 label="Scheduled Cost"
+//                                 variant="outlined"
+//                                 size="small"
+//                                 sx={{
+//                                   "& .MuiOutlinedInput-root": {
+//                                     backgroundColor: "#fff",
+//                                     borderRadius: "6px",
+
+//                                     "& fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 light grey border
+//                                     },
+//                                     "&:hover fieldset": {
+//                                       borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                     },
+//                                     "&.Mui-focused fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                       borderWidth: "1px",
+//                                     },
+//                                   },
+
+//                                   "& .MuiInputLabel-root": {
+//                                     color: "#6b7280", // label grey
+//                                   },
+//                                   "& .MuiInputLabel-root.Mui-focused": {
+//                                     color: "#6b7280", // keep same on focus
+//                                   },
+//                                 }}
+//                                 focused
+//                                 InputProps={{
+//                                   readOnly: true,
+//                                   inputProps: {
+//                                     style: {
+//                                       textAlign: "right",
+//                                     },
+//                                   },
+//                                 }}
+//                               />
+
+//                               <TextField
+//                                 disabled={mode == "V"}
+//                                 fullWidth
+//                                 type="number"
+//                                 id="actual"
+//                                 name="actual"
+//                                 value={values.actual}
+//                                 onBlur={handleBlur}
+//                                 onChange={handleChange}
+//                                 label="Actual Cost"
+//                                 variant="outlined"
+//                                 size="small"
+//                                 sx={{
+//                                   "& .MuiOutlinedInput-root": {
+//                                     backgroundColor: "#fff",
+//                                     borderRadius: "6px",
+
+//                                     "& fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 light grey border
+//                                     },
+//                                     "&:hover fieldset": {
+//                                       borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                     },
+//                                     "&.Mui-focused fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                       borderWidth: "1px",
+//                                     },
+//                                   },
+
+//                                   "& .MuiInputLabel-root": {
+//                                     color: "#6b7280", // label grey
+//                                   },
+//                                   "& .MuiInputLabel-root.Mui-focused": {
+//                                     color: "#6b7280", // keep same on focus
+//                                   },
+//                                 }}
+//                                 focused
+//                                 InputProps={{
+//                                   readOnly: true,
+//                                   inputProps: {
+//                                     style: {
+//                                       textAlign: "right",
+//                                     },
+//                                   },
+//                                 }}
+//                               />
+//                               <TextField
+//                                 disabled={mode == "V"}
+//                                 fullWidth
+//                                 type="number"
+//                                 id="OtherExpenses"
+//                                 name="OtherExpenses"
+//                                 value={values.OtherExpenses}
+//                                 onBlur={handleBlur}
+//                                 onChange={handleChange}
+//                                 label="Other Expenses"
+//                                 variant="outlined"
+//                                 size="small"
+//                                 sx={{
+//                                   "& .MuiOutlinedInput-root": {
+//                                     backgroundColor: "#fff",
+//                                     borderRadius: "6px",
+
+//                                     "& fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 light grey border
+//                                     },
+//                                     "&:hover fieldset": {
+//                                       borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                     },
+//                                     "&.Mui-focused fieldset": {
+//                                       borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                       borderWidth: "1px",
+//                                     },
+//                                   },
+
+//                                   "& .MuiInputLabel-root": {
+//                                     color: "#6b7280", // label grey
+//                                   },
+//                                   "& .MuiInputLabel-root.Mui-focused": {
+//                                     color: "#6b7280", // keep same on focus
+//                                   },
+//                                 }}
+//                                 focused
+//                                 InputProps={{
+//                                   readOnly: true,
+//                                   inputProps: {
+//                                     style: {
+//                                       textAlign: "right",
+//                                     },
+//                                   },
+//                                 }}
+//                               />
+
+//                               {/* </FormControl> */}
+//                             </Box>
+//                           )}
+//                           <Typography
+//                             variant="h6"
+//                             fontWeight={700}
+//                             sx={{ mt: 4, mb: 2, color: "#1F2937" }}
+//                           >
+//                             Location
+//                           </Typography>
+//                           <Box
+//                             display="grid"
+//                             gap={formGap}
+//                             padding={1}
+//                             gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+//                             // gap="30px"
+//                             sx={{
+//                               "& > div": {
+//                                 gridColumn: isNonMobile ? undefined : "span 2",
+//                               },
+//                             }}
+//                           >
+//                             <TextField
+//                               fullWidth
+//                               label="Latitude"
+//                               name="latitude"
+//                               focused
+//                               type="text"
+//                               value={values.latitude}
+//                               onBlur={handleBlur}
+//                               onChange={(e) => {
+//                                 const value = e.target.value;
+
+//                                 // Allow - and one decimal only
+//                                 if (/^-?\d*\.?\d*$/.test(value)) {
+//                                   handleChange(e);
+//                                 }
+//                               }}
+//                               inputProps={{
+//                                 inputMode: "decimal",
+//                                 style: { textAlign: "right" },
+//                               }}
+//                               variant="outlined"
+//                               size="small"
+//                               sx={{
+//                                 "& .MuiOutlinedInput-root": {
+//                                   backgroundColor: "#fff",
+//                                   borderRadius: "6px",
+
+//                                   "& fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 light grey border
+//                                   },
+//                                   "&:hover fieldset": {
+//                                     borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                   },
+//                                   "&.Mui-focused fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                     borderWidth: "1px",
+//                                   },
+//                                 },
+
+//                                 "& .MuiInputLabel-root": {
+//                                   color: "#6b7280", // label grey
+//                                 },
+//                                 "& .MuiInputLabel-root.Mui-focused": {
+//                                   color: "#6b7280", // keep same on focus
+//                                 },
+//                               }}
+//                             />
+//                             <TextField
+//                               fullWidth
+//                               label="Longitude"
+//                               name="longitude"
+//                               focused
+//                               type="text"
+//                               value={values.longitude}
+//                               onBlur={handleBlur}
+//                               onChange={(e) => {
+//                                 const value = e.target.value;
+
+//                                 if (/^-?\d*\.?\d*$/.test(value)) {
+//                                   handleChange(e);
+//                                 }
+//                               }}
+//                               inputProps={{
+//                                 inputMode: "decimal",
+//                                 style: { textAlign: "right" },
+//                               }}
+//                               variant="outlined"
+//                               size="small"
+//                               sx={{
+//                                 "& .MuiOutlinedInput-root": {
+//                                   backgroundColor: "#fff",
+//                                   borderRadius: "6px",
+
+//                                   "& fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 light grey border
+//                                   },
+//                                   "&:hover fieldset": {
+//                                     borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                   },
+//                                   "&.Mui-focused fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                     borderWidth: "1px",
+//                                   },
+//                                 },
+
+//                                 "& .MuiInputLabel-root": {
+//                                   color: "#6b7280", // label grey
+//                                 },
+//                                 "& .MuiInputLabel-root.Mui-focused": {
+//                                   color: "#6b7280", // keep same on focus
+//                                 },
+//                               }}
+//                             />
+
+//                             <TextField
+//                               fullWidth
+//                               focused
+//                               label="Radius (m)"
+//                               name="radius"
+//                               type="text"
+//                               value={values.radius}
+//                               onBlur={handleBlur}
+//                               onChange={(e) => {
+//                                 const value = e.target.value;
+
+//                                 if (/^\d*\.?\d*$/.test(value)) {
+//                                   handleChange(e);
+//                                 }
+//                               }}
+//                               inputProps={{
+//                                 inputMode: "decimal",
+//                                 style: { textAlign: "right" },
+//                               }}
+//                               variant="outlined"
+//                               size="small"
+//                               sx={{
+//                                 "& .MuiOutlinedInput-root": {
+//                                   backgroundColor: "#fff",
+//                                   borderRadius: "6px",
+
+//                                   "& fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 light grey border
+//                                   },
+//                                   "&:hover fieldset": {
+//                                     borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                                   },
+//                                   "&.Mui-focused fieldset": {
+//                                     borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                     borderWidth: "1px",
+//                                   },
+//                                 },
+
+//                                 "& .MuiInputLabel-root": {
+//                                   color: "#6b7280", // label grey
+//                                 },
+//                                 "& .MuiInputLabel-root.Mui-focused": {
+//                                   color: "#6b7280", // keep same on focus
+//                                 },
+//                               }}
+//                             />
+//                             {/* <TextField
+//                     fullWidth
+//                     variant="standard"
+//                     focused
+//                     label="Radius (m)"
+//                     name="radius"
+//                     value={values.radius}
+//                     onBlur={handleBlur}
+//                     onChange={handleChange}
+//                     type="text"
+//                     inputProps={{
+//                       step: "any",
+//                       min: 0,
+//                       style: { textAlign: "right" },
+//                       onKeyDown: (e) => {
+//                         if (["e", "E", "+", "-"].includes(e.key)) {
+//                           e.preventDefault();
+//                         }
+//                       },
+//                       onInput: (e) => {
+//                         e.target.value = e.target.value.replace(
+//                           /[eE+\-]/g,
+//                           ""
+//                         );
+//                       },
+//                     }}
+//                   /> */}
+//                           </Box>
+//                         </>
+//                       ) : null}
+
+//                       {Subscriptionlastthree != "003" ? (
+//                         <>
+//                           <Box
+//                             display="flex"
+//                             justifyContent="end"
+//                             padding={1}
+//                             gap="20px"
+//                           >
+//                             {YearFlag == "true" ? (
+//                               <LoadingButton
+//                                 sx={{
+//                                   textTransform: "none",
+//                                   borderRadius: 2,
+//                                   px: 4,
+//                                   bgcolor: "#0D9488",
+//                                   "&:hover": {
+//                                     bgcolor: "#0F766E",
+//                                   },
+//                                 }}
+//                                 variant="contained"
+//                                 type="submit"
+//                                 loading={isLoading}
+//                               >
+//                                 Save
+//                               </LoadingButton>
+//                             ) : (
+//                               <Button
+//                                 sx={{
+//                                   textTransform: "none",
+//                                   borderRadius: 2,
+//                                   px: 4,
+//                                   bgcolor: "#0D9488",
+//                                   "&:hover": {
+//                                     bgcolor: "#0F766E",
+//                                   },
+//                                 }}
+//                                 variant="contained"
+//                                 disabled={true}
+//                               >
+//                                 Save
+//                               </Button>
+//                             )}
+//                             {/* {YearFlag == "true" && mode == "E" ? (
+//                     <Button
+//                       color="error"
+//                       variant="contained"
+//                       onClick={() => {
+//                         Swal.fire({
+//                           title: errorMsgData.Warningmsg.Delete,
+//                           icon: "warning",
+//                           showCancelButton: true,
+//                           confirmButtonColor: "#3085d6",
+//                           cancelButtonColor: "#d33",
+//                           confirmButtonText: "Confirm",
+//                         }).then((result) => {
+//                           if (result.isConfirmed) {
+//                             Fnsave(values, "harddelete");
+//                             // navigate(-1);
+//                           } else {
+//                             return;
+//                           }
+//                         });
+//                       }}
+//                     >
+//                       Delete
+//                     </Button>
+//                   ) : // <Button
+//                     //   color="error"
+//                     //   variant="contained"
+//                     //   disabled={true}
+//                     // >
+//                     //   Delete
+//                     // </Button>
+//                     null} */}
+//                             <Button
+//                               sx={{
+//                                 textTransform: "none",
+//                                 borderRadius: 2,
+//                                 px: 4,
+//                                 bgcolor: "#F97316",
+//                                 "&:hover": {
+//                                   bgcolor: "#EA580C",
+//                                 },
+//                               }}
+//                               variant="contained"
+//                               onClick={() => {
+//                                 // navigate("/Apps/TR133/Project");
+//                                 navigate(-1);
+//                               }}
+//                             >
+//                               Back
+//                             </Button>
+//                           </Box>
+//                         </>
+//                       ) : null}
+
+//                       {Subscriptionlastthree === "003" && (
+//                         <>
+//                           <Box
+//                             display="flex"
+//                             justifyContent="end"
+//                             padding={1}
+//                             gap="20px"
+//                           >
+//                             <Button
+//                               sx={{
+//                                 backgroundColor: "#009688",
+//                                 color: "#FFFFFF",
+//                                 "&:hover": {
+//                                   backgroundColor: "#009688", // same color on hover
+//                                 },
+//                               }}
+//                               // color="success"
+//                               variant="contained"
+//                               onClick={() => {
+//                                 // navigate("/Apps/TR133/Project");
+//                                 navigate(-1);
+//                               }}
+//                             >
+//                               Back
+//                             </Button>
+//                           </Box>
+//                         </>
+//                       )}
+
+//                       {Subscriptionlastthree === "003" && (
+//                         <>
+//                           <Box
+//                             // m="5px 0 0 0"
+//                             // height={dataGridHeightExplore}
+//                             height="60vh"
+//                             m={1}
+//                             sx={{
+//                               "& .MuiDataGrid-root": {
+//                                 border: "none",
+//                               },
+//                               "& .MuiDataGrid-cell": {
+//                                 borderBottom: "none",
+//                               },
+
+//                               "& .name-column--cell": {
+//                                 color: colors.greenAccent[300],
+//                               },
+//                               "& .MuiDataGrid-columnHeaders": {
+//                                 backgroundColor: colors.blueAccent[800],
+//                                 borderBottom: "none",
+//                               },
+//                               "& .MuiDataGrid-virtualScroller": {
+//                                 backgroundColor: colors.primary[400],
+//                               },
+//                               "& .MuiDataGrid-footerContainer": {
+//                                 borderTop: "none",
+//                                 backgroundColor: colors.blueAccent[800],
+//                               },
+//                               "& .MuiCheckbox-root": {
+//                                 color: `${colors.greenAccent[200]} !important`,
+//                               },
+//                               "& .odd-row": {
+//                                 backgroundColor: "",
+//                                 color: "", // Color for odd rows
+//                               },
+//                               "& .even-row": {
+//                                 backgroundColor: "#D3D3D3",
+//                                 color: "", // Color for even rows
+//                               },
+//                             }}
+//                           >
+//                             <DataGrid
+//                               sx={{
+//                                 "& .MuiDataGrid-footerContainer": {
+//                                   height: dataGridHeaderFooterHeight,
+//                                   minHeight: dataGridHeaderFooterHeight,
+//                                 },
+//                               }}
+//                               rowHeight={35}
+//                               // rowHeight={dataGridRowHeight}
+//                               headerHeight={dataGridHeaderFooterHeight}
+//                               rows={teachrows}
+//                               columns={Teachcolumns}
+//                               loading={exploreLoading}
+//                               editMode="row"
+//                               disableSelectionOnClick
+//                               rowModesModel={rowModesModelteach}
+//                               onRowModesModelChange={
+//                                 handleRowModesModelChangeTeach
+//                               }
+//                               onRowEditStop={handleRowEditStopTeach}
+//                               processRowUpdate={processRowUpdateTeach}
+//                               getRowId={(row) => row.RecordID}
+//                               // getRowId={(row) => row.ProjectTeamRecordID}
+//                               //  getRowId={(row) => row.id}
+//                               disableRowSelectionOnClick
+//                               // isCellEditable={(params) => {
+//                               //     if (params.field === "SlotCode") return false;
+//                               //     return true;
+//                               // }}
+
+//                               experimentalFeatures={{ newEditingApi: true }}
+//                               onProcessRowUpdateError={(error) => {
+//                                 console.error(
+//                                   "Row update validation failed:",
+//                                   error.message,
+//                                 );
+//                                 toast.error(error.message);
+//                               }}
+//                               components={{
+//                                 Toolbar: EditToolbarteach,
+//                               }}
+//                               componentsProps={{
+//                                 toolbar: {
+//                                   setTeachrows,
+//                                   setRowModesModelteach,
+//                                   isRowEditing,
+//                                   setPage,
+//                                   pageSize,
+//                                 }, // ✅ was setRowModesModel (wrong one)
+//                               }}
+//                               rowsPerPageOptions={[5, 10, 20]}
+//                               getRowClassName={(params) =>
+//                                 params.indexRelativeToCurrentPage % 2 === 0
+//                                   ? "odd-row"
+//                                   : "even-row"
+//                               }
+//                               pagination
+//                               pageSize={pageSize}
+//                               page={page}
+//                               onPageSizeChange={(newPageSize) =>
+//                                 setPageSize(newPageSize)
+//                               }
+//                               onPageChange={(newPage) => setPage(newPage)}
+//                             />
+//                           </Box>
+//                         </>
+//                       )}
+//                     </form>
+//                   )}
+//                 </Formik>
+//               </Paper>
+//             </Box>
+//           </Box>
+//         ) : (
+//           false
+//         )}
+
+//         {/* {show == "1" ? (
+//         <Paper elevation={3} sx={{ margin: "10px" }}>
+//           <Formik
+//             initialValues={UnitInitialValues}
+//             validationSchema={validationSchema2}
+//             enableReinitialize={true}
+//             onSubmit={(values, { resetForm, setFieldValue }) => {
+//               setTimeout(() => {
+//                 FnAttachment(values, resetForm, false, setFieldValue);
+//               }, 100);
+//             }}
+//           >
+//             {({
+//               values,
+//               errors,
+//               touched,
+//               handleBlur,
+//               handleSubmit,
+//               handleChange,
+//               setFieldValue,
+//               resetForm,
+//             }) => (
+//               <form
+//                 onSubmit={handleSubmit}
+//                 onReset={() => {
+//                   selectCellRowData({ rowData: {}, mode: "A", field: "" });
+//                   resetForm();
+//                 }}
+//               >
+//                 <Box>
+//                   <Box
+//                     display="grid"
+//                     gap={formGap}
+//                     padding={1}
+//                     gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+//                     sx={{
+//                       "& > div": {
+//                         gridColumn: isNonMobile ? undefined : "span 2",
+//                       },
+//                     }}
+//                   >
+
+//                     <FormControl sx={{ gap: formGap }}>
+//                       <TextField
+//                         fullWidth
+//                         variant="standard"
+//                         type="text"
+//                         id="code"
+//                         name="code"
+//                         value={values.code}
+//                         onBlur={handleBlur}
+//                         onChange={handleChange}
+//                         label="Code"
+//                         focused
+//                         InputProps={{
+//                           readOnly: true
+//                         }}
+//                       />
+
+//                       <TextField
+//                         fullWidth
+//                         variant="standard"
+//                         type="text"
+//                         id="description"
+//                         name="description"
+//                         value={values.description}
+//                         onBlur={handleBlur}
+//                         onChange={handleChange}
+//                         label="Description"
+//                         focused
+//                         InputProps={{
+//                           readOnly: true
+//                         }}
+//                       />
+
+//                       <Box
+//                         m="5px 0 0 0"
+//                         height="50vh"
+//                         sx={{
+//                           "& .MuiDataGrid-root": {
+//                             border: "none",
+//                           },
+//                           "& .MuiDataGrid-cell": {
+//                             borderBottom: "none",
+//                           },
+//                           "& .name-column--cell": {
+//                             color: colors.greenAccent[300],
+//                           },
+//                           "& .MuiDataGrid-columnHeaders": {
+//                             backgroundColor: colors.blueAccent[800],
+//                             borderBottom: "none",
+//                           },
+//                           "& .MuiDataGrid-virtualScroller": {
+//                             backgroundColor: colors.primary[400],
+//                           },
+//                           "& .MuiDataGrid-footerContainer": {
+//                             borderTop: "none",
+//                             backgroundColor: colors.blueAccent[800],
+//                           },
+//                           "& .MuiCheckbox-root": {
+//                             color: `${colors.greenAccent[200]} !important`,
+//                           },
+//                           "& .odd-row": {
+//                             backgroundColor: "",
+//                             color: "", // Color for odd rows
+//                           },
+//                           "& .even-row": {
+//                             backgroundColor: "#D3D3D3",
+//                             color: "", // Color for even rows
+//                           },
+//                         }}
+//                       >
+//                         <DataGrid
+//                           sx={{
+//                             "& .MuiDataGrid-footerContainer": {
+//                               height: dataGridHeaderFooterHeight,
+//                               minHeight: dataGridHeaderFooterHeight,
+//                             },
+//                           }}
+//                           rows={explorelistViewData}
+//                           columns={columns}
+//                           disableSelectionOnClick
+//                           getRowId={(row) => row.RecordID}
+//                           rowHeight={dataGridRowHeight}
+//                           headerHeight={dataGridHeaderFooterHeight}
+//                           pageSize={pageSize}
+//                           onPageSizeChange={(newPageSize) =>
+//                             setPageSize(newPageSize)
+//                           }
+//                           onCellClick={(params) => {
+//                             selectCellRowData({
+//                               rowData: params.row,
+//                               mode: "E",
+//                               field: params.field,
+//                             });
+//                           }}
+//                           rowsPerPageOptions={[5, 10, 20]}
+//                           pagination
+//                           components={{
+//                             Toolbar: Employee,
+//                           }}
+//                           onStateChange={(stateParams) =>
+//                             setRowCount(stateParams.pagination.rowCount)
+//                           }
+//                           loading={exploreLoading}
+//                           componentsProps={{
+//                             toolbar: {
+//                               showQuickFilter: true,
+//                               quickFilterProps: { debounceMs: 500 },
+//                             },
+//                           }}
+//                           getRowClassName={(params) =>
+//                             params.indexRelativeToCurrentPage % 2 === 0
+//                               ? "odd-row"
+//                               : "even-row"
+//                           }
+//                         />
+//                       </Box>
+//                     </FormControl>
+
+//                     <FormControl
+//                       sx={{
+//                         gap: formGap,
+//                         mt: { xs: "opx", md: "150px" },
+//                       }}
+//                     >
+
+//                       {CompanyAutoCode == "Y" ? (
+//                         <TextField
+//                           name="Code"
+//                           type="text"
+//                           id="Code"
+//                           label="Code"
+//                           placeholder="Auto"
+//                           variant="standard"
+//                           focused
+//                           // required
+//                           value={values.Code}
+//                           onBlur={handleBlur}
+//                           onChange={handleChange}
+//                           error={!!touched.Code && !!errors.Code}
+//                           helperText={touched.Code && errors.Code}
+//                           sx={{
+//                             backgroundColor: "#ffffff",
+//                             "& .MuiFilledInput-root": {
+//                               backgroundColor: "#f5f5f5 ",
+//                             },
+//                           }}
+//                           InputProps={{ readOnly: true }}
+//                         // autoFocus
+//                         />
+//                       ) : (
+//                         <TextField
+//                           name="Code"
+//                           type="text"
+//                           id="Code"
+//                           label={
+//                             <>
+//                               Code
+//                               <span style={{ color: "red", fontSize: "20px" }}>
+//                                 *
+//                               </span>
+//                             </>
+//                           }
+//                           variant="standard"
+//                           focused
+//                           // required
+//                           value={values.Code}
+//                           onBlur={handleBlur}
+//                           onChange={handleChange}
+//                           error={!!touched.Code && !!errors.Code}
+//                           helperText={touched.Code && errors.Code}
+//                           sx={{
+//                             backgroundColor: "#ffffff",
+//                             "& .MuiFilledInput-root": {
+//                               backgroundColor: "#f5f5f5 ",
+//                             },
+//                           }}
+//                           autoFocus
+//                         />
+//                       )}
+
+//                       <TextField
+//                         disabled={mode == "V"}
+//                         name="Name"
+//                         type="text"
+//                         id="Name"
+//                         label={
+//                           <>
+//                             Name
+//                             <span style={{ color: "red", fontSize: "20px" }}>
+//                               *
+//                             </span>
+//                           </>
+//                         }
+//                         variant="standard"
+//                         focused
+//                         value={values.Name}
+//                         onBlur={handleBlur}
+//                         onChange={handleChange}
+//                         error={!!touched.Name && !!errors.Name}
+//                         helperText={touched.Name && errors.Name}
+//                         autoFocus
+//                       />
+//                       <ProjectVendor
+//                         name="OwnedBy"
+//                         // label="Owned By"
+//                         label={
+//                           <>
+
+//                             Owned By
+//                             <span style={{ color: "red", fontSize: "20px" }}>
+//                               *
+//                             </span>
+//                           </>
+//                         }
+//                         variant="outlined"
+//                         id="OwnedBy"
+//                         value={values.OwnedBy}
+//                         onChange={(newValue) => {
+//                           setFieldValue(
+//                             "OwnedBy",
+//                             newValue
+//                               ? {
+//                                 RecordID: newValue.RecordID,
+//                                 Code: newValue.Code,
+//                                 Name: newValue.Name,
+//                               }
+//                               : null
+//                           );
+//                         }}
+//                         error={!!touched.OwnedBy && !!errors.OwnedBy}
+//                         helperText={touched.OwnedBy && errors.OwnedBy}
+
+//                         url={`${listViewurl}?data={"Query":{"AccessID":"2102","ScreenName":"Vendor","Filter":"parentID='${CompanyID}'","Any":""}}`}
+//                       />
+//                       <TextField
+//                         label="Comments"
+//                         id="Comments"
+//                         name="Comments"
+//                         focused
+//                         variant="standard"
+//                         value={values.Comments}
+//                         onBlur={handleBlur}
+//                         onChange={handleChange}
+//                         error={!!touched.Comments && !!errors.Comments}
+//                         helperText={touched.Comments && errors.Comments}
+//                       />
+//                       <TextField
+//                         fullWidth
+//                         variant="standard"
+//                         type="number"
+//                         label="Sort Order"
+//                         value={values.sortOrder}
+//                         id="sortOrder"
+//                         onBlur={handleBlur}
+//                         onChange={handleChange}
+//                         name="sortOrder"
+//                         sx={{ background: "" }}
+//                         focused
+//                         onWheel={(e) => e.target.blur()}
+//                         onInput={(e) => {
+//                           e.target.value = Math.max(0, parseInt(e.target.value))
+//                             .toString()
+//                             .slice(0, 8);
+//                         }}
+//                         InputProps={{
+//                           inputProps: {
+//                             style: { textAlign: "right" },
+//                           },
+//                         }}
+//                       />
+
+//                       <Box>
+//                         <FormControlLabel
+//                           control={
+//                             <Checkbox
+//                               name="disable"
+//                               checked={values.disable}
+//                               onChange={handleChange}
+//                             />
+//                           }
+//                           label="Disable"
+
+//                         />
+//                       </Box>
+//                       <Box
+//                         display="flex"
+//                         justifyContent="end"
+//                         padding={1}
+//                         gap={2}
+//                       >
+//                         {YearFlag == "true" ? (
+//                           <LoadingButton
+//                             color="secondary"
+//                             variant="contained"
+//                             type="submit"
+//                             loading={isLoading}
+//                           >
+//                             Save
+//                           </LoadingButton>
+//                         ) : (
+//                           <Button
+//                             color="secondary"
+//                             variant="contained"
+//                             disabled={true}
+//                           >
+//                             Save
+//                           </Button>
+//                         )}
+//                         {YearFlag == "true" ? (
+//                           <Button
+//                             color="error"
+//                             variant="contained"
+//                             disabled={funMode == "A"}
+//                             onClick={() => {
+//                               Swal.fire({
+//                                 title: errorMsgData.Warningmsg.Delete,
+//                                 icon: "warning",
+//                                 showCancelButton: true,
+//                                 confirmButtonColor: "#3085d6",
+//                                 cancelButtonColor: "#d33",
+//                                 confirmButtonText: "Confirm",
+//                               }).then((result) => {
+//                                 if (result.isConfirmed) {
+//                                   FnAttachment(
+//                                     values,
+//                                     resetForm,
+//                                     "harddelete"
+//                                   );
+//                                 } else {
+//                                   return;
+//                                 }
+//                               });
+//                             }}
+//                           >
+//                             Delete
+//                           </Button>
+//                         ) : (
+//                           <Button
+//                             color="error"
+//                             variant="contained"
+//                             disabled={true}
+//                           >
+//                             Delete
+//                           </Button>
+//                         )}
+//                         <Button
+//                           type="reset"
+//                           color="warning"
+//                           variant="contained"
+//                           onClick={() => {
+//                             setScreen(0);
+//                           }}
+//                         >
+//                           Cancel
+//                         </Button>
+//                       </Box>
+//                     </FormControl>
+//                   </Box>
+//                 </Box>
+//               </form>
+//             )}
+//           </Formik>
+//         </Paper>
+//       ) : (
+//         false
+//       )} */}
+
+//         {show == "3" ? (
+//           <Box
+//             display="flex"
+//             gap={3}
+//             alignItems="flex-start"
+//             flexWrap="wrap"
+//             sx={{ p: 1 }}
+//           >
+//             {/* LEFT: Form Sections sidebar */}
+//             {mode !== "A" && (
+//               <FormSectionsSidebar
+//                 show={show}
+//                 screenChange={screenChange}
+//                 sections={formSections}
+//                 open={sectionsOpen}
+//                 onToggle={() => setSectionsOpen((p) => !p)}
+//               />
+//             )}
+//             <Box
+//               flex={1}
+//               minWidth={0}
+//               display="flex"
+//               flexDirection="column"
+//               gap={3}
+//             >
+//               <Paper
+//                 elevation={0}
+//                 sx={{
+//                   backgroundColor: "#fff",
+//                   border: "1px solid #E5E7EB",
+//                   borderRadius: 3,
+//                   p: 3,
+//                 }}
+//               >
+//                 <Formik
+//                   initialValues={UnitInitialValues}
+//                   // validationSchema={validationSchema2}
+//                   enableReinitialize={true}
+//                   // onSubmit={(values, { resetForm, setFieldValue }) => {
+//                   //   setTimeout(() => {
+//                   //     FnAttachment(values, resetForm, false, setFieldValue);
+//                   //   }, 100);
+//                   // }}
+//                   onSubmit={(values, { resetForm }) => {
+//                     handleSaveButtonClick(values, resetForm);
+//                   }}
+//                 >
+//                   {({
+//                     values,
+//                     errors,
+//                     touched,
+//                     handleBlur,
+//                     handleSubmit,
+//                     handleChange,
+//                     setFieldValue,
+//                     resetForm,
+//                   }) => (
+//                     <form
+//                       onSubmit={handleSubmit}
+//                     // onReset={() => {
+//                     //   selectCellRowData({ rowData: {}, mode: "A", field: "" });
+//                     //   resetForm();
+//                     // }}
+//                     >
+//                       {/* ----- CARD HEADER ----- */}
+//                       <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+//                         <Box
+//                           sx={{
+//                             width: 32,
+//                             height: 32,
+//                             borderRadius: "50%",
+//                             backgroundColor: "#EFF6FF",
+//                             display: "flex",
+//                             alignItems: "center",
+//                             justifyContent: "center",
+//                           }}
+//                         >
+//                           <Typography sx={{ fontSize: 16 }}>🏢</Typography>
+//                         </Box>
+//                         <Box>
+//                           <Typography
+//                             variant="subtitle1"
+//                             fontWeight={700}
+//                             color="#0D94885"
+//                           >
+//                             Units
+//                           </Typography>
+
+//                           <Typography variant="body2" color="text.secondary">
+//                             Unit / block details linked to the Project
+//                           </Typography>
+//                         </Box>
+//                       </Box>
+//                       <Box
+//                         display="grid"
+//                         gap={formGap}
+//                         padding={1}
+//                         gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+//                         sx={{
+//                           "& > div": {
+//                             gridColumn: isNonMobile ? undefined : "span 2",
+//                           },
+//                         }}
+//                       >
+//                         {/* <FormControl sx={{ gap: formGap }}> */}
+//                         <TextField
+//                           fullWidth
+//                           variant="outlined"
+//                           size="small"
+//                           type="text"
+//                           id="code"
+//                           name="code"
+//                           value={values.code}
+//                           onBlur={handleBlur}
+//                           onChange={handleChange}
+//                           label="Code"
+//                           focused
+//                           InputProps={{
+//                             readOnly: true,
+//                           }}
+//                           sx={{
+//                             "& .MuiOutlinedInput-root": {
+//                               backgroundColor: "#fff",
+//                               borderRadius: "6px",
+
+//                               "& fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 light grey border
+//                               },
+//                               "&:hover fieldset": {
+//                                 borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                               },
+//                               "&.Mui-focused fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                 borderWidth: "1px",
+//                               },
+//                             },
+
+//                             "& .MuiInputLabel-root": {
+//                               color: "#6b7280", // label grey
+//                             },
+//                             "& .MuiInputLabel-root.Mui-focused": {
+//                               color: "#6b7280", // keep same on focus
+//                             },
+//                           }}
+//                         />
+
+//                         <TextField
+//                           fullWidth
+//                           variant="outlined"
+//                           size="small"
+//                           type="text"
+//                           id="description"
+//                           name="description"
+//                           value={values.description}
+//                           onBlur={handleBlur}
+//                           onChange={handleChange}
+//                           label="Description"
+//                           focused
+//                           InputProps={{
+//                             readOnly: true,
+//                           }}
+//                           sx={{
+//                             "& .MuiOutlinedInput-root": {
+//                               backgroundColor: "#fff",
+//                               borderRadius: "6px",
+
+//                               "& fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 light grey border
+//                               },
+//                               "&:hover fieldset": {
+//                                 borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                               },
+//                               "&.Mui-focused fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                 borderWidth: "1px",
+//                               },
+//                             },
+
+//                             "& .MuiInputLabel-root": {
+//                               color: "#6b7280", // label grey
+//                             },
+//                             "& .MuiInputLabel-root.Mui-focused": {
+//                               color: "#6b7280", // keep same on focus
+//                             },
+//                           }}
+//                         />
+//                       </Box>
+//                       <Box
+//                         padding={1}
+//                         // height="500px"
+//                         height={dataGridHeightExplore}
+//                         marginTop={2}
+//                         sx={{
+//                           "& .MuiDataGrid-root": {
+//                             border: "none",
+//                           },
+//                           "& .cell-negative-status": {
+//                             color: colors.redAccent[500],
+//                             fontWeight: 600,
+//                           },
+//                           "& .cell-positive-status": {
+//                             color: colors.greenAccent[400],
+//                             fontWeight: 600,
+//                           },
+//                           "& .MuiDataGrid-cell": {
+//                             borderBottom: "none",
+//                           },
+//                           "& .name-column--cell": {
+//                             color: colors.greenAccent[300],
+//                           },
+//                           "& .MuiDataGrid-columnHeaders": {
+//                             backgroundColor: colors.blueAccent[800],
+//                             // backgroundColor: "#25adad",
+//                             borderBottom: "none",
+//                           },
+//                           "& .MuiDataGrid-virtualScroller": {
+//                             backgroundColor: colors.primary[400],
+//                           },
+//                           "& .MuiDataGrid-footerContainer": {
+//                             borderTop: "none",
+//                             backgroundColor: colors.blueAccent[800],
+//                             // borderColor: "#d0edec",
+//                             // backgroundColor: "",
+//                           },
+//                           "& .MuiCheckbox-root": {
+//                             color: `${colors.greenAccent[200]} !important`,
+//                           },
+//                           "& .odd-row": {
+//                             backgroundColor: "",
+//                             color: "", // Color for odd rows
+//                           },
+//                           "& .even-row": {
+//                             // backgroundColor: "#d0edec",
+//                             backgroundColor: "",
+//                             color: "", // Color for even rows
+//                           },
+
+//                           "& .MuiDataGrid-columnHeaderTitle": {
+//                             color: colors.blueAccent[900],
+//                             fontWeight: 600,
+//                           },
+//                           "& .MuiTablePagination-root": {
+//                             color: colors.blueAccent[900],
+//                           },
+//                           /* ✅ PAGINATION STYLES (WHITE COLOR) */
+//                           "& .MuiTablePagination-root": {
+//                             color: "#fff",
+//                           },
+
+//                           "& .MuiTablePagination-selectLabel": {
+//                             color: "#fff",
+//                           },
+
+//                           "& .MuiTablePagination-displayedRows": {
+//                             color: "#fff",
+//                           },
+
+//                           /* Dropdown icon */
+//                           "& .MuiTablePagination-selectIcon": {
+//                             color: "#fff",
+//                           },
+
+//                           /* Left & Right arrow buttons */
+//                           "& .MuiTablePagination-actions button": {
+//                             color: "#fff",
+//                           },
+//                         }}
+//                       >
+//                         <DataGrid
+//                           sx={{
+//                             "& .MuiDataGrid-footerContainer": {
+//                               height: dataGridHeaderFooterHeight,
+//                               minHeight: dataGridHeaderFooterHeight,
+//                             },
+//                           }}
+//                           rowHeight={dataGridRowHeight}
+//                           headerHeight={dataGridHeaderFooterHeight}
+//                           rows={rows}
+//                           columns={TTColumns}
+//                           loading={exploreLoading}
+//                           editMode="row"
+//                           disableSelectionOnClick
+//                           rowModesModel={rowModesModel}
+//                           onRowModesModelChange={handleRowModesModelChange}
+//                           onRowEditStop={handleRowEditStop}
+//                           processRowUpdate={processRowUpdate}
+//                           getRowId={(row) => row.RecordID}
+//                           isCellEditable={(params) => {
+//                             if (params.field === "SLNO") return false;
+//                             if (params.field === "Code" && YearFlag == "true")
+//                               return false;
+//                             return true;
+//                           }}
+//                           disableRowSelectionOnClick
+//                           experimentalFeatures={{ newEditingApi: true }}
+//                           onProcessRowUpdateError={(error) => {
+//                             console.error(
+//                               "Row update validation failed:",
+//                               error.message,
+//                             );
+
+//                             toast.error(error.message);
+//                           }}
+//                           components={{
+//                             Toolbar: EditToolbar,
+//                           }}
+//                           componentsProps={{
+//                             toolbar: { setRows, setRowModesModel },
+//                           }}
+//                           rowsPerPageOptions={[5, 10, 20]}
+//                           getRowClassName={(params) =>
+//                             params.indexRelativeToCurrentPage % 2 === 0
+//                               ? "odd-row"
+//                               : "even-row"
+//                           }
+//                           pagination
+//                           pageSize={pageSize}
+//                           page={page}
+//                           onPageSizeChange={(newPageSize) =>
+//                             setPageSize(newPageSize)
+//                           }
+//                           onPageChange={(newPage) => setPage(newPage)}
+//                         />
+//                       </Box>
+
+//                       {/* </FormControl> */}
+//                       <Box
+//                         display="flex"
+//                         justifyContent="space-between"
+//                         padding={1}
+//                       >
+//                         <Box>
+//                           <Typography
+//                             fontWeight={600}
+//                             fontSize={15}
+//                             lineHeight={1}
+//                             mb={1}
+//                             ml={0.5}
+//                           >
+//                             Actions Guide
+//                           </Typography>
+//                           <Box
+//                             display="flex"
+//                             flexDirection="row"
+//                             gap="15px"
+//                             sx={{ overflowY: "auto" }}
+//                           >
+//                             <Chip
+//                               icon={<EditIcon color="info" />}
+//                               label="Edit"
+//                               variant="outlined"
+//                             />
+//                             <Chip
+//                               icon={<DeleteIcon color="error" />}
+//                               label="Delete"
+//                               variant="outlined"
+//                             />
+//                             <Chip
+//                               icon={<SaveIcon color="inherit" />}
+//                               label="Save"
+//                               variant="outlined"
+//                             />
+//                             <Chip
+//                               icon={<CancelIcon color="info" />}
+//                               label="Cancel"
+//                               variant="outlined"
+//                             />
+//                           </Box>
+//                         </Box>
+//                         <Box
+//                           display="flex"
+//                           justifyContent="space-between"
+//                           padding={1}
+//                           gap="20px"
+//                         >
+//                           <LoadingButton
+//                             sx={{
+//                               textTransform: "none",
+//                               borderRadius: 2,
+//                               px: 4,
+//                               bgcolor: "#0D9488",
+//                               "&:hover": {
+//                                 bgcolor: "#0F766E",
+//                               },
+//                             }}
+//                             variant="contained"
+//                             type="submit"
+//                           >
+//                             Save
+//                           </LoadingButton>
+//                           <Button
+//                             sx={{
+//                               textTransform: "none",
+//                               borderRadius: 2,
+//                               px: 4,
+//                               bgcolor: "#F97316",
+//                               "&:hover": {
+//                                 bgcolor: "#EA580C",
+//                               },
+//                             }}
+//                             variant="contained"
+//                             onClick={() => {
+//                               setScreen(0);
+//                             }}
+//                           >
+//                             Back
+//                           </Button>
+//                         </Box>
+//                       </Box>
+//                     </form>
+//                   )}
+//                 </Formik>
+//               </Paper>
+//             </Box>
+//           </Box>
+//         ) : (
+//           false
+//         )}
+
+//         {show == "2" ? (
+//           <Box
+//             display="flex"
+//             gap={3}
+//             alignItems="flex-start"
+//             flexWrap="wrap"
+//             sx={{ p: 1 }}
+//           >
+//             {/* LEFT: Form Sections sidebar */}
+//             {mode !== "A" && (
+//               <FormSectionsSidebar
+//                 show={show}
+//                 screenChange={screenChange}
+//                 sections={formSections}
+//                 open={sectionsOpen}
+//                 onToggle={() => setSectionsOpen((p) => !p)}
+//               />
+//             )}
+//             <Box
+//               flex={1}
+//               minWidth={0}
+//               display="flex"
+//               flexDirection="column"
+//               gap={3}
+//             >
+//               <Paper
+//                 elevation={0}
+//                 sx={{
+//                   backgroundColor: "#fff",
+//                   border: "1px solid #E5E7EB",
+//                   borderRadius: 3,
+//                   p: 3,
+//                 }}
+//               >
+//                 <Formik
+//                   initialValues={DocInitialValues}
+//                   // validationSchema={validationSchema2}
+//                   enableReinitialize={true}
+//                 // onSubmit={(values, { resetForm, setFieldValue }) => {
+//                 //   setTimeout(() => {
+//                 //     FnAttachment(values, resetForm, false, setFieldValue);
+//                 //   }, 100);
+//                 // }}
+//                 >
+//                   {({
+//                     values,
+//                     errors,
+//                     touched,
+//                     handleBlur,
+//                     handleSubmit,
+//                     handleChange,
+//                     setFieldValue,
+//                     resetForm,
+//                   }) => (
+//                     <form
+//                       onSubmit={handleSubmit}
+//                       onReset={() => {
+//                         selectCellRowData({
+//                           rowData: {},
+//                           mode: "A",
+//                           field: "",
+//                         });
+//                         resetForm();
+//                       }}
+//                     >
+//                       {/* ----- CARD HEADER ----- */}
+//                       <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+//                         <Box
+//                           sx={{
+//                             width: 32,
+//                             height: 32,
+//                             borderRadius: "50%",
+//                             backgroundColor: "#EFF6FF",
+//                             display: "flex",
+//                             alignItems: "center",
+//                             justifyContent: "center",
+//                           }}
+//                         >
+//                           <Typography sx={{ fontSize: 16 }}>📄</Typography>
+//                         </Box>
+//                         <Box>
+//                           <Typography
+//                             variant="subtitle1"
+//                             fontWeight={700}
+//                             color="#0D94885"
+//                           >
+//                             List Of Documents
+//                           </Typography>
+
+//                           <Typography variant="body2" color="text.secondary">
+//                             Attachments documents for the Project
+//                           </Typography>
+//                         </Box>
+//                       </Box>
+//                       <Box
+//                         display="grid"
+//                         gap={formGap}
+//                         padding={1}
+//                         gridTemplateColumns="repeat(2 , minMax(0,1fr))"
+//                         sx={{
+//                           "& > div": {
+//                             gridColumn: isNonMobile ? undefined : "span 2",
+//                           },
+//                         }}
+//                       >
+//                         {/* <FormControl sx={{ gap: formGap }}> */}
+//                         <TextField
+//                           fullWidth
+//                           variant="outlined"
+//                           size="small"
+//                           type="text"
+//                           id="code"
+//                           name="code"
+//                           value={values.code}
+//                           onBlur={handleBlur}
+//                           onChange={handleChange}
+//                           label="Code"
+//                           focused
+//                           InputProps={{
+//                             readOnly: true,
+//                           }}
+//                           sx={{
+//                             "& .MuiOutlinedInput-root": {
+//                               backgroundColor: "#fff",
+//                               borderRadius: "6px",
+
+//                               "& fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 light grey border
+//                               },
+//                               "&:hover fieldset": {
+//                                 borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                               },
+//                               "&.Mui-focused fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                 borderWidth: "1px",
+//                               },
+//                             },
+
+//                             "& .MuiInputLabel-root": {
+//                               color: "#6b7280", // label grey
+//                             },
+//                             "& .MuiInputLabel-root.Mui-focused": {
+//                               color: "#6b7280", // keep same on focus
+//                             },
+//                           }}
+//                         />
+
+//                         <TextField
+//                           fullWidth
+//                           variant="outlined"
+//                           size="small"
+//                           type="text"
+//                           id="description"
+//                           name="description"
+//                           value={values.description}
+//                           onBlur={handleBlur}
+//                           onChange={handleChange}
+//                           label="Description"
+//                           focused
+//                           InputProps={{
+//                             readOnly: true,
+//                           }}
+//                           sx={{
+//                             "& .MuiOutlinedInput-root": {
+//                               backgroundColor: "#fff",
+//                               borderRadius: "6px",
+
+//                               "& fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 light grey border
+//                               },
+//                               "&:hover fieldset": {
+//                                 borderColor: "#bfc4cc", // 👈 slightly darker on hover
+//                               },
+//                               "&.Mui-focused fieldset": {
+//                                 borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+//                                 borderWidth: "1px",
+//                               },
+//                             },
+
+//                             "& .MuiInputLabel-root": {
+//                               color: "#6b7280", // label grey
+//                             },
+//                             "& .MuiInputLabel-root.Mui-focused": {
+//                               color: "#6b7280", // keep same on focus
+//                             },
+//                           }}
+//                         />
+//                         {/* </FormControl> */}
+//                       </Box>
+
+//                       <Box
+//                         padding={1}
+//                         m="5px 0 0 0"
+//                         // height="50vh"
+//                         // height={dataGridHeight}
+//                         height={dataGridHeightExplore}
+//                         sx={{
+//                           "& .MuiDataGrid-root": {
+//                             border: "none",
+//                           },
+//                           "& .cell-negative-status": {
+//                             color: colors.redAccent[500],
+//                             fontWeight: 600,
+//                           },
+//                           "& .cell-positive-status": {
+//                             color: colors.greenAccent[400],
+//                             fontWeight: 600,
+//                           },
+//                           "& .MuiDataGrid-cell": {
+//                             borderBottom: "none",
+//                           },
+//                           "& .name-column--cell": {
+//                             color: colors.greenAccent[300],
+//                           },
+//                           "& .MuiDataGrid-columnHeaders": {
+//                             backgroundColor: colors.blueAccent[800],
+//                             // backgroundColor: "#25adad",
+//                             borderBottom: "none",
+//                           },
+//                           "& .MuiDataGrid-virtualScroller": {
+//                             backgroundColor: colors.primary[400],
+//                           },
+//                           "& .MuiDataGrid-footerContainer": {
+//                             borderTop: "none",
+//                             backgroundColor: colors.blueAccent[800],
+//                             // borderColor: "#d0edec",
+//                             // backgroundColor: "",
+//                           },
+//                           "& .MuiCheckbox-root": {
+//                             color: `${colors.greenAccent[200]} !important`,
+//                           },
+//                           "& .odd-row": {
+//                             backgroundColor: "",
+//                             color: "", // Color for odd rows
+//                           },
+//                           "& .even-row": {
+//                             // backgroundColor: "#d0edec",
+//                             backgroundColor: "",
+//                             color: "", // Color for even rows
+//                           },
+
+//                           "& .MuiDataGrid-columnHeaderTitle": {
+//                             color: colors.blueAccent[900],
+//                             fontWeight: 600,
+//                           },
+//                           "& .MuiTablePagination-root": {
+//                             color: colors.blueAccent[900],
+//                           },
+//                           /* ✅ PAGINATION STYLES (WHITE COLOR) */
+//                           "& .MuiTablePagination-root": {
+//                             color: "#fff",
+//                           },
+
+//                           "& .MuiTablePagination-selectLabel": {
+//                             color: "#fff",
+//                           },
+
+//                           "& .MuiTablePagination-displayedRows": {
+//                             color: "#fff",
+//                           },
+
+//                           /* Dropdown icon */
+//                           "& .MuiTablePagination-selectIcon": {
+//                             color: "#fff",
+//                           },
+
+//                           /* Left & Right arrow buttons */
+//                           "& .MuiTablePagination-actions button": {
+//                             color: "#fff",
+//                           },
+//                         }}
+//                       >
+//                         <DataGrid
+//                           sx={{
+//                             "& .MuiDataGrid-footerContainer": {
+//                               height: dataGridHeaderFooterHeight,
+//                               minHeight: dataGridHeaderFooterHeight,
+//                             },
+//                           }}
+//                           // rows={explorelistViewData}
+//                           rows={filteredExploreRows}
+//                           columns={columns}
+//                           disableSelectionOnClick
+//                           getRowId={(row) => row.RecordID}
+//                           rowHeight={dataGridRowHeight}
+//                           headerHeight={dataGridHeaderFooterHeight}
+//                           pageSize={pageSize}
+//                           onPageSizeChange={(newPageSize) =>
+//                             setPageSize(newPageSize)
+//                           }
+//                           onCellClick={(params) => {
+//                             selectCellRowData({
+//                               rowData: params.row,
+//                               mode: "E",
+//                               field: params.field,
+//                             });
+//                           }}
+//                           // rowsPerPageOptions={[5, 10, 20]}
+//                           pagination
+//                           components={{
+//                             Toolbar: Employee,
+//                           }}
+//                           onStateChange={(stateParams) =>
+//                             setRowCount(stateParams.pagination.rowCount)
+//                           }
+//                           componentsProps={{
+//                             toolbar: { setRows, setRowModesModel },
+//                           }}
+//                           loading={exploreLoading}
+//                           // componentsProps={{
+//                           //   toolbar: {
+//                           //     showQuickFilter: true,
+//                           //     quickFilterProps: { debounceMs: 500 },
+//                           //   },
+//                           // }}
+//                           getRowClassName={(params) =>
+//                             params.indexRelativeToCurrentPage % 2 === 0
+//                               ? "odd-row"
+//                               : "even-row"
+//                           }
+//                         />
+//                       </Box>
+//                     </form>
+//                   )}
+//                 </Formik>
+//                 <Box display="flex" justifyContent="space-between" padding={1}>
+//                   <Box>
+//                     <Typography
+//                       fontWeight={600}
+//                       fontSize={15}
+//                       lineHeight={1}
+//                       mb={1}
+//                       ml={0.5}
+//                     >
+//                       Actions Guide
+//                     </Typography>
+//                     <Box
+//                       display="flex"
+//                       flexDirection="row"
+//                       gap="15px"
+//                       sx={{ overflowY: "auto" }}
+//                     >
+//                       <Chip
+//                         icon={<VisibilityIcon color="primary" />}
+//                         label="Open Document"
+//                         variant="outlined"
+//                       />
+//                     </Box>
+//                   </Box>
+//                   <Box
+//                     display="flex"
+//                     justifyContent="space-between"
+//                     padding={1}
+//                   >
+//                     <Button
+//                       sx={{
+//                         textTransform: "none",
+//                         borderRadius: 2,
+//                         px: 4,
+//                         bgcolor: "#F97316",
+//                         "&:hover": {
+//                           bgcolor: "#EA580C",
+//                         },
+//                       }}
+//                       variant="contained"
+//                       onClick={() => {
+//                         setScreen("0");
+//                       }}
+//                     >
+//                       Back
+//                     </Button>
+//                   </Box>
+//                 </Box>
+//               </Paper>
+//             </Box>
+//           </Box>
+//         ) : (
+//           false
+//         )}
+//         {/* </Box> */}
+//       </Box>
+//     </React.Fragment>
+//   );
+// };
+
+// export default Editproject;

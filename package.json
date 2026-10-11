@@ -59,7 +59,13 @@
     "start": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build": "set NODE_OPTIONS=--max_old_space_size=8192 && react-scripts build"
+    "build": "set NODE_OPTIONS=--max_old_space_size=8192 && react-scripts build",
+    "start:bosuat": "env-cmd -f .env.bosuat react-scripts start",
+    "build:bosuat": "env-cmd -f .env.bosuat react-scripts build",
+    "start:boslive": "env-cmd -f .env.boslive react-scripts start",
+    "build:boslive": "env-cmd -f .env.boslive react-scripts build",
+    "start:admin": "env-cmd -f .env.admin react-scripts start",
+    "build:admin": "env-cmd -f .env.admin react-scripts build"
   },
   "eslintConfig": {
     "extends": [
@@ -78,5 +84,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "env-cmd": "^11.0.0"
   }
 }
