@@ -888,60 +888,82 @@ const StaffTimetable = () => {
                                     url={`${listViewurl}?data={"Query":{"AccessID":"2164","ScreenName":"Staff Terms","Filter":"EmployeeID IN ('${params.id}') AND CompanyID=${companyId}","Any":"","VerticalLicense":"${sliceSubcriptionCode || ""}"}}`}
                                 />
 
-                                 <CheckinAutocomplete
-                                                  name="Slotgroup"
-                                                   label={
-                                                    <>
-                                                      Slot Group
-                                                      <span style={{ color: "red", fontSize: "20px" }}>
-                                                        *
-                                                      </span>
-                                                    </>
-                                                  }
-                                                  id="Slotgroup"
-                                                  value={values.Slotgroup}
-                                                  onChange={(newValue) =>
-                                                    setFieldValue("Slotgroup", {
-                                                      RecordID: newValue.RecordID,
-                                                      Code: newValue.Code,
-                                                      Name: newValue.Name,
-                                                    })
-                                                  }
-                                                  url={`${listViewurl}?data=${JSON.stringify({
-                                                    Query: {
-                                                      AccessID: "2180",
-                                                      ScreenName: "Slotgroup",
-                                                    //   Filter: values?.Teacher
-                                                    //     ? `EmployeeID IN ('${Array.isArray(values.Teacher)
-                                                    //       ? values.Teacher.map(t => t.RecordID).join("','")
-                                                    //       : values.Teacher.RecordID
-                                                    //     }') AND CompanyID='${companyId}'`
-                                                    //     : `CompanyID='${companyId}'`,
-                                                      Filter: `EmployeeID IN('${params.id}') AND CompanyID='${companyId}' GROUP BY RecordID`,
-                                                      Any: "",
-                                                      VerticalLicense: sliceSubcriptionCode || "",
-                                                    },
-                                                  })}`}
-                                                />
+                                <CheckinAutocomplete
+                                    name="Slotgroup"
+                                    label={
+                                        <>
+                                            Slot Group
+                                            <span style={{ color: "red", fontSize: "20px" }}>
+                                                *
+                                            </span>
+                                        </>
+                                    }
+                                    id="Slotgroup"
+                                    value={values.Slotgroup}
+                                    onChange={(newValue) =>
+                                        setFieldValue("Slotgroup", {
+                                            RecordID: newValue.RecordID,
+                                            Code: newValue.Code,
+                                            Name: newValue.Name,
+                                        })
+                                    }
+                                    url={`${listViewurl}?data=${JSON.stringify({
+                                        Query: {
+                                            AccessID: "2180",
+                                            ScreenName: "Slotgroup",
+                                            //   Filter: values?.Teacher
+                                            //     ? `EmployeeID IN ('${Array.isArray(values.Teacher)
+                                            //       ? values.Teacher.map(t => t.RecordID).join("','")
+                                            //       : values.Teacher.RecordID
+                                            //     }') AND CompanyID='${companyId}'`
+                                            //     : `CompanyID='${companyId}'`,
+                                            Filter: `EmployeeID IN('${params.id}') AND CompanyID='${companyId}' GROUP BY RecordID`,
+                                            Any: "",
+                                            VerticalLicense: sliceSubcriptionCode || "",
+                                        },
+                                    })}`}
+                                />
                             </Box>
 
                             {/* ── ACTION BUTTONS ── */}
                             <Box display="flex" justifyContent="flex-end" p={1} gap="12px" flexWrap="wrap">
-                                <Button color="secondary" variant="contained" type="submit" disabled={apiLoading}>
+                                <Button
+                                    // color="secondary"
+                                    sx={{
+                                        textTransform: "none",
+                                        borderRadius: 2,
+                                        color: "#fff",
+                                        px: 4,
+                                        bgcolor: "#0D9488",
+                                        "&:hover": {
+                                            bgcolor: "#0F766E",
+                                        },
+                                    }}
+                                    variant="contained" type="submit" disabled={apiLoading}>
                                     {apiLoading ? "Loading…" : "Apply"}
                                 </Button>
-                                        {/* ✅ RESET BUTTON — clears everything */}
-                                      <Button
-                                        color="error"
-                                        variant="contained"
-                                        // disabled={apiLoading}
-                                        onClick={() => {
-                                          resetForm();          // resets Teacher & terms to initial values
-                                          setApiData(null);     // hides PDF icon, summary chips, timetables
-                                        }}
-                                      >
-                                        Reset
-                                      </Button>
+                                {/* ✅ RESET BUTTON — clears everything */}
+                                <Button
+                                    color="error"
+                                    variant="contained"
+                                    sx={{
+                                        textTransform: "none",
+                                        borderRadius: 2,
+                                        color: "#fff",
+                                        px: 4,
+                                        bgcolor: "#d32f2f",
+                                        "&:hover": {
+                                            bgcolor: "#b71c1c",
+                                        },
+                                    }}
+                                    // disabled={apiLoading}
+                                    onClick={() => {
+                                        resetForm();          // resets Teacher & terms to initial values
+                                        setApiData(null);     // hides PDF icon, summary chips, timetables
+                                    }}
+                                >
+                                    Reset
+                                </Button>
 
                                 {apiData && apiData.Teachers && apiData.Teachers.length > 0 && (
                                     <PDFDownloadLink
@@ -968,8 +990,20 @@ const StaffTimetable = () => {
                                     </PDFDownloadLink>
                                 )}
 
-                                <Button color="warning" variant="contained" onClick={() => navigate(-1)}>
-                                    Cancel
+                                <Button
+                                    // color="warning" 
+                                    sx={{
+                                        px: 4,
+                                        borderRadius: 2,
+                                        color: "#fff",
+                                        textTransform: "none",
+                                        bgcolor: "#F97316",
+                                        "&:hover": {
+                                            bgcolor: "#EA580C",
+                                        },
+                                    }}
+                                    variant="contained" onClick={() => navigate(-1)}>
+                                    Back
                                 </Button>
                             </Box>
 

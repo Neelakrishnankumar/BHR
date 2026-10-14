@@ -3834,7 +3834,8 @@ const Editrequests = () => {
                           color="primary"
                           loading={loading}
                           sx={{
-                            minWidth: 110,
+                            // minWidth: 110,
+                            px: 4,
                             borderRadius: 2,
                             textTransform: "none",
                             fontWeight: 600,
@@ -3870,7 +3871,8 @@ const Editrequests = () => {
                               });
                             }}
                             sx={{
-                              minWidth: 110,
+                              // minWidth: 110,
+                              px: 4,
                               borderRadius: 2,
                               textTransform: "none",
                               fontWeight: 600,

@@ -830,13 +830,13 @@ const EditAttendanceEntry = () => {
                                 : null
                         }
                         onChange={(newValue) => handleShiftChange(params.row.SLNO, newValue)}
-                         url={CompanyID === "742"
+                        url={CompanyID === "742" && params.row.ClassificationName === "Student"
                             ? `${listViewurl}?data=${JSON.stringify({
                                 Query: {
-                                    AccessID: "2215",
+                                    AccessID: "2216",
                                     ScreenName: "Trust Shift",
                                     VerticalLicense: Subscriptionlastthree,
-                                    Filter: `CompanyID='${CompanyID}'`,
+                                    Filter: `CompanyID='${CompanyID}' AND EmployeeID='${params.row.EmpID}'`,
                                 },
                             })}`
                             : `${listViewurl}?data=${JSON.stringify({
@@ -848,16 +848,16 @@ const EditAttendanceEntry = () => {
                                 },
                             })}`
                         }
-                        // url={CompanyID ==`${listViewurl}?data=${JSON.stringify({
-                        //     Query: {
-                        //         AccessID: "2215",
-                        //         ScreenName: "Shift",
-                        //         VerticalLicense: Subscriptionlastthree,
-                        //         // employee-wise filter
-                        //         Filter: `CompanyID='${CompanyID}' AND EmployeeID='${params.row.EmpID}'`,
-                        //         Any: "",
-                        //     },
-                        // })}`}
+                    // url={CompanyID ==`${listViewurl}?data=${JSON.stringify({
+                    //     Query: {
+                    //         AccessID: "2215",
+                    //         ScreenName: "Shift",
+                    //         VerticalLicense: Subscriptionlastthree,
+                    //         // employee-wise filter
+                    //         Filter: `CompanyID='${CompanyID}' AND EmployeeID='${params.row.EmpID}'`,
+                    //         Any: "",
+                    //     },
+                    // })}`}
                     />
                 </Box>
             ),
@@ -1101,7 +1101,7 @@ const EditAttendanceEntry = () => {
 
                                             <Box
                                                 sx={{
-                                                    display: "grid",
+                                                    display: "flex",
                                                     gridTemplateColumns: {
                                                         xs: "1fr",
                                                         md: "1fr auto",
@@ -1110,6 +1110,7 @@ const EditAttendanceEntry = () => {
                                                     alignItems: "center",
                                                     width: "100%",
                                                     p: 1,
+                                                    flexWrap: "nowrap",
                                                 }}
                                             >
                                                 <Stack
@@ -1117,7 +1118,8 @@ const EditAttendanceEntry = () => {
                                                     spacing={2}
                                                     alignItems={{ xs: "stretch", lg: "center" }}
                                                     sx={{
-                                                        width: "100%",
+                                                        flex: 1,
+                                                        minWidth: 0,
                                                     }}
                                                 >
                                                     <TextField
@@ -1254,9 +1256,9 @@ const EditAttendanceEntry = () => {
                                                                         ScreenName: "Classification",
                                                                         VerticalLicense:
                                                                             Subscriptionlastthree,
-                                                                            Filter: CompanyID === "742"
-                                                                                    ? `CompanyID=${CompanyID}`
-                                                                                    : `CompanyID=${CompanyID} AND Name <> 'Student'`,
+                                                                        Filter: CompanyID === "742"
+                                                                            ? `CompanyID=${CompanyID}`
+                                                                            : `CompanyID=${CompanyID} AND Name <> 'Student'`,
                                                                         // Filter: `CompanyID=${CompanyID} AND Name <> 'Student'`,
                                                                         Any: "",
                                                                     },

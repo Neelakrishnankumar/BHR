@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     previousBalanceValue: {
         fontSize: 9,
         fontWeight: 'bold',
-        color: '#d97706',
+        // color: '#d97706',
         textAlign: 'right',
         marginTop: 4,
     },

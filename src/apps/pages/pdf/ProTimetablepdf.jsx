@@ -6,80 +6,33 @@
 //   Text,
 //   Image,
 //   StyleSheet,
-//   Font,
 // } from "@react-pdf/renderer";
 
-// // ─── Colour tokens ────────────────────────────────────────────────────────────
-// const C = {
-//   headerBg: "#1e1e3a",
-//   headerText: "#c8d0ea",
-//   dayBg: "#f0f0f8",
-//   dayText: "#1e1e3a",
-//   cellBg: "#f0f2ff",
-//   cellText: "#3a3a6e",
-//   oddRow: "#f8f8fc",
-//   evenRow: "#ffffff",
-//   border: "#e8e8f0",
-//   dayBorder: "#d0d0e8",
-//   intervalBg: "#1e1e3a",
-//   intervalLabel: "#a8b2d8",
-//   intervalValue: "#dde2f5",
-//   titleText: "#1e1e3a",
-//   mutedText: "#64748b",
-//   accent: "#3a3a6e",
+// /* =========================================================
+//    DESIGN TOKENS  (black & white only — no fills anywhere)
+// ========================================================= */
+
+// const COLORS = {
+//   black: "#000000",
 // };
 
-// // ─── Styles ───────────────────────────────────────────────────────────────────
+// const BOLD = "Helvetica-Bold";
+// const REGULAR = "Helvetica";
+
+// /* =========================================================
+//    STYLES
+// ========================================================= */
+
 // const s = StyleSheet.create({
 //   page: {
-//     fontFamily: "Helvetica",
+//     fontFamily: REGULAR,
 //     fontSize: 8,
-//     backgroundColor: "#ffffff",
+//     color: COLORS.black,
 //     paddingTop: 80,
-//     paddingBottom: 36,
 //     paddingHorizontal: 0,
 //   },
 
-//   // ── Header banner ──
-//   headerBanner: {
-//     backgroundColor: C.headerBg,
-//     paddingVertical: 14,
-//     paddingHorizontal: 28,
-//     flexDirection: "row",
-//     alignItems: "center",
-//     justifyContent: "space-between",
-//     marginBottom: 0,
-//   },
-//   headerLogoBox: {
-//     width: 60,
-//     height: 36,
-//   },
-//   headerLogo: {
-//     width: "100%",
-//     height: "100%",
-//     objectFit: "contain",
-//   },
-//   headerCenter: {
-//     flex: 1,
-//     alignItems: "center",
-//   },
-//   headerTitle: {
-//     fontSize: 14,
-//     fontFamily: "Helvetica-Bold",
-//     color: "#ffffff",
-//     letterSpacing: 0.5,
-//   },
-//   headerSub: {
-//     fontSize: 9,
-//     color: C.headerText,
-//     marginTop: 3,
-//   },
-//   headerRight: {
-//     fontSize: 8,
-//     color: C.headerText,
-//     textAlign: "right",
-//   },
-//   /* HEADER */
+//   /* ---------- Header image ---------- */
 //   headerWrapper: {
 //     position: "absolute",
 //     top: 15,
@@ -95,236 +48,188 @@
 //     objectFit: "contain",
 //   },
 
-//   /* FOOTER */
-//   footerWrapper: {
-//     position: "absolute",
-//     bottom: 15,
-//     left: 5,
-//     right: 5,     // forces full width
-//     height: 80,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     objectFit: "cover",
+//   /* ---------- Title ---------- */
+//   headerText: {
+//     fontFamily: BOLD,
+//     fontSize: 16,
+//     fontWeight: 700,
+//     color: COLORS.black,
+//     textAlign: "center",
+//     marginBottom: 10,
 //   },
 
-//   footerImage: {
-//     width: "100%",
-//     height: "100%",
-//     objectFit: "cover",
-//   },
-//   // ── Content wrapper ──
+//   /* ---------- Content wrapper ---------- */
 //   content: {
 //     paddingHorizontal: 20,
-//     paddingTop: 16,
+//     paddingTop: 10,
 //   },
 
-//   // ── Section heading ──
+//   /* ---------- Section heading ---------- */
 //   sectionLabel: {
-//     fontSize: 9,
-//     fontFamily: "Helvetica-Bold",
-//     color: C.mutedText,
-//     letterSpacing: 0.8,
-//     textTransform: "uppercase",
+//     fontFamily: BOLD,
+//     fontSize: 11,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //     marginBottom: 8,
 //   },
-//  headerText: {
-//     fontSize: 16,
-//     fontWeight: "bold",
-//     textAlign: "center",
-//     marginBottom: 10
-//   },
-//   // ── Timetable grid ──
+
+//   /* ---------- TIMETABLE GRID ----------
+//      The table owns the left + top border, every cell owns its
+//      right border, and every row owns its bottom border. */
 //   table: {
-//     borderRadius: 4,
-//     border: `1 solid ${C.border}`,
-//     overflow: "hidden",
+//     borderLeftWidth: 1,
+//     borderLeftColor: COLORS.black,
+//     borderTopWidth: 1,
+//     borderTopColor: COLORS.black,
 //     marginBottom: 16,
 //   },
 
-//   // Header row of the grid
+//   /* Header row */
 //   tableHeaderRow: {
 //     flexDirection: "row",
-//     backgroundColor: C.headerBg,
-//     minHeight: 28,
+//     minHeight: 30,
+//     borderBottomWidth: 1,
+//     borderBottomColor: COLORS.black,
 //   },
 //   tableHeaderDayCell: {
 //     width: 52,
 //     flexShrink: 0,
-//     borderRightWidth: 2,
-//     borderRightColor: "#2e2e50",
+//     borderRightWidth: 1,
+//     borderRightColor: COLORS.black,
 //     paddingHorizontal: 4,
 //     paddingVertical: 6,
 //     justifyContent: "center",
 //     alignItems: "center",
 //   },
 //   tableHeaderDayCellText: {
-//     fontSize: 7,
-//     fontFamily: "Helvetica-Bold",
-//     color: C.headerText,
-//     letterSpacing: 0.4,
+//     fontFamily: BOLD,
+//     fontSize: 9,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //   },
 //   tableHeaderCell: {
 //     flex: 1,
 //     borderRightWidth: 1,
-//     borderRightColor: "#2e2e50",
-//     paddingHorizontal: 3,
-//     paddingVertical: 4,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   tableHeaderCellLast: {
-//     flex: 1,
+//     borderRightColor: COLORS.black,
 //     paddingHorizontal: 3,
 //     paddingVertical: 4,
 //     justifyContent: "center",
 //     alignItems: "center",
 //   },
 //   tableHeaderCellText: {
-//     fontSize: 7,
-//     fontFamily: "Helvetica-Bold",
-//     color: C.headerText,
+//     fontFamily: BOLD,
+//     fontSize: 9,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //     textAlign: "center",
-//     letterSpacing: 0.3,
 //   },
 //   tableHeaderCellTime: {
-//     fontSize: 6,
-//     color: "#8890b8",
+//     fontFamily: BOLD,
+//     fontSize: 8,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //     textAlign: "center",
 //     marginTop: 2,
 //   },
 
-//   // Data rows
+//   /* Data rows */
 //   tableRow: {
 //     flexDirection: "row",
 //     minHeight: 36,
-//     borderTopWidth: 0.5,
-//     borderTopColor: C.border,
+//     borderBottomWidth: 1,
+//     borderBottomColor: COLORS.black,
 //   },
-//   oddRow: { backgroundColor: C.oddRow },
-//   evenRow: { backgroundColor: C.evenRow },
-
 //   tableDayCell: {
 //     width: 52,
 //     flexShrink: 0,
-//     backgroundColor: C.dayBg,
-//     borderRightWidth: 2,
-//     borderRightColor: C.dayBorder,
+//     borderRightWidth: 1,
+//     borderRightColor: COLORS.black,
 //     justifyContent: "center",
 //     alignItems: "center",
 //     paddingHorizontal: 4,
 //     paddingVertical: 4,
 //   },
 //   tableDayCellText: {
-//     fontSize: 8,
-//     fontFamily: "Helvetica-Bold",
-//     color: C.dayText,
+//     fontFamily: BOLD,
+//     fontSize: 9,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //   },
-
 //   tableDataCell: {
 //     flex: 1,
-//     borderRightWidth: 0.5,
-//     borderRightColor: C.border,
+//     borderRightWidth: 1,
+//     borderRightColor: COLORS.black,
 //     paddingHorizontal: 3,
 //     paddingVertical: 4,
 //     justifyContent: "center",
 //     alignItems: "center",
 //   },
-//   tableDataCellLast: {
-//     flex: 1,
-//     paddingHorizontal: 3,
-//     paddingVertical: 4,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   cellChip: {
-//     backgroundColor: C.cellBg,
-//     borderRadius: 4,
-//     paddingHorizontal: 5,
-//     paddingVertical: 2,
-//   },
-//   cellChipText: {
-//     fontSize: 7,
-//     color: C.cellText,
+//   cellSubject: {
+//     fontFamily: BOLD,
+//     fontSize: 8,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //     textAlign: "center",
-//     lineHeight: 1.4,
+//     lineHeight: 1.3,
+//   },
+//   cellTeacher: {
+//     fontFamily: REGULAR,
+//     fontSize: 7.5,
+//     color: COLORS.black,
+//     textAlign: "center",
+//     lineHeight: 1.3,
+//   },
+//   cellEmpty: {
+//     fontSize: 8,
+//     color: COLORS.black,
+//     textAlign: "center",
 //   },
 
-//   // ── Intervals section ──
+//   /* ---------- Intervals section ---------- */
 //   intervalsHeading: {
-//     fontSize: 9,
-//     fontFamily: "Helvetica-Bold",
-//     color: "#444444",
+//     fontFamily: BOLD,
+//     fontSize: 11,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //     marginBottom: 8,
 //   },
 //   intervalsList: {
 //     flexDirection: "row",
 //     flexWrap: "wrap",
-//     gap: 6,
 //     marginBottom: 20,
 //   },
 //   intervalPill: {
 //     flexDirection: "row",
 //     alignItems: "center",
-//     backgroundColor: C.intervalBg,
-//     borderRadius: 10,
+//     borderWidth: 1,
+//     borderColor: COLORS.black,
 //     paddingHorizontal: 10,
 //     paddingVertical: 4,
 //     marginRight: 6,
 //     marginBottom: 6,
 //   },
 //   intervalLabel: {
-//     fontSize: 8,
-//     color: C.intervalLabel,
+//     fontFamily: REGULAR,
+//     fontSize: 8.5,
+//     color: COLORS.black,
 //   },
 //   intervalArrow: {
+//     fontFamily: REGULAR,
 //     fontSize: 9,
-//     color: "#5a6080",
+//     color: COLORS.black,
 //     marginHorizontal: 4,
 //   },
 //   intervalValue: {
-//     fontSize: 8,
-//     fontFamily: "Helvetica-Bold",
-//     color: C.intervalValue,
-//   },
-
-//   // ── Footer ──
-//   footer: {
-//     position: "absolute",
-//     bottom: 12,
-//     left: 20,
-//     right: 20,
-//     flexDirection: "row",
-//     justifyContent: "space-between",
-//     alignItems: "center",
-//     borderTopWidth: 0.5,
-//     borderTopColor: "#e2e8f0",
-//     paddingTop: 6,
-//   },
-//   footerLeft: {
-//     fontSize: 7,
-//     color: C.mutedText,
-//   },
-//   footerRight: {
-//     fontSize: 7,
-//     color: C.mutedText,
-//   },
-//   footerLogo: {
-//     height: 22,
-//     objectFit: "contain",
+//     fontFamily: BOLD,
+//     fontSize: 8.5,
+//     fontWeight: 700,
+//     color: COLORS.black,
 //   },
 // });
 
-// // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-// /** Format today's date as "DD MMM YYYY" */
-// const today = () => {
-//   const d = new Date();
-//   return d.toLocaleDateString("en-GB", {
-//     day: "2-digit",
-//     month: "short",
-//     year: "numeric",
-//   });
-// };
+// /* =========================================================
+//    HELPERS
+// ========================================================= */
 
 // const extractColumns = (columns = []) =>
 //   (columns || []).map((col) => ({
@@ -338,55 +243,68 @@
 //   return { from: key, to: "" };
 // };
 
+// /* =========================================================
+//    TABLE HEADER ROW
+//    The first column is the day column, which is replaced by a
+//    fixed "DAY" corner cell, so it is skipped when rendering the
+//    period header cells.
+// ========================================================= */
 
-// const TableHeaderRow = ({ columns }) => (
-//   <View style={s.tableHeaderRow}>
-//     {/* Day corner */}
-//     <View style={s.tableHeaderDayCell}>
-//       <Text style={s.tableHeaderDayCellText}>DAY</Text>
+// const TableHeaderRow = ({ columns }) => {
+//   const [, ...periodCols] = columns;
+
+//   return (
+//     <View style={s.tableHeaderRow}>
+//       <View style={s.tableHeaderDayCell}>
+//         <Text style={s.tableHeaderDayCellText}>DAY</Text>
+//       </View>
+
+//       {periodCols.map((col) => {
+//         const { from, to } = splitSlotKey(col.headerName);
+//         return (
+//           <View key={col.field} style={s.tableHeaderCell}>
+//             <Text style={s.tableHeaderCellText}>{to ? `${from} –` : from}</Text>
+//             {to ? <Text style={s.tableHeaderCellTime}>{to}</Text> : null}
+//           </View>
+//         );
+//       })}
 //     </View>
+//   );
+// };
 
-//     {/* Period columns */}
-//     {columns.map((col, idx) => {
-//       const isLast = idx === columns.length - 1;
-//       const { from, to } = splitSlotKey(col.headerName);
-//       return (
-//         <View key={col.field} style={isLast ? s.tableHeaderCellLast : s.tableHeaderCell}>
-//           <Text style={s.tableHeaderCellText}>{from}</Text>
-//           {to ? <Text style={s.tableHeaderCellTime}>{to}</Text> : null}
-//         </View>
-//       );
-//     })}
-//   </View>
-// );
+// /* =========================================================
+//    TABLE DATA ROW
+// ========================================================= */
 
-// const TableDataRow = ({ row, columns, rowIndex }) => {
-//   const isOdd = rowIndex % 2 !== 0;
+// const TableDataRow = ({ row, columns }) => {
 //   // The first column is always the "Day" column (field: "day" or similar)
 //   const [dayCol, ...periodCols] = columns;
 //   const dayValue = row[dayCol?.field] ?? "";
 
 //   return (
-//     <View style={[s.tableRow, isOdd ? s.oddRow : s.evenRow]}>
-//       {/* Day cell */}
+//     <View style={s.tableRow} wrap={false}>
 //       <View style={s.tableDayCell}>
 //         <Text style={s.tableDayCellText}>
 //           {String(dayValue).slice(0, 3).toUpperCase()}
 //         </Text>
 //       </View>
 
-//       {/* Period cells */}
-//       {periodCols.map((col, idx) => {
-//         const isLast = idx === periodCols.length - 1;
+//       {periodCols.map((col) => {
 //         const cellValue = row[col.field] ?? "";
+//         const subject =
+//           typeof cellValue === "object" ? cellValue?.subject : cellValue;
+//         const teacher =
+//           typeof cellValue === "object" ? cellValue?.teacher : "";
+
 //         return (
-//           <View key={col.field} style={isLast ? s.tableDataCellLast : s.tableDataCell}>
+//           <View key={col.field} style={s.tableDataCell}>
 //             {cellValue ? (
-//               <View style={s.cellChip}>
-//                 <Text style={s.cellChipText}>{cellValue}</Text>
+//               <View>
+//                 <Text style={s.cellSubject}>{subject}</Text>
+//                 {teacher ? <Text style={s.cellTeacher}>{teacher}</Text> : null}
 //               </View>
 //             ) : (
-//               <Text style={{ fontSize: 7, color: "#cbd5e1" }}>—</Text>
+//               <Text style={s.cellEmpty}>—</Text>
 //             )}
 //           </View>
 //         );
@@ -395,6 +313,10 @@
 //   );
 // };
 
+// /* =========================================================
+//    MAIN PDF DOCUMENT
+// ========================================================= */
+
 // const ProjectTimeTablePDF = ({
 //   rows = [],
 //   columns = [],
@@ -402,19 +324,22 @@
 //   projectName = "",
 //   termName = "",
 //   filters = {},
+//   footerHeight,
 // }) => {
 //   const pdfColumns = extractColumns(columns);
+//   const fh = footerHeight || 60;
 
 //   return (
-//     <Document
-//       title="Timetable"
-//     >
+//     <Document title="Timetable">
 //       <Page
 //         size="A4"
 //         orientation="landscape"
-//         style={s.page}
+//         style={[
+//           s.page,
+//           { paddingBottom: filters.FooterImg ? fh : 36 },
+//         ]}
 //       >
-//         {/* ── Header Banner ── */}
+//         {/* ── Header image ── */}
 //         <View fixed style={s.headerWrapper}>
 //           {filters.HeaderImg && (
 //             <Image
@@ -423,14 +348,16 @@
 //             />
 //           )}
 //         </View>
-//         <View style={s.headerTextContainer}>
-//             <Text style={s.headerText}>
-//               {`Timetable (${projectName || ""}${projectName && termName ? " - " : ""}${termName || ""})`}
-//             </Text>          
+
+//         {/* ── Title ── */}
+//         <View>
+//           <Text style={s.headerText}>
+//             {`Timetable (${projectName || ""}${projectName && termName ? " - " : ""}${termName || ""})`}
+//           </Text>
 //         </View>
+
 //         {/* ── Content ── */}
 //         <View style={s.content}>
-//           {/* Timetable grid */}
 //           {pdfColumns.length > 0 && (
 //             <>
 //               <Text style={s.sectionLabel}>Weekly Schedule</Text>
@@ -441,7 +368,6 @@
 //                     key={row.id ?? idx}
 //                     row={row}
 //                     columns={pdfColumns}
-//                     rowIndex={idx}
 //                   />
 //                 ))}
 //               </View>
@@ -465,12 +391,24 @@
 //           )}
 //         </View>
 
-//         {/* ── Footer ── */}
-//         <View fixed style={s.footerWrapper}>
+//         {/* ── Footer image ── */}
+//         <View
+//           fixed
+//           style={{
+//             position: "absolute",
+//             bottom: 0,
+//             left: 0,
+//             right: 0,
+//             height: fh,
+//           }}
+//         >
 //           {filters.FooterImg && (
 //             <Image
 //               src={`${filters.Imageurl}/uploads/images/${filters.FooterImg}`}
-//               style={s.footerImage}
+//               style={{
+//                 width: "100%",
+//                 height: "100%",
+//               }}
 //             />
 //           )}
 //         </View>
@@ -480,6 +418,8 @@
 // };
 
 // export default ProjectTimeTablePDF;
+
+//OLD WITH COLORS
 import React from "react";
 import {
   Document,

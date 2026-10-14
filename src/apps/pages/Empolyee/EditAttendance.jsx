@@ -226,8 +226,8 @@ const EditAttendance = () => {
       setproData(null);
     }
   };
-   const handleSync = async (values) => {
-     const data = {
+  const handleSync = async (values) => {
+    const data = {
       Month: values.attmonth?.toString() ?? "",
       Year: values.attyear ?? "",
       EmployeeID: useCurrentEmp
@@ -240,12 +240,12 @@ const EditAttendance = () => {
     try {
       const res = await dispatch(
         AttendanceSyncGet({
-         CompanyID:CompanyID
+          CompanyID: CompanyID
         })
       ).unwrap();
 
       if (res.status === "success") {
-           dispatch(Attendance({ data }));
+        dispatch(Attendance({ data }));
 
       }
     } catch (err) {
@@ -507,18 +507,18 @@ const EditAttendance = () => {
 
   return (
     <React.Fragment>
-     <Box sx={{ height: "100vh", overflow: "auto" }}>
-              <Box sx={{ p: 1.5, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                     <Paper sx={{ borderRadius: 3, border: "1px solid #E5E7EB" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Typography 
-             sx={{
+      <Box sx={{ height: "100vh", overflow: "auto" }}>
+        <Box sx={{ p: 1.5, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          <Paper sx={{ borderRadius: 3, border: "1px solid #E5E7EB" }}>
+            <Box display="flex" justifyContent="space-between" p={2}>
+              <Box display="flex" borderRadius="3px" alignItems="center">
+                {broken && !rtl && (
+                  <IconButton onClick={() => toggleSidebar()}>
+                    <MenuOutlinedIcon />
+                  </IconButton>
+                )}
+                <Typography
+                  sx={{
                     fontSize: 20,
                     fontWeight: 700,
                     color: "#111827",
@@ -526,217 +526,229 @@ const EditAttendance = () => {
                     px: 1,
                     py: 0.2,
                   }}
-            >Monthly Attendance</Typography>
-          </Box>
-          <Box display="flex">
-            <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box>
-      </Paper>
+                >Monthly Attendance</Typography>
+              </Box>
+              <Box display="flex">
+                <Tooltip title="Close">
+                  <IconButton onClick={() => fnLogOut("Close")} color="error">
+                    <ResetTvIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Logout">
+                  <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                    <LogoutOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Box>
+          </Paper>
 
-      <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
-               <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-             <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
-               <Formik
-          initialValues={AttInitialvalues}
-          enableReinitialize={true}
-          onSubmit={(values, { resetForm }) => {
-            setTimeout(() => {
-              attendaceFnSave(values, resetForm);
-            }, 100);
-          }}
-        >
-          {({
-            errors,
-            touched,
-            handleBlur,
-            handleChange,
-            isSubmitting,
-            values,
-            handleSubmit,
-            resetForm,
-            setFieldValue
-          }) => (
-            <form
-              onSubmit={handleSubmit}
-              onReset={() => {
-                resetForm();
-                setproData(null);
-                setempData(null);
-                setFieldValue("attmonth", currentMonthNumber)
-                setFieldValue("attyear", currentYear)
-                sessionStorage.removeItem("attmonth");
-                sessionStorage.removeItem("attyear");
-                sessionStorage.removeItem("empData");
-                sessionStorage.removeItem("proData");
-                dispatch(resetTrackingData());
-              }}
-            >
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+              <Paper elevation={0} sx={{ backgroundColor: "#fff", border: "1px solid #E5E7EB", borderRadius: 3, p: 3 }}>
+                <Formik
+                  initialValues={AttInitialvalues}
+                  enableReinitialize={true}
+                  onSubmit={(values, { resetForm }) => {
+                    setTimeout(() => {
+                      attendaceFnSave(values, resetForm);
+                    }, 100);
+                  }}
+                >
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    isSubmitting,
+                    values,
+                    handleSubmit,
+                    resetForm,
+                    setFieldValue
+                  }) => (
+                    <form
+                      onSubmit={handleSubmit}
+                      onReset={() => {
+                        resetForm();
+                        setproData(null);
+                        setempData(null);
+                        setFieldValue("attmonth", currentMonthNumber)
+                        setFieldValue("attyear", currentYear)
+                        sessionStorage.removeItem("attmonth");
+                        sessionStorage.removeItem("attyear");
+                        sessionStorage.removeItem("empData");
+                        sessionStorage.removeItem("proData");
+                        dispatch(resetTrackingData());
+                      }}
+                    >
 
-                  {/* ----- CARD HEADER ----- */}
-                                                              <Box
-                              display="flex"
-                              alignItems="center"
-                              gap={1.5}
-                              mb={1}
-                              // sx={{ px: 2, pt: 2 }}
-                            >
-                              {/* ICON */}
-                              <Box
-                                sx={{
-                                  width: 36,
-                                  height: 36,
-                                  borderRadius: "50%",
-                                  backgroundColor: "#EFF6FF",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                <Typography sx={{ fontSize: 18 }}>
-                                 📋
-                                </Typography>
-                              </Box>
-                            
-                              {/* TITLE + SUBTITLE */}
-                              <Box>
-                                <Typography
-                                  variant="subtitle1"
-                                  fontWeight={700}
-                                  color="#0D94885"
-                                >
-                                  Monthly Attendance
-                                </Typography>
-                            
-                                <Typography variant="body2" color="text.secondary">
-                                 Monthly Attendance Summary Report
-                                </Typography>
-                              </Box>
-                            </Box>
+                      {/* ----- CARD HEADER ----- */}
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        gap={1.5}
+                        mb={1}
+                      // sx={{ px: 2, pt: 2 }}
+                      >
+                        {/* ICON */}
+                        <Box
+                          sx={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: "50%",
+                            backgroundColor: "#EFF6FF",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography sx={{ fontSize: 18 }}>
+                            📋
+                          </Typography>
+                        </Box>
+
+                        {/* TITLE + SUBTITLE */}
+                        <Box>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                            color="#0D94885"
+                          >
+                            Monthly Attendance
+                          </Typography>
+
+                          <Typography variant="body2" color="text.secondary">
+                            Monthly Attendance Summary Report
+                          </Typography>
+                        </Box>
+                      </Box>
 
 
-              <Box
-                display="grid"
-                gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                gap={formGap}
-                padding={1}
-                sx={{
-                  "& > div": {
-                    gridColumn: isNonMobile ? undefined : "span 4",
-                  },
-                }}
-              >
-                <Stack direction="row" spacing={2}>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    size="small"
-                    type="text"
-                    id="attmonth"
-                    name="attmonth"
-                    label="Month"
-                    value={values.attmonth}
-                    focused
-                    // onChange={handleChange}
-                    onChange={(e) => {
-                      handleChange(e);
-                      sessionStorage.setItem("attmonth", e.target.value);
-                    }}
-                    onBlur={handleBlur}
-                    select
-                    sx={{
-                       "& .MuiOutlinedInput-root": {
-      backgroundColor: "#fff",
-      borderRadius: "6px",
+                      <Box
+                        display="grid"
+                        gridTemplateColumns={{
+                          xs: "1fr",
+                          md: "minmax(0, 1fr) auto",
+                        }}
+                        gap={formGap}
+                        padding={1}
+                        sx={{
+                          alignItems: "center",
+                          width: "100%",
+                          minWidth: 0,
+                        }}
+                      >
+                        <Stack
+                          direction={{ xs: "column", sm: "row" }}
+                          spacing={2}
+                          alignItems={{ xs: "stretch", sm: "center" }}
+                          sx={{
+                            width: "100%",
+                            minWidth: 0,
+                            flexWrap: { xs: "wrap", lg: "nowrap" },
+                          }}
+                        >
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="text"
+                            id="attmonth"
+                            name="attmonth"
+                            label="Month"
+                            value={values.attmonth}
+                            focused
+                            // onChange={handleChange}
+                            onChange={(e) => {
+                              handleChange(e);
+                              sessionStorage.setItem("attmonth", e.target.value);
+                            }}
+                            onBlur={handleBlur}
+                            select
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-      "& fieldset": {
-        borderColor: "#d1d5db", // 👈 light grey border
-      },
-      "&:hover fieldset": {
-        borderColor: "#bfc4cc", // 👈 slightly darker on hover
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-        borderWidth: "1px",
-      },
-    },
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
 
-    "& .MuiInputLabel-root": {
-      color: "#6b7280", // label grey
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "#6b7280", // keep same on focus
-    },
-                      width: 200,
-                    }}
-                  >
-                    <MenuItem value={"1"}>January</MenuItem>
-                    <MenuItem value={"2"}>February</MenuItem>
-                    <MenuItem value={"3"}>March</MenuItem>
-                    <MenuItem value={"4"}>April</MenuItem>
-                    <MenuItem value={"5"}>May</MenuItem>
-                    <MenuItem value={"6"}>June</MenuItem>
-                    <MenuItem value={"7"}>July</MenuItem>
-                    <MenuItem value={"8"}>August</MenuItem>
-                    <MenuItem value={"9"}>September</MenuItem>
-                    <MenuItem value={"10"}>October</MenuItem>
-                    <MenuItem value={"11"}>November</MenuItem>
-                    <MenuItem value={"12"}>December</MenuItem>
-                  </TextField>
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                              width: 200,
+                            }}
+                          >
+                            <MenuItem value={"1"}>January</MenuItem>
+                            <MenuItem value={"2"}>February</MenuItem>
+                            <MenuItem value={"3"}>March</MenuItem>
+                            <MenuItem value={"4"}>April</MenuItem>
+                            <MenuItem value={"5"}>May</MenuItem>
+                            <MenuItem value={"6"}>June</MenuItem>
+                            <MenuItem value={"7"}>July</MenuItem>
+                            <MenuItem value={"8"}>August</MenuItem>
+                            <MenuItem value={"9"}>September</MenuItem>
+                            <MenuItem value={"10"}>October</MenuItem>
+                            <MenuItem value={"11"}>November</MenuItem>
+                            <MenuItem value={"12"}>December</MenuItem>
+                          </TextField>
 
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    size="small"
-                    type="number"
-                    id="attyear"
-                    name="attyear"
-                    label="Year"
-                    value={values.attyear}
-                    inputProps={{ min: "1900", max: "2100", step: "1" }}
-                    focused
-                    // onChange={handleChange}
-                    onChange={(e) => {
-                      handleChange(e);
-                      sessionStorage.setItem("attyear", e.target.value);
-                    }}
-                    onBlur={handleBlur}
-                    sx={{
-                       "& .MuiOutlinedInput-root": {
-      backgroundColor: "#fff",
-      borderRadius: "6px",
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            id="attyear"
+                            name="attyear"
+                            label="Year"
+                            value={values.attyear}
+                            inputProps={{ min: "1900", max: "2100", step: "1" }}
+                            focused
+                            // onChange={handleChange}
+                            onChange={(e) => {
+                              handleChange(e);
+                              sessionStorage.setItem("attyear", e.target.value);
+                            }}
+                            onBlur={handleBlur}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-      "& fieldset": {
-        borderColor: "#d1d5db", // 👈 light grey border
-      },
-      "&:hover fieldset": {
-        borderColor: "#bfc4cc", // 👈 slightly darker on hover
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-        borderWidth: "1px",
-      },
-    },
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
 
-    "& .MuiInputLabel-root": {
-      color: "#6b7280", // label grey
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "#6b7280", // keep same on focus
-    },
-                      width: 200,
-                    }}
-                  />
-                  {/* <Employeeautocomplete
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                              width: 200,
+                            }}
+                          />
+                          {/* <Employeeautocomplete
                      sx={{ width: 400 }}
                     name="ProName"
                     label="Project"
@@ -761,111 +773,112 @@ const EditAttendance = () => {
 
                      /> */}
 
-                  {/* <Employeeautocomplete */}
-                  <TimeSheetEmployeeautocomplete
-                    sx={{ 
-                      width: 400,
- "& .MuiOutlinedInput-root": {
-      backgroundColor: "#fff",
-      borderRadius: "6px",
+                          {/* <Employeeautocomplete */}
+                          <TimeSheetEmployeeautocomplete
+                            sx={{
+                              width: 400,
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-      "& fieldset": {
-        borderColor: "#d1d5db", // 👈 light grey border
-      },
-      "&:hover fieldset": {
-        borderColor: "#bfc4cc", // 👈 slightly darker on hover
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-        borderWidth: "1px",
-      },
-    },
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
 
-    "& .MuiInputLabel-root": {
-      color: "#6b7280", // label grey
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "#6b7280", // keep same on focus
-    },
-                     }}
-                    name="ProName"
-                    label={getBusinessCaption("Project", "Project")}
-                    id="ProName"
-                    value={proData}
-                    // onChange={handleSelectionProjectChange}
-                    onChange={(newValue) => {
-                      setproData(newValue);
-                      if (newValue)
-                        sessionStorage.setItem("proData", JSON.stringify(newValue));
-                      else
-                        sessionStorage.removeItem("proData");
-                    }}
-                    error={!!touched.ProName && !!errors.ProName}
-                    helperText={touched.ProName && errors.ProName}
-                    // url={`${listViewurl}?data=${encodeURIComponent(
-                    //   JSON.stringify({
-                    //     Query: {
-                    //       AccessID: "2054",
-                    //       ScreenName: "Project",
-                    //       Filter: `parentID=${CompanyID}`,
-                    //       Any: "",
-                    //     },
-                    //   })
-                    // )}`}
-                    url={`${listViewurl}?data=${JSON.stringify({
-                      Query: {
-                        AccessID: "2054",
-                        ScreenName: "Project",
-                        VerticalLicense: Subscriptionlastthree,
-                        Filter: `parentID='${CompanyID}'`,
-                        Any: "",
-                      },
-                    })}`}
-                  />
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                            }}
+                            name="ProName"
+                            label={getBusinessCaption("Project", "Project")}
+                            id="ProName"
+                            value={proData}
+                            // onChange={handleSelectionProjectChange}
+                            onChange={(newValue) => {
+                              setproData(newValue);
+                              if (newValue)
+                                sessionStorage.setItem("proData", JSON.stringify(newValue));
+                              else
+                                sessionStorage.removeItem("proData");
+                            }}
+                            error={!!touched.ProName && !!errors.ProName}
+                            helperText={touched.ProName && errors.ProName}
+                            // url={`${listViewurl}?data=${encodeURIComponent(
+                            //   JSON.stringify({
+                            //     Query: {
+                            //       AccessID: "2054",
+                            //       ScreenName: "Project",
+                            //       Filter: `parentID=${CompanyID}`,
+                            //       Any: "",
+                            //     },
+                            //   })
+                            // )}`}
+                            url={`${listViewurl}?data=${JSON.stringify({
+                              Query: {
+                                AccessID: "2054",
+                                ScreenName: "Project",
+                                VerticalLicense: Subscriptionlastthree,
+                                Filter: `parentID='${CompanyID}'`,
+                                Any: "",
+                              },
+                            })}`}
+                          />
 
-                  {/* <Employeeautocomplete */}
-                  <TimeSheetEmployeeautocomplete
-                    sx={{ width: 400,
-                       "& .MuiOutlinedInput-root": {
-      backgroundColor: "#fff",
-      borderRadius: "6px",
+                          {/* <Employeeautocomplete */}
+                          <TimeSheetEmployeeautocomplete
+                            sx={{
+                              width: 400,
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
 
-      "& fieldset": {
-        borderColor: "#d1d5db", // 👈 light grey border
-      },
-      "&:hover fieldset": {
-        borderColor: "#bfc4cc", // 👈 slightly darker on hover
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-        borderWidth: "1px",
-      },
-    },
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
 
-    "& .MuiInputLabel-root": {
-      color: "#6b7280", // label grey
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "#6b7280", // keep same on focus
-    },
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
 
-                     }}
-                    name="Employee"
-                    label="Personnel"
-                    id="Employee"
-                    value={empData}
-                    // onChange={handleSelectionEmployeeChange}
-                    onChange={(newValue) => {
-                      setempData(newValue);
-                      if (newValue)
-                        sessionStorage.setItem("empData", JSON.stringify(newValue));
-                      else
-                        sessionStorage.removeItem("empData");
-                    }}
-                    url={employeeUrl}
-                  />
+                            }}
+                            name="Employee"
+                            label="Personnel"
+                            id="Employee"
+                            value={empData}
+                            // onChange={handleSelectionEmployeeChange}
+                            onChange={(newValue) => {
+                              setempData(newValue);
+                              if (newValue)
+                                sessionStorage.setItem("empData", JSON.stringify(newValue));
+                              else
+                                sessionStorage.removeItem("empData");
+                            }}
+                            url={employeeUrl}
+                          />
 
-                  {/* {isManager === "1" ? (
+                          {/* {isManager === "1" ? (
                     <>
                       <Employeeautocomplete
                         sx={{ width: 400 }}
@@ -900,7 +913,7 @@ const EditAttendance = () => {
                       }}
                     />
                   )} */}
-                  {/* <FormControlLabel
+                          {/* <FormControlLabel
           control={
             <Checkbox
               checked={useCurrentEmp}
@@ -911,7 +924,7 @@ const EditAttendance = () => {
           }
           label="Self"
         /> */}
-                  {/* <FormControlLabel
+                          {/* <FormControlLabel
                     control={
                       <Checkbox
                         checked={useCurrentEmp}
@@ -924,7 +937,7 @@ const EditAttendance = () => {
                     }
                     label="Payslip"
                   /> */}
-                  {/* <Tooltip title="Download Payslip">
+                          {/* <Tooltip title="Download Payslip">
                     <PDFDownloadLink
                       document={<PayslipPdf data={[]} filters={{}} />}
                       fileName="payslip.pdf"
@@ -941,15 +954,18 @@ const EditAttendance = () => {
 
                     </PDFDownloadLink>
                   </Tooltip> */}
-                </Stack>
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  display="flex"
-                  padding={1}
-                  justifyContent="end"
-                >
-                  {/* <PDFDownloadLink
+                        </Stack>
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          alignItems="center"
+                          justifyContent={{ xs: "flex-start", md: "flex-end" }}
+                          sx={{
+                            minWidth: 0,
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          {/* <PDFDownloadLink
                     document={<PayslipPdf data={paySlipdata}
                       filters={{
                         Imageurl: baseurlUAAM,
@@ -970,111 +986,111 @@ const EditAttendance = () => {
                     </Button>
 
                   </PDFDownloadLink> */}
-                  <Button
-                  startIcon={<AutorenewIcon />}
-                  // onClick={() =>
-                  //   dispatch(
-                  //     PartySync({
-                  //       accessid: "TR321",
-                  //       action: "sync",
-                  //     })
-                  //   )
-                  // }
-                  onClick={()=>handleSync(values)}
-                  sx={{
-                    backgroundColor: "#2971f5",
-                    color: "#fff",
-                    borderRadius: 2,
-                    px: 3,
-                    textTransform: "none",
-                    "&:hover": {
-                      backgroundColor: "#085bd6",
-                    },
-                  }}
-                >
-                  Sync
-                </Button>
-                  <Button 
-                  type="submit" 
-                  variant="contained" 
-                  sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#0D9488",
-                        "&:hover": {
-                          bgcolor: "#0F766E",
-                        },
-                      }}
-                  >
-                    Apply
-                  </Button>
-                  <Button 
-                  type="reset" 
-                  variant="contained" 
-                  color="error"
-                  sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        // bgcolor: "#0D9488",
-                        // "&:hover": {
-                        //   bgcolor: "#0F766E",
-                        // },
-                      }}
-                  >
-                    Reset
-                  </Button>
-                  {AttendanceDataLoading ? (
-                    <CircularProgress size={20} />
-                  ) : (
-                    AttendanceData?.length > 0 && (
-                      <>
-                        <PDFDownloadLink
-                          document={
-                            <AttendancePDF
-                              data={AttendanceData}
-                              filters={{
-                                Month: values.attmonth,
-                                Year: values.attyear,
-                                EmployeeID: empData?.Name,
-                                Imageurl: baseurlUAAM,
-                                HeaderImg: HeaderImg,
-                                FooterImg: FooterImg,
-                              }}
-                              footerHeight={footerHeight}
-                            />
-                          }
-                          fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
-                          style={{ color: "#d32f2f", cursor: "pointer" }}
-                        >
-                          {({ loading }) =>
-                            loading ? (
-                              <PictureAsPdfIcon
-                                sx={{ fontSize: 24, opacity: 0.5 }}
-                              />
-                            ) : (
-                              <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                            )
-                          }
-                        </PDFDownloadLink>
+                          <Button
+                            startIcon={<AutorenewIcon />}
+                            // onClick={() =>
+                            //   dispatch(
+                            //     PartySync({
+                            //       accessid: "TR321",
+                            //       action: "sync",
+                            //     })
+                            //   )
+                            // }
+                            onClick={() => handleSync(values)}
+                            sx={{
+                              backgroundColor: "#2971f5",
+                              color: "#fff",
+                              borderRadius: 2,
+                              px: 3,
+                              textTransform: "none",
+                              "&:hover": {
+                                backgroundColor: "#085bd6",
+                              },
+                            }}
+                          >
+                            Sync
+                          </Button>
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
+                          >
+                            Apply
+                          </Button>
+                          <Button
+                            type="reset"
+                            variant="contained"
+                            color="error"
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              // bgcolor: "#0D9488",
+                              // "&:hover": {
+                              //   bgcolor: "#0F766E",
+                              // },
+                            }}
+                          >
+                            Reset
+                          </Button>
+                          {AttendanceDataLoading ? (
+                            <CircularProgress size={20} />
+                          ) : (
+                            AttendanceData?.length > 0 && (
+                              <>
+                                <PDFDownloadLink
+                                  document={
+                                    <AttendancePDF
+                                      data={AttendanceData}
+                                      filters={{
+                                        Month: values.attmonth,
+                                        Year: values.attyear,
+                                        EmployeeID: empData?.Name,
+                                        Imageurl: baseurlUAAM,
+                                        HeaderImg: HeaderImg,
+                                        FooterImg: FooterImg,
+                                      }}
+                                      footerHeight={footerHeight}
+                                    />
+                                  }
+                                  fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
+                                  style={{ color: "#d32f2f", cursor: "pointer" }}
+                                >
+                                  {({ loading }) =>
+                                    loading ? (
+                                      <PictureAsPdfIcon
+                                        sx={{ fontSize: 24, opacity: 0.5 }}
+                                      />
+                                    ) : (
+                                      <PictureAsPdfIcon sx={{ fontSize: 24 }} />
+                                    )
+                                  }
+                                </PDFDownloadLink>
 
-                        <FaFileExcel
-                          size={20}
-                          color="#1D6F42"
-                          style={{ cursor: "pointer" }}
-                          onClick={() =>
-                            MonthlyAttendanceExcel(AttendanceData, {
-                              month: values.attmonth,
-                              year: values.attyear,
-                              employee: empData?.Name,
-                            })
-                          }
-                        />
-                      </>
-                    )
-                  )}
-                  {/* {AttendanceData?.length > 0 && (
+                                <FaFileExcel
+                                  size={20}
+                                  color="#1D6F42"
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() =>
+                                    MonthlyAttendanceExcel(AttendanceData, {
+                                      month: values.attmonth,
+                                      year: values.attyear,
+                                      employee: empData?.Name,
+                                    })
+                                  }
+                                />
+                              </>
+                            )
+                          )}
+                          {/* {AttendanceData?.length > 0 && (
                     <PDFDownloadLink
                       document={
                         <AttendancePDF
@@ -1140,67 +1156,68 @@ const EditAttendance = () => {
 
                   )} */}
 
-                  {/* //For SOP PDF */}
-                  {/* <Tooltip title="View PDF">
+                          {/* //For SOP PDF */}
+                          {/* <Tooltip title="View PDF">
                     <IconButton onClick={handlePdfClick}>
                       <PictureAsPdfIcon sx={{ fontSize: 24, color: "#d32f2f" }} />
                     </IconButton>
                   </Tooltip> */}
 
 
-                </Stack>
-              </Box>
-              <Box sx={{ gridColumn: "span 4" }}>
-                <Box
-                  // padding={1}
-                  height="500px"
-                  // height={dataGridHeight}
-                  marginTop={2}
-                  sx={{
-                    "& .MuiDataGrid-root": {
-                      // border: "none",
-                    },
-                    "& .MuiDataGrid-cell": {
-                      // borderBottom: "none",
-                    },
-                    "& .name-column--cell": {
-                      color: colors.greenAccent[300],
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: colors.blueAccent[800],
-                      // borderBottom: "none",
-                    },
-                    "& .MuiDataGrid-virtualScroller": {
-                      backgroundColor: colors.primary[400],
-                    },
-                    "& .MuiDataGrid-footerContainer": {
-                      // borderTop: "none",
-                      backgroundColor: colors.blueAccent[800],
-                    },
-                    "& .MuiCheckbox-root": {
-                      color: `${colors.greenAccent[200]} !important`,
-                    },
-                    "& .odd-row": {
-                      backgroundColor: "",
-                      color: "", // Color for odd rows
-                    },
-                    "& .even-row": {
-                      backgroundColor: "#d0edec",
-                      color: "", // Color for even rows
-                    },
-                    "& .weekoff-row": {
-                      backgroundColor: "#f2acb7", // light red
-                      color: "#b71c1c", // dark red text
-                    },
-                    "& .holiday-row": {
-                      backgroundColor: "#c9f5cc", // light green
-                      color: "#1b5e20", // dark green text
-                    },
-                    "& .leave-row": {
-                      backgroundColor: "#f3cd9b", // light green
-                      color: "#a16a03", // dark green text
-                    },
-                    "& .MuiDataGrid-columnHeaderTitle": {
+                        </Stack>
+                      </Box>
+
+                      <Box sx={{ gridColumn: "span 4" }}>
+                        <Box
+                          // padding={1}
+                          height="500px"
+                          // height={dataGridHeight}
+                          marginTop={2}
+                          sx={{
+                            "& .MuiDataGrid-root": {
+                              // border: "none",
+                            },
+                            "& .MuiDataGrid-cell": {
+                              // borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              // borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              backgroundColor: "#d0edec",
+                              color: "", // Color for even rows
+                            },
+                            "& .weekoff-row": {
+                              backgroundColor: "#f2acb7", // light red
+                              color: "#b71c1c", // dark red text
+                            },
+                            "& .holiday-row": {
+                              backgroundColor: "#c9f5cc", // light green
+                              color: "#1b5e20", // dark green text
+                            },
+                            "& .leave-row": {
+                              backgroundColor: "#f3cd9b", // light green
+                              color: "#a16a03", // dark green text
+                            },
+                            "& .MuiDataGrid-columnHeaderTitle": {
                               color: colors.blueAccent[900],
                               fontWeight: 600,
                             },
@@ -1229,116 +1246,116 @@ const EditAttendance = () => {
                             "& .MuiTablePagination-actions button": {
                               color: "#fff",
                             },
-                  }}
-                >
-                  <DataGrid
-                    sx={{
-                      "& .MuiDataGrid-footerContainer": {
-                        height: dataGridHeaderFooterHeight,
-                        minHeight: dataGridHeaderFooterHeight,
-                      },
-                    }}
-                    rowHeight={dataGridRowHeight}
-                    headerHeight={dataGridHeaderFooterHeight}
-                    rows={AttendanceData}
-                    columns={AttColumn}
-                    disableSelectionOnClick
-                    getRowId={(row) => row.SLNO}
-                    pageSize={pageSize}
-                    page={page}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    onPageChange={(newPage) => setPage(newPage)}
-                    onCellClick={(params) => { }}
-                    rowsPerPageOptions={[5, 10, 20]}
-                    pagination
-                    components={{
-                      Toolbar: AttendanceTool,
-                    }}
-                    onStateChange={(stateParams) =>
-                      setRowCount(stateParams.pagination.rowCount)
-                    }
-                    loading={getLoading}
-                    componentsProps={{
-                      toolbar: {
-                        showQuickFilter: true,
-                        quickFilterProps: { debounceMs: 500 },
-                      },
-                    }}
-                    // getRowClassName={(params) =>
-                    //   params.indexRelativeToCurrentPage % 2 === 0
-                    //     ? "odd-row"
-                    //     : "even-row"
-                    // }
-                    // getRowClassName={(params) => {
-                    //   const status = params.row.Status;
-                    //   if (status === "WeekOff") return "weekoff-row";
-                    //   if (status === "Holiday") return "holiday-row";
-                    //   if (status === "Casual Leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
-                    //   return params.indexRelativeToCurrentPage % 2 === 0
-                    //     ? "odd-row"
-                    //     : "even-row";
-                    // }}
-                    getRowClassName={(params) => {
-                      const status = params.row.Status;
-                      if (status === "Week Off") return "weekoff-row";
-                      if (status === "Holiday") return "holiday-row";
-                      // if (status === "Casual leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
-                      const leaveStatuses = [
-                        "casual leave",
-                        "sick leave",
-                        "medical leave",
-                      ];
+                          }}
+                        >
+                          <DataGrid
+                            sx={{
+                              "& .MuiDataGrid-footerContainer": {
+                                height: dataGridHeaderFooterHeight,
+                                minHeight: dataGridHeaderFooterHeight,
+                              },
+                            }}
+                            rowHeight={dataGridRowHeight}
+                            headerHeight={dataGridHeaderFooterHeight}
+                            rows={AttendanceData}
+                            columns={AttColumn}
+                            disableSelectionOnClick
+                            getRowId={(row) => row.SLNO}
+                            pageSize={pageSize}
+                            page={page}
+                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                            onPageChange={(newPage) => setPage(newPage)}
+                            onCellClick={(params) => { }}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            pagination
+                            components={{
+                              Toolbar: AttendanceTool,
+                            }}
+                            onStateChange={(stateParams) =>
+                              setRowCount(stateParams.pagination.rowCount)
+                            }
+                            loading={getLoading}
+                            componentsProps={{
+                              toolbar: {
+                                showQuickFilter: true,
+                                quickFilterProps: { debounceMs: 500 },
+                              },
+                            }}
+                            // getRowClassName={(params) =>
+                            //   params.indexRelativeToCurrentPage % 2 === 0
+                            //     ? "odd-row"
+                            //     : "even-row"
+                            // }
+                            // getRowClassName={(params) => {
+                            //   const status = params.row.Status;
+                            //   if (status === "WeekOff") return "weekoff-row";
+                            //   if (status === "Holiday") return "holiday-row";
+                            //   if (status === "Casual Leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
+                            //   return params.indexRelativeToCurrentPage % 2 === 0
+                            //     ? "odd-row"
+                            //     : "even-row";
+                            // }}
+                            getRowClassName={(params) => {
+                              const status = params.row.Status;
+                              if (status === "Week Off") return "weekoff-row";
+                              if (status === "Holiday") return "holiday-row";
+                              // if (status === "Casual leave" || status === "Sick leave" || status === "Medical leave") return "leave-row";
+                              const leaveStatuses = [
+                                "casual leave",
+                                "sick leave",
+                                "medical leave",
+                              ];
 
-                      if (leaveStatuses.includes(status?.trim().toLowerCase())) {
-                        return "leave-row";
-                      }
+                              if (leaveStatuses.includes(status?.trim().toLowerCase())) {
+                                return "leave-row";
+                              }
 
-                      return params.indexRelativeToCurrentPage % 2 === 0
-                        ? "odd-row"
-                        : "even-row";
-                    }}
-                  />
-                </Box>
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  padding="15px"
-                  gap={formGap}
-                >
-                  <Chip
-                    icon={<AlarmOffIcon color="primary" />}
-                    label="Week Off"
-                    variant="outlined"
-                    sx={{
-                      backgroundColor: "#f2acb7",
-                      borderColor: "#ef5350",
-                    }}
-                  />
-                  <Chip
-                    icon={<DeckIcon color="primary" />}
-                    label="Holiday"
-                    variant="outlined"
-                    sx={{
-                      backgroundColor: "#c9f5cc",
-                      borderColor: "#66bb6a",
-                    }}
-                  />
-                  <Chip
-                    icon={<ExitToAppIcon color="primary" />}
-                    label="Leave"
-                    variant="outlined"
-                    sx={{ backgroundColor: "#f3cd9b", borderColor: "#a16a03", }}
-                  />
-                </Box>
-              </Box>
-            </form>
-          )}
-        </Formik>
-      </Paper>
-          </Box>
+                              return params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row";
+                            }}
+                          />
                         </Box>
-                            </Box>
-                                          </Box>
+                        <Box
+                          display="flex"
+                          flexDirection="row"
+                          padding="15px"
+                          gap={formGap}
+                        >
+                          <Chip
+                            icon={<AlarmOffIcon color="primary" />}
+                            label="Week Off"
+                            variant="outlined"
+                            sx={{
+                              backgroundColor: "#f2acb7",
+                              borderColor: "#ef5350",
+                            }}
+                          />
+                          <Chip
+                            icon={<DeckIcon color="primary" />}
+                            label="Holiday"
+                            variant="outlined"
+                            sx={{
+                              backgroundColor: "#c9f5cc",
+                              borderColor: "#66bb6a",
+                            }}
+                          />
+                          <Chip
+                            icon={<ExitToAppIcon color="primary" />}
+                            label="Leave"
+                            variant="outlined"
+                            sx={{ backgroundColor: "#f3cd9b", borderColor: "#a16a03", }}
+                          />
+                        </Box>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
     </React.Fragment>
   );
 };

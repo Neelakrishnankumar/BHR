@@ -233,7 +233,7 @@ import RaiseComplaints from "./pages/Empolyee/RaiseComplaints";
 import Editproject_V1 from "./pages/HR/EditProject_V1";
 import EditOtherEvents from "./pages/HR/EditOtherEvents";
 import EditadmissionForm_v1 from "./pages/Empolyee/EditadmissionForm_v1";
-import Editpromotion from "./pages/HR/Editpromotion";
+import EditGradingreport from "./pages/HR/Editgradingreport";
 import NonTeacherOccupancy from "./pages/HR/NonTeacherOccupancy";
 import Editpromotion_v1 from "./pages/HR/Editpromotion_v1";
 import EditStandardSessions from "./pages/HR/EditStandardSessions";
@@ -243,6 +243,7 @@ import EditGeneral from "./pages/HR/EditGeneralevent";
 import ItemStokAnalytics from "./pages/DashBoards/ItemStockAnalytics";
 import EditRemainder from "./pages/Empolyee/EditRemainder";
 import TransferCertificate from "./pages/SkillGlow/Pdf/TransferCertificatePdf";
+import Editsponser from "./pages/HR/Editsponser";
 
 
 function App() {
@@ -1375,6 +1376,12 @@ function App() {
                     path="/Secondarylistview/:accessID/:screenName/:filtertype/EditPromotion/:id/:Mode"
                     element={<Editpromotion_v1 />}
                   />
+                  {/* /Apps/Secondarylistview/ReportCard/${params.row.AcademicYearID}/EditReportCard/${params.row.RecordID}/E */}
+                  <Route
+                    path="/Secondarylistview/:accessID/:screenName/:filtertype/:termid/:termName/EditReportCard/:id/:Mode"                              
+                    element={<EditGradingreport />}
+                  />
+                  {/* /Apps/Secondarylistview/TR275/Standard/61/281/Term%201/EditReportCard/1149/E */}
                   <Route
                     path="/:accessID/:screenName/EditProject/:id/:Mode"
                     element={<Editproject />}
@@ -1407,6 +1414,10 @@ function App() {
                   <Route
                     path="/:accessID/:screenName/EditParty/:id/:Mode"
                     element={<Editvendor />}
+                  />
+                  <Route
+                    path="/:accessID/:screenName/EditSponser/:id/:Mode"
+                    element={<Editsponser />}
                   />
                   <Route
                     path="/:accessID/:screenName/EditSettlements/:id/:Mode"

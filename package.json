@@ -56,16 +56,16 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build": "set NODE_OPTIONS=--max_old_space_size=8192 && react-scripts build",
-    "start:bosuat": "env-cmd -f .env.bosuat react-scripts start",
-    "build:bosuat": "env-cmd -f .env.bosuat react-scripts build",
-    "start:boslive": "env-cmd -f .env.boslive react-scripts start",
-    "build:boslive": "env-cmd -f .env.boslive react-scripts build",
-    "start:admin": "env-cmd -f .env.admin react-scripts start",
-    "build:admin": "env-cmd -f .env.admin react-scripts build"
+    "start": "cross-env NODE_OPTIONS=--max-old-space-size=8192 react-scripts start",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 react-scripts build",
+    "start:bosuat": "cross-env NODE_OPTIONS=--max-old-space-size=8192 env-cmd -f .env.bosuat react-scripts start",
+    "build:bosuat": "cross-env NODE_OPTIONS=--max-old-space-size=8192 env-cmd -f .env.bosuat react-scripts build",
+    "start:boslive": "cross-env NODE_OPTIONS=--max-old-space-size=8192 env-cmd -f .env.boslive react-scripts start",
+    "build:boslive": "cross-env NODE_OPTIONS=--max-old-space-size=8192 env-cmd -f .env.boslive react-scripts build",
+    "start:admin": "cross-env NODE_OPTIONS=--max-old-space-size=8192 env-cmd -f .env.admin react-scripts start",
+    "build:admin": "cross-env NODE_OPTIONS=--max-old-space-size=8192 env-cmd -f .env.admin react-scripts build"
   },
   "eslintConfig": {
     "extends": [
@@ -86,6 +86,7 @@
     ]
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "env-cmd": "^11.0.0"
   }
 }

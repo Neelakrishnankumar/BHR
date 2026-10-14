@@ -154,6 +154,9 @@ import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import LockResetIcon from "@mui/icons-material/LockReset";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import InvenquiryPDF from "./pdf/Invoiceenquirypdf";
+import SourceOutlinedIcon from "@mui/icons-material/SourceOutlined";
+import GradingIcon from '@mui/icons-material/Grading';
+
 const ListviewSecondary = () => {
   const colorMode = useContext(ColorModeContext);
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -779,9 +782,12 @@ const ListviewSecondary = () => {
   else if (accessID == "TR377") {
     filter = `SlotGroupID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
-  else if (accessID == "TR275") {
+  else if (accessID == "TR275" ) {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
+  //  else if (accessID == "TR275" && screenName == "Standard") {
+  //   filter = `AcademicYearID = '${leaderID}' AND TermID = '${Type}' AND CompanyID = '${compID}'`;
+  // }
   else if (accessID == "TR218") {
     filter = `AcademicYearID = '${leaderID}' AND CompanyID = '${compID}'`;
   }
@@ -3163,7 +3169,7 @@ const ListviewSecondary = () => {
                     </Typography>
                   </Breadcrumbs>
                 </Box>
-              ) : accessID == "TR275" ? (
+              ) : accessID == "TR275" && screenName == "Project" ? (
                 <Box display="flex" borderRadius="3px" alignItems="center">
                   <Breadcrumbs
                     maxItems={2}
@@ -3179,6 +3185,42 @@ const ListviewSecondary = () => {
                       }}
                     >
                       Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                    >
+                      Standard/Activities
+                    </Typography>
+                  </Breadcrumbs>
+                </Box>
+                 ) : accessID == "TR275" && screenName == "Standard" ? (
+                <Box display="flex" borderRadius="3px" alignItems="center">
+                  <Breadcrumbs
+                    maxItems={2}
+                    aria-label="breadcrumb"
+                    separator={<NavigateNextIcon sx={{ color: "#0000D1" }} />}
+                  >
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate("/Apps/TR374/Academic Year");
+                      }}
+                    >
+                      Academic Year ({state.AcademicYear ? state.AcademicYear : state.Classification})
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      color="#0000D1"
+                      sx={{ cursor: "default" }}
+                      onClick={() => {
+                        navigate(`/Apps/Secondarylistview/TR375/Terms/${state.AcademicYearID}`, { state: { ...state, termName: state.Terms, termid: state.TermID } });
+                      }}
+                    >
+                      Terms ({state.Terms?state.Terms:state.termName})
                     </Typography>
                     <Typography
                       variant="h5"
@@ -5685,7 +5727,7 @@ const ListviewSecondary = () => {
                 </Tooltip>
               )}
 
-              {accessID === "TR275" && is003Subscription && (
+              {accessID === "TR275" && screenName === "Project" && is003Subscription && (
                 <IconButton>
                   <Tooltip title="Fees Structures">
                     <PaymentIcon
@@ -5757,6 +5799,8 @@ const ListviewSecondary = () => {
                 ) : accessID == "TR399" ? (
                   false
                 ) : accessID == "TR418" ? (
+                  false
+                  ) : (accessID == "TR275" && screenName === "Standard") ? (
                   false
                   //        ) : (accessID == "TR304" && storedStatus == "Close" )? (
                   // false  
@@ -9010,7 +9054,7 @@ const ListviewSecondary = () => {
 
                       </Box>
                     ) : //LIST OF APPRAISAL
-                      accessID == "TR275" ? (
+                      (accessID == "TR275" && screenName == "Project") ? (
                         <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                           {/* <Chip
                                   icon={<BalanceIcon color="primary" />}
@@ -9053,6 +9097,16 @@ const ListviewSecondary = () => {
                           />
                         </Box>
                       ) :
+                       (accessID == "TR275" && screenName == "Standard") ? (
+                          <Box display="flex" flexDirection="row" padding="25px" gap={2}>
+                            <Chip
+                              icon={<GradingIcon                          
+                                color="primary" />}
+                              label="Grading Report"
+                              variant="outlined"
+                            />
+                            </Box>
+                            ) :
                         accessID == "TR384" ? (
                           <Box display="flex" flexDirection="row" padding="25px" gap={2}>
                             <Chip
@@ -9085,6 +9139,20 @@ const ListviewSecondary = () => {
                               variant="outlined"
                             />
                           </Box>
+                          ) : accessID == "TR375" ? (
+                          <Box display="flex" flexDirection="row" padding="25px" gap="5px">
+                            
+                            <Chip
+                              icon={<ModeEditOutlinedIcon color="primary" />}
+                              label="Edit"
+                              variant="outlined"
+                            />
+                            <Chip
+                              icon={<SourceOutlinedIcon color="primary" />}
+                              label="Standard/Activities"
+                              variant="outlined"
+                            />
+                          </Box>
                         ) : accessID == "TR335" ? (
                           <Box display="flex" flexDirection="row" padding="25px" gap="5px">
                             <Chip
@@ -9101,7 +9169,7 @@ const ListviewSecondary = () => {
                               variant="outlined"
                             />
                           </Box>
-                        ) : accessID != "TR373" && accessID != "TR418" && accessID != "TR371" && accessID != "TR399"  ? (
+                        ) : accessID != "TR373" && accessID != "TR418" && accessID != "TR375" && accessID != "TR371" && accessID != "TR399"  ? (
                           <Box display="flex" flexDirection="row" padding="25px">
                             <Chip
                               icon={<ModeEditOutlinedIcon color="primary" />}
