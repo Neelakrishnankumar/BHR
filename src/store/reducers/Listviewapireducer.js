@@ -970,10 +970,12 @@ export const fetchListview =
       // }
       else if (AccessID === "TR328") {
         const savedFilter = sessionStorage.getItem("TR328_WHERE");
-
-        filter = savedFilter
+      filter = savedFilter
           ? savedFilter
-          : `HrLoginUserID='${LoginID}' AND CompanyID='${CompId}'`;
+          : `CompanyID='${CompId}'`;
+        // filter = savedFilter
+        //   ? savedFilter
+        //   : `HrLoginUserID='${LoginID}' AND CompanyID='${CompId}'`;
       }
 
       // else if (AccessID == "TR305") {
@@ -4259,7 +4261,8 @@ export const fetchListview =
                   );
                 },
               };
-            } else if (AccessID === "TR304") {
+            } 
+            else if (AccessID === "TR304") {
               obj = {
                 field: "action",
                 headerName: "Action",
@@ -4293,7 +4296,7 @@ export const fetchListview =
                             </IconButton>
                           </Tooltip>
                         </Link>
-                        <Link
+                        {/* <Link
                           to={`./Edit${screenName}/${params.row.RecordID}/IM`}
                           state={{
                             PartyName: params.row.PartyName,
@@ -4306,7 +4309,7 @@ export const fetchListview =
                               <AttachFileIcon />
                             </IconButton>
                           </Tooltip>
-                        </Link>
+                        </Link> */}
                         {/* if (params.row.Editable === "Close") */}
                       </Box>
                     );
@@ -8974,13 +8977,13 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
                 rows={params.row}
               />
             )}
-            {is003Subscription && params.row.Classification == "Student" && (
+            {/* {is003Subscription && params.row.Classification == "Student" && (
               <Tooltip title="Report Card">
                 <IconButton color="info" size="small" onClick={downloadReportCardPDF}>
                   <ArticleIcon />
                 </IconButton>
               </Tooltip>
-            )}
+            )} */}
             {/* OLD
          {is003Subscription && params.row.Classification == "Student" && (
               <Link

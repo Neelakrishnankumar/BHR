@@ -145,6 +145,9 @@ const initialState = {
   vendorregisterGetData: {},
   vendorregisterGetDatastatus: "",
   vendorregisterGetDataloading: false,
+  SponsorregisterGetData: {},
+  SponsorregisterGetDatastatus: "",
+  SponsorregisterGetDataloading: false,
   itemFlagGetDataGetData: {},
   itemFlagGetDatastatus: "",
   itemFlagGetDataloading: false,
@@ -957,6 +960,22 @@ export const Processpost = createAsyncThunk(
     return response.data;
   }
 );
+export const Processpost_v1 = createAsyncThunk(
+  "employee/deployment/process",
+  async (payload) => {
+    const url = store.getState().globalurl.PayrollProcessController;
+
+    console.log("Final API Payload:", payload);
+
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+
+    return response.data;
+  }
+);
 export const InventoryPostController = createAsyncThunk(
   "employee/deployment/postdata",
   async (payload) => {
@@ -1608,6 +1627,34 @@ export const VendorRegisterFetchData = createAsyncThunk(
   "VendorRegisterFetchData/Header",
   async ({ get, recID }) => {
     var url = store.getState().globalurl.VendorRegistrationGet;
+    const data = {
+      action: get,
+      recid: recID,
+    };
+
+    console.log(
+      "🚀 ~ file: Formapireducer.js:225 ~ data:",
+      JSON.stringify(data),
+    );
+
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+//Sponsor
+export const SponsorRegistrationGet = createAsyncThunk(
+  "SponsorRegistrationGet/Header",
+  async ({ get, recID }) => {
+    var url = store.getState().globalurl.SponsorRegistrationGet;
     const data = {
       action: get,
       recid: recID,
@@ -2550,6 +2597,30 @@ export const VendorRegisterpostData = createAsyncThunk(
 
     const data = {
       accessid: accessID,
+      action: action,
+      data: idata,
+    };
+    console.log("get" + JSON.stringify(data));
+    const response = await axios.post(url, data, {
+      headers: {
+        Authorization:
+          "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+      },
+    });
+    console.log(
+      "🚀 ~ file: newFormApiReducer.js:27 ~ fetchData ~ response:",
+      response,
+    );
+    return response.data;
+  },
+);
+export const SponsorRegistrationPost = createAsyncThunk(
+  "SponsorRegisterpostData/post",
+  async ({ action, idata }) => {
+    const url = store.getState().globalurl.SponsorRegistrationPost;
+
+    const data = {
+      
       action: action,
       data: idata,
     };
@@ -5659,6 +5730,23 @@ export const getApiSlice = createSlice({
     .addCase(VendorRegisterFetchData.rejected, (state, action) => {
       state.vendorregisterGetData = {};
       state.vendorregisterGetDataloading = false;
+      state.error = action.error.message;
+    })
+    // SponsorRegistrationGet
+     .addCase(SponsorRegistrationGet.pending, (state) => {
+      state.SponsorregisterGetData = {};
+      state.SponsorregisterGetDataloading = true;
+      state.error = null;
+    })
+    .addCase(SponsorRegistrationGet.fulfilled, (state, action) => {
+      state.SponsorregisterGetData = action.payload.Data;
+
+      state.SponsorregisterGetDataloading = false;
+      state.error = null;
+    })
+    .addCase(SponsorRegistrationGet.rejected, (state, action) => {
+      state.SponsorregisterGetData = {};
+      state.SponsorregisterGetDataloading = false;
       state.error = action.error.message;
     })
     //ITEM FLAG GET

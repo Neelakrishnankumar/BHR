@@ -64,7 +64,7 @@ const EditGradingreport = () => {
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const rowData = location.state || {};
   const config = getConfig();
-  const baseurl = config.BOS_URL;
+  const baseurl = config.BASE_URL;
   const CompanyID = sessionStorage.getItem("compID");
   const ProjectID = rowData.projectID;
   const theme = useTheme();

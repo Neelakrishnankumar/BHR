@@ -12,7 +12,20 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 // import { FixedSizeList } from "react-window";
 
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { Popper } from "@mui/material";
 
+const BottomPopper = (props) => (
+  <Popper
+    {...props}
+    placement="bottom-start"
+    modifiers={[
+      { name: "flip", enabled: false },
+      { name: "preventOverflow", enabled: false },
+    ]}
+  />
+);
+
+// inside <Autocomplete ... PopperComponent={BottomPopper} />
 // Context for custom listbox
 const LISTBOX_PADDING = 8; // Padding around the listbox
 const OuterElementContext = createContext({});
@@ -1126,10 +1139,10 @@ export function MultiFormikOptimizedselectAutocomplete({
 
       try {
         const response = await axios.get(url, {
-         headers: {
-          Authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
-        },
+          headers: {
+            Authorization:
+              "eyJhbGciOiJIUzI1NiIsInR5cGUiOiJKV1QifQ.eyJzdWIiOiJCZXhAMTIzIiwibmFtZSI6IkJleCIsImFkbWluIjp0cnVlLCJleHAiOjE2Njk5ODQzNDl9.uxE3r3X4lqV_WKrRKRPXd-Jub9BnVcCXqCtLL4I0fpU",
+          },
         });
 
         const data = response?.data?.Data?.rows || [];
@@ -1179,7 +1192,6 @@ export function MultiFormikOptimizedselectAutocomplete({
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      // ✅ Prevent crash + remove "Select All" from chips
       value={(value || []).filter((v) => v.RecordID !== "ALL")}
       onChange={handleChange}
       options={options}
@@ -1187,7 +1199,20 @@ export function MultiFormikOptimizedselectAutocomplete({
       disableCloseOnSelect
       isOptionEqualToValue={(option, val) => option?.RecordID === val?.RecordID}
       getOptionLabel={(option) => option?.Name || ""}
-      // ✅ Checkbox UI
+
+      // ✅ Always open the list below the field
+      slotProps={{
+        popper: {
+          placement: "bottom-start",
+          modifiers: [
+            { name: "flip", enabled: false },
+            { name: "preventOverflow", enabled: false },
+          ],
+        },
+      }}
+      // ✅ Keep the list short so it fits below the field
+      ListboxProps={{ style: { maxHeight: 220 } }}
+
       renderOption={(props, option, { selected }) => {
         return (
           <li {...props} style={{ display: "flex", gap: 8, height: 36 }}>
@@ -1199,7 +1224,6 @@ export function MultiFormikOptimizedselectAutocomplete({
           </li>
         );
       }}
-      // ✅ Input UI
       renderInput={(params) => (
         <TextField
           {...params}
@@ -1207,7 +1231,6 @@ export function MultiFormikOptimizedselectAutocomplete({
           error={errors}
           helperText={helper}
           variant="outlined"
-          // focused
           InputProps={{
             ...params.InputProps,
             endAdornment: (
@@ -1221,6 +1244,58 @@ export function MultiFormikOptimizedselectAutocomplete({
       )}
       {...props}
     />
+    // <Autocomplete
+    //   sx={{
+    //     "& .MuiAutocomplete-tag": { maxWidth: "90px" },
+    //   }}
+    //   size="small"
+    //   multiple={multiple}
+    //   limitTags={1}
+    //   open={open}
+    //   onOpen={() => setOpen(true)}
+    //   onClose={() => setOpen(false)}
+    //   // ✅ Prevent crash + remove "Select All" from chips
+    //   value={(value || []).filter((v) => v.RecordID !== "ALL")}
+    //   onChange={handleChange}
+    //   options={options}
+    //   loading={loading}
+    //   disableCloseOnSelect
+    //   isOptionEqualToValue={(option, val) => option?.RecordID === val?.RecordID}
+    //   getOptionLabel={(option) => option?.Name || ""}
+    //   // ✅ Checkbox UI
+    //   renderOption={(props, option, { selected }) => {
+    //     return (
+    //       <li {...props} style={{ display: "flex", gap: 8, height: 36 }}>
+    //         <Checkbox
+    //           size="small"
+    //           checked={option.RecordID === "ALL" ? isAllSelected : selected}
+    //         />
+    //         {option.Name}
+    //       </li>
+    //     );
+    //   }}
+    //   // ✅ Input UI
+    //   renderInput={(params) => (
+    //     <TextField
+    //       {...params}
+    //       label={label}
+    //       error={errors}
+    //       helperText={helper}
+    //       variant="outlined"
+    //       // focused
+    //       InputProps={{
+    //         ...params.InputProps,
+    //         endAdornment: (
+    //           <>
+    //             {loading && <CircularProgress color="inherit" size={20} />}
+    //             {params.InputProps.endAdornment}
+    //           </>
+    //         ),
+    //       }}
+    //     />
+    //   )}
+    //   {...props}
+    // />
   );
 }
 
@@ -4272,7 +4347,7 @@ export function LocmultiSelect({
             checked={
               option.RecordID === "ALL"
                 ? value.length ===
-                  options.filter((item) => item.RecordID !== "ALL").length
+                options.filter((item) => item.RecordID !== "ALL").length
                 : selected
             }
           />
@@ -4944,24 +5019,24 @@ export function MultiFormikDocumentsAutocomplete({
       // getOptionLabel={(option) => `${option.Code} || ${option.Name || ""}`}
       disableCloseOnSelect
       loading={loading}
-     renderOption={(props, option, { selected }) => (
-  <li
-    {...props}
-    style={{
-      display: "flex",
-      gap: 4,
-      minHeight: 36,
-      padding: "6px 8px",
-    }}
-  >
-    <Checkbox
-      size="small"
-      sx={{ marginLeft: -1 }}
-      checked={selected}
-    />
-    {option.Name}
-  </li>
-)}
+      renderOption={(props, option, { selected }) => (
+        <li
+          {...props}
+          style={{
+            display: "flex",
+            gap: 4,
+            minHeight: 36,
+            padding: "6px 8px",
+          }}
+        >
+          <Checkbox
+            size="small"
+            sx={{ marginLeft: -1 }}
+            checked={selected}
+          />
+          {option.Name}
+        </li>
+      )}
       renderInput={(params) => (
         <TextField
           {...params}

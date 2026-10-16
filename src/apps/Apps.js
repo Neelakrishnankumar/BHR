@@ -1416,7 +1416,7 @@ function App() {
                     element={<Editvendor />}
                   />
                   <Route
-                    path="/:accessID/:screenName/EditSponser/:id/:Mode"
+                    path="/:accessID/:screenName/EditSponsor/:id/:Mode"
                     element={<Editsponser />}
                   />
                   <Route
@@ -1429,6 +1429,10 @@ function App() {
                   />
                   <Route
                     path="/:accessID/Editattendance"
+                    element={<EditAttendance />}
+                  />
+                  <Route
+                    path="/:accessID/Editattendance/:Mode"
                     element={<EditAttendance />}
                   />
                   <Route path="/:accessID/EditAudit" element={<EditAudit />} />

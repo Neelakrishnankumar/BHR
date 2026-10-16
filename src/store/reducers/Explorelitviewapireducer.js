@@ -675,6 +675,7 @@ export const fetchExplorelitview =
       if (
         filter != "" &&
         AccessID !== "TR212" &&
+        AccessID !== "TR420" &&
         AccessID !== "TR309" &&
         AccessID !== "TR325" &&
         AccessID !== "TR302" &&

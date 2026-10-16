@@ -382,7 +382,10 @@ const initialState = {
   TcgetUrl: "",
   AttendanceSyncController:"",
   PaidLeaveProcessurl:"",
-  StudentReportCardGet:""
+  StudentReportCardGet:"",
+  SponsorRegistrationGet:"",
+  SponsorRegistrationPost:"",
+  PayrollProcessController:""
 
 };
 
@@ -638,6 +641,9 @@ export const getUrlSlice = createSlice({
       state.AttendanceSyncController = APIurl + "AttendanceSyncController.php";
       state.PaidLeaveProcessurl = APIurl + "PaidLeaveProcessController.php";
       state.StudentReportCardGet = APIurl + "StudentReportCardGet.php";
+      state.SponsorRegistrationGet = APIurl + "SponsorRegistrationGet.php";
+      state.SponsorRegistrationPost = APIurl + "SponsorRegistrationPost.php";
+      state.PayrollProcessController = APIurl + "PayrollProcessController.php";
     },
 
   },

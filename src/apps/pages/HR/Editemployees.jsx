@@ -28,7 +28,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Slider
+  Slider,
+  InputAdornment
 } from "@mui/material";
 import { subDays, differenceInDays } from "date-fns";
 import * as Yup from "yup";
@@ -76,7 +77,7 @@ import {
   ExitFormalities,
   PaidLeaveProcess,
 } from "../../../store/reducers/Formapireducer";
-import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
+import { fileUpload, fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { toast } from "react-hot-toast";
@@ -153,12 +154,11 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import LockResetOutlinedIcon from '@mui/icons-material/LockResetOutlined';
 import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
-
-// ***********************************************
-//  Developer:Gowsalya
-// Purpose:To Create Employee
-
-// ***********************************************
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
+import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 const Editemployee = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -196,6 +196,38 @@ const Editemployee = () => {
   const config = getConfig();
   const baseurl1 = config.UAAM_URL;
   const baseurl = config.BASE_URL;
+
+  const GIFT_TYPE_OPTIONS = ["Birthday", "Festival", "Others"];
+  const FREQUENCY_OPTIONS = ["One Time", "Monthly", "Quarterly", "Half Yearly", "Yearly"];
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+  const FILE_RULES = {
+    photograph: {
+      accept: ".jpg,.jpeg,.png",
+      hint: "JPG, PNG (Max 5MB)",
+      mimes: ["image/jpeg", "image/png"],
+    },
+    thanksLetter: {
+      accept: ".pdf,.doc,.docx",
+      hint: "PDF, DOC, DOCX (Max 5MB)",
+      mimes: [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ],
+    },
+    attachment: {
+      accept: ".pdf,.jpg,.jpeg,.png,.doc,.docx",
+      hint: "PDF, JPG, PNG, DOC, DOCX (Max 5MB)",
+      mimes: [
+        "application/pdf",
+        "image/jpeg",
+        "image/png",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ],
+    },
+  };
+
 
   useEffect(() => {
     if (!FooterImg) return;
@@ -402,6 +434,7 @@ const Editemployee = () => {
   const [validationSchema23, setValidationSchema23] = useState(null);
   const [validationSchema24, setValidationSchema24] = useState(null);
   const [validationSchema25, setValidationSchema25] = useState(null);
+  const [validationSchema26, setValidationSchema26] = useState(null);
 
   const formikRef = useRef(null);
   const [editingRecordID, setEditingRecordID] = useState(null);
@@ -858,7 +891,18 @@ const Editemployee = () => {
           .notRequired()
           .transform((value) => (value === "" ? null : value))
           .matches(/^\d{17}$/, data.Employeecontact.esinumber);
+        //Newly added for Trust company
+        schemaFields1.pancardnumber = Yup.string()
+          .nullable()
+          .notRequired()
+          .transform((value) => (value === "" ? null : value))
+          .matches(/^[A-Z]{5}[0-9]{4}[A-Z]$/, data.Employeecontact.Pancardno);
 
+        schemaFields1.rationcardno = Yup.string()
+          .nullable()
+          .notRequired()
+          .transform((value) => (value === "" ? null : value))
+          .matches(/^[A-Za-z0-9]{8,15}$/, data.Employeecontact.rationcardno);
         schemaFields1.phonenumber = Yup.string()
           .nullable()
           .notRequired()
@@ -1215,6 +1259,15 @@ const Editemployee = () => {
           Grpitems: Yup.object().required(data.Inventory.Grpitems).nullable(),
         });
         setValidationSchema18(schema18);
+
+        const schema26 = Yup.object().shape({
+          giftMoneyType: Yup.string().trim().required(data.Gift.Giftmoneytype),
+          receivedDate: Yup.string().trim().required(data.Gift.Receiveddate),
+          amount: Yup.string().trim().required(data.Gift.Amount),
+
+        });
+
+        setValidationSchema26(schema26);
       })
       .catch((err) => console.error("Error loading validationcms.json:", err));
   }, [CompanyAutoCode]);
@@ -1473,7 +1526,7 @@ const Editemployee = () => {
           : Data.Gender === "Others"
             ? "O"
             : "",
-            Age: Data.Age || "",
+    Age: Data.Age || "",
     // disable: Data.Disable === "Y" ? true : false,
     disable:
       typeof Data.Disable === "boolean" ? Data.Disable : Data.Disable === "Y",
@@ -2023,6 +2076,20 @@ const Editemployee = () => {
       );
       selectCellRowData({ rowData: {}, mode: "A", field: "" });
     }
+    //GiftMoney
+    if (event.target.value == "27") {
+
+      dispatch(
+        fetchExplorelitview(
+          "TR420",
+          Subscriptionlastthree,
+          "GiftMoney",
+          `StudentID=${recID} AND CompanyID=${CompanyID}`,
+          "",
+        ),
+      );
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+    }
     //Contractor
     // if (event.target.value == "8") {
     //   dispatch(
@@ -2442,6 +2509,7 @@ const Editemployee = () => {
     aadharcardnumber: DataExplore?.AadharCardNo || "",
     pfnumber: DataExplore?.PfNo || "",
     esinumber: DataExplore?.EsiNo || "",
+    rationcardno: DataExplore?.RationNumber || "",
     permanentaddress: DataExplore?.PermanentAddress || "",
     localaddress: DataExplore?.LocalAddress || "",
     FatherName: DataExplore?.FathersName || "",
@@ -2449,6 +2517,7 @@ const Editemployee = () => {
     AccountHoldersName: DataExplore?.AccountHoldersName || "",
     IfscCode: DataExplore?.IfscCode || "",
     Branch: DataExplore?.Branch || "",
+    pancardnumber: DataExplore?.PanNumber || "",
   };
 
   const fncontact = async (values, resetForm) => {
@@ -2467,6 +2536,8 @@ const Editemployee = () => {
       AadharCardNo: values.aadharcardnumber,
       PfNo: values.pfnumber,
       EsiNo: values.esinumber,
+      RationNumber: values.rationcardno,
+      PanNumber: values.pancardnumber,
       PermanentAddress: values.permanentaddress,
       LocalAddress: values.localaddress,
       FathersName: values.FatherName || "",
@@ -2653,6 +2724,9 @@ const Editemployee = () => {
     ];
   } else if (show == "20") {
     VISIBLE_FIELDS = ["slno", "Item", "ItemCategory", "ItemGroup", "action"];
+  }
+  else if (show == "27") {
+    VISIBLE_FIELDS = ["slno", "ReceivedDate", "GiftMoneyType", "Amount", "action"];
   } else {
     VISIBLE_FIELDS = [
       "slno",
@@ -3106,7 +3180,9 @@ const Editemployee = () => {
                                         ? `List of Relation`
                                         : show == "11"
                                           ? "List of Contracts"
-                                          : "List of Managers"}
+                                          : show == "27"
+                                            ? "List of Gift Money"
+                                            : "List of Managers"}
           </Typography>
 
           {show != "20" && (
@@ -3226,6 +3302,17 @@ const Editemployee = () => {
   };
   const [funMode, setFunMode] = useState("A");
   const [funEmpRecID, setFunEmpRecID] = useState("");
+  const [openGiftMoneyModal, setOpenGiftMoneyModal] = useState(false);
+  const [giftMoneyData, setGiftMoneyData] = useState({
+    recordID: "",
+    giftMoneyType: "",
+    frequency: "",
+    receivedDate: "", // must be yyyy-mm-dd for the date input
+    amount: "",
+    photographName: "",
+    thanksLetterName: "",
+    attachmentName: "",
+  });
 
   const [itemCustodyData, setItemCustodyData] = useState({
     recordID: "",
@@ -3235,6 +3322,7 @@ const Editemployee = () => {
     itemValue: "",
     reference: "",
   });
+
   const [itemCustodyData1, setItemCustodyData1] = useState({
     recordID: "",
     itemGroup: null,
@@ -3243,6 +3331,7 @@ const Editemployee = () => {
     itemValue: "",
     reference: "",
   });
+
   console.log("🚀 ~ Editemployee ~ itemCustodyData:", itemCustodyData);
 
   // const [itemServicesData, setItemServicesData] = useState({
@@ -3380,6 +3469,16 @@ const Editemployee = () => {
         assestID: "",
         itemValue: "",
         reference: "",
+      });
+      setGiftMoneyData({
+        recordID: "",
+        giftMoneyType: "",
+        frequency: "",
+        receivedDate: "", // must be yyyy-mm-dd for the date input
+        amount: "",
+        photographName: "",
+        thanksLetterName: "",
+        attachmentName: "",
       });
       setItemCustodyData1({
         recordID: "",
@@ -3555,6 +3654,17 @@ const Editemployee = () => {
           itemValue: rowData.ItemValue,
           reference: rowData.PurchaseReference,
         });
+        setGiftMoneyData({
+          recordID: rowData.RecordID,
+          giftMoneyType: rowData.GiftMoneyType,
+          frequency: rowData.Frequency,
+          receivedDate: rowData.GMDate, // must be yyyy-mm-dd for the date input
+          amount: rowData.Amount,
+          photographName: rowData.Attachment1,
+          thanksLetterName: rowData.Attachment2,
+          attachmentName: rowData.Attachment3,
+        });
+
         setItemCustodyData1({
           recordID: rowData.RecordID,
           itemGroup: rowData.ItemGroupID
@@ -5446,7 +5556,7 @@ const Editemployee = () => {
     workfromhome: deploymentData.WorkFromHome === "Y" ? true : false,
     hybrid: deploymentData.Hybrid === "Y" ? true : false,
     onsite: deploymentData.OnSite === "Y" ? true : false,
-    College: deploymentData.College === "Y" ? true : false,
+    College: deploymentData.CollegeChkbox === "Y" ? true : false,
     Onsitedateflag: deploymentData.OnsiteDateFlag === "Y" ? true : false,
     Geninvoice: deploymentData.GenerateInvoice === "Y" ? true : false,
     Essaccess: deploymentData.EssAccess === "Y" ? true : false,
@@ -5505,7 +5615,7 @@ const Editemployee = () => {
       Office: values.office === true ? "Y" : "N",
       WorkFromHome: values.workfromhome === true ? "Y" : "N",
       Hybrid: values.hybrid === true ? "Y" : "N",
-      College: values.College === true ? "Y" : "N",
+      CollegeChkbox: values.College === true ? "Y" : "N",
       OnSite: values.onsite === true ? "Y" : "N",
 
       OnsiteDateFlag: values.Onsitedateflag === true ? "Y" : "N",
@@ -5595,7 +5705,7 @@ const Editemployee = () => {
         // add your other required API parameters
       };
 
-      const response = await dispatch(PaidLeaveProcess({data:payload})).unwrap();
+      const response = await dispatch(PaidLeaveProcess({ data: payload })).unwrap();
 
       if (response?.Status === "N") {
         toast.error(response?.Msg || "Paid leave calculation failed");
@@ -5603,7 +5713,7 @@ const Editemployee = () => {
       }
 
       if (response?.Status === "Y") {
-      dispatch(getDeployment({ HeaderID: recID }));
+        dispatch(getDeployment({ HeaderID: recID }));
         toast.success(response?.Msg || "Paid leave processed successfully");
 
         // setFieldValue("PaidLeavePerYear", daysCount);
@@ -5749,7 +5859,7 @@ const Editemployee = () => {
       Office: values.office === true ? "Y" : "N",
       WorkFromHome: values.workfromhome === true ? "Y" : "N",
       Hybrid: values.hybrid === true ? "Y" : "N",
-      College: values.College === true ? "Y" : "N",
+      CollegeChkbox: values.College === true ? "Y" : "N",
       OnSite: values.onsite === true ? "Y" : "N",
     };
 
@@ -6005,6 +6115,377 @@ const Editemployee = () => {
     }
   };
 
+  // 27 -Gift Money
+  const giftMoneyInitialValue = useMemo(
+    () => ({
+      code: Data.Code,
+      description: Data.Name,
+      imageurl: Data.ImageName
+        ? store.getState().globalurl.imageUrl + Data.ImageName
+        : store.getState().globalurl.imageUrl + "Defaultimg.jpg",
+      Disable: "N",
+      recordID: giftMoneyData.recordID || "",
+      giftMoneyType: giftMoneyData.giftMoneyType || "",
+      frequency: giftMoneyData.frequency || "",
+      receivedDate: giftMoneyData.receivedDate || "",
+      amount: giftMoneyData.amount || "",
+      // new files chosen by the user (File objects)
+      photograph: null,
+      thanksLetter: null,
+      attachment: null,
+      // file names already saved on the server (edit mode)
+      photographName: giftMoneyData.photographName || "",
+      thanksLetterName: giftMoneyData.thanksLetterName || "",
+      attachmentName: giftMoneyData.attachmentName || "",
+    }),
+    [Data, giftMoneyData],
+  );
+  const empGiftMoneyFn = async (values, resetForm, del) => {
+    setLoading(true);
+    let action =
+      funMode === "A" && !del
+        ? "insert"
+        : funMode === "E" && del
+          ? "harddelete"
+          : "update";
+
+    const idata = {
+      RecordID: giftMoneyData.recordID,
+      StudentID: recID,
+      GiftMoneyType: values.giftMoneyType,
+      Frequency: values.frequency,
+      ReceivedDate: values.receivedDate, // yyyy-mm-dd from <input type="date">
+      Amount: values.amount,
+      // file names – keep the old name if no new file was picked
+      Attachment1: values.photographName || "",
+      Attachment2: values.thanksLetterName || "",
+      Attachment3: values.attachmentName || "",
+      Disable: "N",
+      CompanyID,
+    };
+    const response = await dispatch(
+      explorePostData({ accessID: "TR420", action, idata }),
+    );
+    if (response.payload.Status == "Y") {
+      setLoading(false);
+      dispatch(
+        fetchExplorelitview(
+          "TR420",
+          Subscriptionlastthree,
+          "GiftMoney",
+          `StudentID=${recID} AND CompanyID=${CompanyID}`,
+          "",
+        ),
+      );
+      toast.success(response.payload.Msg);
+      selectCellRowData({ rowData: {}, mode: "A", field: "" });
+      resetForm();
+      setOpenGiftMoneyModal(false);
+    } else {
+      setLoading(false);
+      toast.error(response.payload.Msg);
+    }
+  };
+  // helpers (put outside the component)
+
+  const FileUploadCard = ({
+    title,
+    optional = false,
+    icon,
+    rule,
+    file,          // newly picked File (or null)
+    existingName,  // name saved on server (after upload or from edit mode)
+    onPick,        // (file, serverName) => void
+    onRemove,
+    error,
+  }) => {
+    const inputRef = useRef(null);
+    const [blobUrl, setBlobUrl] = useState("");
+    const [localError, setLocalError] = useState("");
+    const [uploading, setUploading] = useState(false);
+
+    // local blob URL for the newly picked file (image or pdf)
+    useEffect(() => {
+      if (file) {
+        const url = URL.createObjectURL(file);
+        setBlobUrl(url);
+        return () => URL.revokeObjectURL(url);
+      }
+      setBlobUrl("");
+    }, [file]);
+
+    const serverUrl = existingName
+      ? store.getState().globalurl.imageUrl + existingName
+      : "";
+
+    const isImage = file
+      ? file.type.startsWith("image/")
+      : /\.(jpg|jpeg|png|gif|webp)$/i.test(existingName || "");
+
+    const shownName = file ? file.name : existingName;
+    const shownImage = isImage ? (blobUrl || serverUrl) : "";
+
+    // URL used when the user clicks the preview
+    const viewUrl = serverUrl || blobUrl;
+    const MIME_BY_EXT = {
+      jpg: "image/jpeg",
+      jpeg: "image/jpeg",
+      png: "image/png",
+      gif: "image/gif",
+      webp: "image/webp",
+      pdf: "application/pdf",
+      txt: "text/plain",
+    };
+    const OFFICE_EXT = ["doc", "docx", "xls", "xlsx", "ppt", "pptx"];
+
+    const handleOpen = async () => {
+      if (!shownName) return;
+
+      const ext = shownName.split(".").pop().toLowerCase();
+
+      // 1. Office files: browsers can't render these, use Microsoft's online viewer
+      if (OFFICE_EXT.includes(ext)) {
+        if (!serverUrl) return; // viewer needs a public server URL
+        window.open(
+          `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(serverUrl)}`,
+          "_blank"
+        );
+        return;
+      }
+
+      // 2. Just-picked local file: blob URL already has the right type
+      if (file && blobUrl) {
+        window.open(blobUrl, "_blank");
+        return;
+      }
+
+      // 3. Saved server file: fetch and re-open as an inline blob
+      if (!serverUrl) return;
+
+      // open the tab first (inside the click) so popup blockers allow it
+      const tab = window.open("", "_blank");
+      try {
+        const res = await fetch(serverUrl);
+        if (!res.ok) throw new Error("Fetch failed");
+
+        const raw = await res.blob();
+        const type = MIME_BY_EXT[ext] || raw.type || "application/octet-stream";
+        const url = URL.createObjectURL(new Blob([raw], { type }));
+
+        if (tab) tab.location.href = url;
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      } catch (err) {
+        console.error(err);
+        // fallback: open the plain URL
+        if (tab) tab.location.href = serverUrl;
+        else window.open(serverUrl, "_blank");
+      }
+    };
+
+    const handleSelect = async (e) => {
+      const picked = e.target.files?.[0];
+      e.target.value = ""; // allow picking the same file again
+      if (!picked) return;
+
+      if (!rule.mimes.includes(picked.type)) {
+        setLocalError(`Only ${rule.hint.split(" (")[0]} allowed`);
+        return;
+      }
+      if (picked.size > MAX_FILE_SIZE) {
+        setLocalError("File size must be below 5MB");
+        return;
+      }
+
+      setLocalError("");
+      setUploading(true);
+
+      try {
+        const formData = new FormData();
+        formData.append("file", picked);
+        formData.append("type", "images");
+
+        const fileData = await dispatch(fileUpload({ formData }));
+
+        if (fileData?.payload?.Status === "Y") {
+          toast.success(fileData.payload.Msg);
+          onPick(picked, fileData.payload.name); // server file name
+        } else {
+          setLocalError("File upload failed.");
+          toast.error("File Upload Failed");
+        }
+      } catch (err) {
+        console.error(err);
+        setLocalError("An error occurred during file processing.");
+        toast.error("An error occurred during file processing.");
+      } finally {
+        setUploading(false);
+      }
+    };
+
+    const handleRemove = () => {
+      setLocalError("");
+      onRemove();
+    };
+
+    return (
+      <Box
+        sx={{
+          backgroundColor: "#fff",
+          border: "1px solid #E5E7EB",
+          borderRadius: 2,
+          p: 1.5,
+        }}
+      >
+        {/* header */}
+        <Box display="flex" alignItems="center" justifyContent="space-between" mb={1.5}>
+          <Box display="flex" alignItems="center" gap={1}>
+            <Box
+              sx={{
+                width: 28,
+                height: 28,
+                borderRadius: 1.5,
+                backgroundColor: "#EFF6FF",
+                color: "#1E3A5F",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {icon}
+            </Box>
+            <Typography variant="body2" fontWeight={600}>
+              {title}
+              {/* {optional && (
+                <Typography
+                  component="span"
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ ml: 0.5, fontWeight: 400 }}
+                >
+                  (Optional)
+                </Typography>
+              )} */}
+            </Typography>
+          </Box>
+
+          <IconButton
+            size="small"
+            onClick={handleRemove}
+            disabled={!shownName || uploading}
+            sx={{ color: "#EF4444" }}
+          >
+            <DeleteOutlineIcon fontSize="small" />
+          </IconButton>
+        </Box>
+
+        {/* body */}
+        <Box display="flex" gap={1.5}>
+          <Box
+            sx={{
+              flex: 1.4,
+              border: "1.5px dashed #BFD3E6",
+              borderRadius: 2,
+              py: 2,
+              px: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+              backgroundColor: "#FAFCFF",
+            }}
+          >
+            <CloudUploadOutlinedIcon sx={{ color: "#1E3A5F" }} />
+            <input
+              ref={inputRef}
+              type="file"
+              hidden
+              accept={rule.accept}
+              onChange={handleSelect}
+            />
+            <Button
+              size="small"
+              variant="outlined"
+              disabled={uploading}
+              onClick={() => inputRef.current?.click()}
+              startIcon={uploading ? <CircularProgress size={14} /> : null}
+              sx={{
+                textTransform: "none",
+                fontWeight: 600,
+                borderRadius: 2,
+                color: "#1E3A5F",
+                borderColor: "#D5E1EE",
+                backgroundColor: "#fff",
+              }}
+            >
+              {uploading ? "Uploading..." : "Choose File"}
+            </Button>
+            <Typography variant="caption" color="text.secondary" textAlign="center">
+              {rule.hint}
+            </Typography>
+          </Box>
+
+          {/* preview box - click to open image / pdf / any file */}
+          <Box
+            onClick={handleOpen}
+            title={viewUrl ? "Click to view" : ""}
+            sx={{
+              flex: 1,
+              minHeight: 110,
+              borderRadius: 2,
+              backgroundColor: "#EEF2F7",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 0.5,
+              overflow: "hidden",
+              p: 0.5,
+              cursor: viewUrl ? "pointer" : "default",
+              "&:hover": viewUrl ? { backgroundColor: "#E2E8F0" } : {},
+            }}
+          >
+            {shownImage ? (
+              <img
+                src={shownImage}
+                alt={title}
+                style={{ maxWidth: "100%", maxHeight: 100, objectFit: "contain" }}
+              />
+            ) : shownName ? (
+              <>
+                <DescriptionOutlinedIcon sx={{ color: "#64748B" }} />
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  textAlign="center"
+                  sx={{ wordBreak: "break-all" }}
+                >
+                  {shownName}
+                </Typography>
+                <Typography variant="caption" color="primary">
+                  Click to view
+                </Typography>
+              </>
+            ) : (
+              <>
+                <ImageOutlinedIcon sx={{ color: "#94A3B8" }} />
+                <Typography variant="caption" color="text.secondary">
+                  No file selected
+                </Typography>
+              </>
+            )}
+          </Box>
+        </Box>
+
+        {(localError || error) && (
+          <Typography variant="caption" color="error" display="block" mt={0.5}>
+            {localError || error}
+          </Typography>
+        )}
+      </Box>
+    );
+  };
+
   const [sectionsOpen, setSectionsOpen] = useState(true);
 
   //For side menu
@@ -6178,12 +6659,23 @@ const Editemployee = () => {
         },
       ]
       : []),
-    {
-      value: 17,
-      label: getBusinessCaption("ItemCustody", "Item Custody"),
-      desc: "Items in custody",
-      icon: "🔒",
-    },
+    ...(CompanyID === "586" && isStudentClassification
+      ? [
+        {
+          value: 27,
+          label: "Gift Money",
+          desc: "Add gift money received details",
+          icon: "🎁",
+        },
+      ]
+      : [
+        {
+          value: 17,
+          label: getBusinessCaption("ItemCustody", "Item Custody"),
+          desc: "Items in custody",
+          icon: "🔒",
+        },
+      ]),
     ...(!isStudentClassification
       ? [
         {
@@ -7607,6 +8099,7 @@ const Editemployee = () => {
                                         shrink: true,
                                       }}
                                     />
+                                    {mode == "E" && (
                                     <TextField
                                       fullWidth
                                       variant="outlined"
@@ -7629,16 +8122,19 @@ const Editemployee = () => {
                                         backgroundColor: "#ffffff",
                                         "& input": {
                                           textAlign: "right",
+                                          
                                         },
                                       }}
+                                      InputProps={{ readOnly: true }}
                                       inputProps={{
                                         min: 0,
                                         max: 999,
                                       }}
-                                      // InputLabelProps={{
-                                      //   shrink: true,
-                                      // }}
+                                    // InputLabelProps={{
+                                    //   shrink: true,
+                                    // }}
                                     />
+                                    )}
 
                                     <TextField
                                       name="joindate"
@@ -7808,7 +8304,7 @@ const Editemployee = () => {
                                       label={
                                         <>
                                           {/* Relegion */}
-                                          Relegion
+                                          Religion
                                           <span style={{ color: "red", fontSize: "20px" }}> *</span>
                                         </>
                                       }
@@ -8534,23 +9030,42 @@ const Editemployee = () => {
                                   errors.aadharcardnumber
                                 }
                               />
+                              {CompanyID == "586" ? (
+                                <TextField
+                                  fullWidth
+                                  variant="outlined"
+                                  size="small"
+                                  type="text"
+                                  id="pancardnumber"
+                                  name="pancardnumber"
+                                  value={values.pancardnumber}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  label="PAN Card No"
+                                  error={
+                                    touched.pancardnumber && Boolean(errors.pancardnumber)
+                                  }
+                                  helperText={touched.pancardnumber && errors.pancardnumber}
+                                />
+                              ) : (
+                                <TextField
+                                  fullWidth
+                                  variant="outlined"
+                                  size="small"
+                                  type="text"
+                                  id="pfnumber"
+                                  name="pfnumber"
+                                  value={values.pfnumber}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  label="PF No"
+                                  error={
+                                    touched.pfnumber && Boolean(errors.pfnumber)
+                                  }
+                                  helperText={touched.pfnumber && errors.pfnumber}
+                                />
+                              )}
 
-                              <TextField
-                                fullWidth
-                                variant="outlined"
-                                size="small"
-                                type="text"
-                                id="pfnumber"
-                                name="pfnumber"
-                                value={values.pfnumber}
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                label="PF No"
-                                error={
-                                  touched.pfnumber && Boolean(errors.pfnumber)
-                                }
-                                helperText={touched.pfnumber && errors.pfnumber}
-                              />
 
 
 
@@ -8583,26 +9098,53 @@ const Editemployee = () => {
                                 onChange={handleChange}
                                 label="Local Address"
                               />
-                              <TextField
-                                fullWidth
-                                variant="outlined"
-                                size="small"
-                                type="number"
-                                inputMode="numeric"
-                                id="esinumber"
-                                name="esinumber"
-                                value={values.esinumber}
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                label="ESI No"
-                                onWheel={(e) => e.target.blur()}
-                                error={
-                                  touched.esinumber && Boolean(errors.esinumber)
-                                }
-                                helperText={
-                                  touched.esinumber && errors.esinumber
-                                }
-                              />
+                              {CompanyID == "586" ? (
+
+                                <TextField
+                                  fullWidth
+                                  variant="outlined"
+                                  size="small"
+                                  type="number"
+                                  inputMode="numeric"
+                                  id="rationcardno"
+                                  name="rationcardno"
+                                  value={values.rationcardno}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  label="Ration Card No"
+                                  onWheel={(e) => e.target.blur()}
+                                  error={
+                                    touched.rationcardno && Boolean(errors.rationcardno)
+                                  }
+                                  helperText={
+                                    touched.rationcardno && errors.rationcardno
+                                  }
+                                />
+
+                              ) : (
+                                <TextField
+                                  fullWidth
+                                  variant="outlined"
+                                  size="small"
+                                  type="number"
+                                  inputMode="numeric"
+                                  id="esinumber"
+                                  name="esinumber"
+                                  value={values.esinumber}
+                                  onBlur={handleBlur}
+                                  onChange={handleChange}
+                                  label="ESI No"
+                                  onWheel={(e) => e.target.blur()}
+                                  error={
+                                    touched.esinumber && Boolean(errors.esinumber)
+                                  }
+                                  helperText={
+                                    touched.esinumber && errors.esinumber
+                                  }
+                                />
+                              )}
+
+
                             </Box>
 
                             {/* Photo column */}
@@ -11309,19 +11851,22 @@ const Editemployee = () => {
                               }
                               label={SubscriptionCode ? "School" : "office"}
                             />
-                             <FormControlLabel
-                              control={
-                                <Field
-                                  type="checkbox"
-                                  name="College"
-                                  id="College"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  as={Checkbox}
-                                />
-                              }
-                              label="College"
-                            />
+                            {CompanyID === "586" && (
+                              <FormControlLabel
+                                control={
+                                  <Field
+                                    type="checkbox"
+                                    name="College"
+                                    id="College"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    as={Checkbox}
+                                  />
+                                }
+                                label="College"
+                              />
+                            )}
+
                             <FormControlLabel
                               control={
                                 <Field
@@ -11855,7 +12400,7 @@ const Editemployee = () => {
                           </Box>
                         </Box>
                         {/* ----- Paid Leave Count ----- */}
-                        {!isStudentClassification && (
+                        {is003Subscription && !isStudentClassification && (
                           <Box
                             sx={{
                               backgroundColor: "#F9FAFB",
@@ -11874,7 +12419,7 @@ const Editemployee = () => {
                               Paid Leave Calculation
                             </Typography>
 
-                            {/* <Box
+                            <Box
                               display="flex"
                               alignItems="flex-end"
                               flexWrap="wrap"
@@ -11917,7 +12462,7 @@ const Editemployee = () => {
                               >
                                 Process
                               </Button>
-                            </Box> */}
+                            </Box>
                           </Box>
                         )}
                         {/* ----- COSTING CARD ----- */}
@@ -15542,7 +16087,7 @@ const Editemployee = () => {
                                   backgroundColor: "#ffffff",
                                   "& .MuiFilledInput-root": { backgroundColor: "#f5f5f5" },
                                 }}
-                                // autoFocus
+                              // autoFocus
                               />
                               <TextField
                                 name="dateofbirth"
@@ -15991,7 +16536,7 @@ const Editemployee = () => {
                             name="occupation"
                             type="text"
                             id="occupation"
-                            label="Occupation"                             
+                            label="Occupation"
                             variant="outlined"
                             size="small"
                             value={values.occupation}
@@ -16005,7 +16550,7 @@ const Editemployee = () => {
                                 backgroundColor: "#f5f5f5 ", // Ensure the filled variant also has a white background
                               },
                             }}
-                            
+
                           />
                           {/* <CheckinAutocomplete
                         id="ReferenceBy"
@@ -22225,7 +22770,7 @@ const Editemployee = () => {
                                 fontWeight={700}
                                 color="#0D94885"
                               >
-                                Item Custody Details
+                                {getBusinessCaption("ItemCustody", "Item Custody")} Details
                               </Typography>
 
 
@@ -22234,7 +22779,7 @@ const Editemployee = () => {
                                 color="text.secondary"
 
                               >
-                                Manage employee item allocation and tracking
+                                Manages item allocation and tracking
                               </Typography>
                             </Box>
                           </Box>
@@ -24397,6 +24942,536 @@ const Editemployee = () => {
           ) : (
             false
           )}
+          {show == "27" ? (
+            <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap" sx={{ p: 1 }}>
+              {/* RIGHT: Sidebar */}
+              {mode !== "A" && (
+                <FormSectionsSidebar
+                  show={show}
+                  screenChange={screenChange}
+                  sections={formSections}
+                  open={sectionsOpen}
+                  onToggle={() => setSectionsOpen((p) => !p)}
+                />
+              )}
+
+              {/* LEFT MAIN */}
+              <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    backgroundColor: "#fff",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: 3,
+                    p: 1,
+                  }}
+                >
+                  <Formik
+                    initialValues={giftMoneyInitialValue}
+                    enableReinitialize={true}
+                    validationSchema={validationSchema26}
+                    onSubmit={(values, { resetForm }) => {
+                      setTimeout(() => {
+                        empGiftMoneyFn(values, resetForm, false);
+                      }, 100);
+                    }}
+                  >
+                    {({
+                      errors,
+                      touched,
+                      handleBlur,
+                      handleChange,
+                      values,
+                      handleSubmit,
+                      resetForm,
+                      setFieldValue,
+                    }) => (
+                      <form
+                        onSubmit={handleSubmit}
+                        onReset={() => {
+                          selectCellRowData({ rowData: {}, mode: "A", field: "" });
+                          resetForm();
+                          setOpenGiftMoneyModal(true);
+                        }}
+                      >
+                        {/* ================= HEADER ================= */}
+                        <Box sx={{ p: 1 }}>
+                          <Box display="flex" alignItems="center" gap={1} mb={1}>
+                            <Box
+                              sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: "50%",
+                                backgroundColor: "#FEF3C7",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Typography sx={{ fontSize: 16 }}>🎁</Typography>
+                            </Box>
+                            <Box>
+                              <Typography variant="subtitle1" fontWeight={700} color="#0D9488">
+                                {getBusinessCaption("GiftMoney", "Gift Money")} Details
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                Add gift money received details
+                              </Typography>
+                            </Box>
+                          </Box>
+
+                          {/* ================= CODE + NAME ================= */}
+                          <Box display="flex" flexDirection="column" gap={2} mb={3}>
+                            <TextField
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              label="Code"
+                              value={values.code}
+                              InputProps={{ readOnly: true }}
+                            />
+                            <TextField
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              label="Name"
+                              value={values.description}
+                              InputProps={{ readOnly: true }}
+                            />
+                          </Box>
+                        </Box>
+
+                        {/* ================= TABLE (STYLED) ================= */}
+                        <Box
+                          sx={{
+                            border: "1px solid #E5E7EB",
+                            borderRadius: 2,
+                            overflow: "hidden",
+                            mb: 3,
+                            mt: 2,
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              height: "55vh",
+                              "& .MuiDataGrid-root": { border: "none" },
+                              "& .cell-negative-status": {
+                                color: colors.redAccent[500],
+                                fontWeight: 600,
+                              },
+                              "& .cell-positive-status": {
+                                color: colors.greenAccent[400],
+                                fontWeight: 600,
+                              },
+                              "& .MuiDataGrid-cell": { borderBottom: "none" },
+                              "& .name-column--cell": { color: colors.greenAccent[300] },
+                              "& .MuiDataGrid-columnHeaders": {
+                                backgroundColor: colors.blueAccent[800],
+                                borderBottom: "none",
+                              },
+                              "& .MuiDataGrid-virtualScroller": {
+                                backgroundColor: colors.primary[400],
+                              },
+                              "& .MuiDataGrid-footerContainer": {
+                                borderTop: "none",
+                                backgroundColor: colors.blueAccent[800],
+                              },
+                              "& .MuiCheckbox-root": {
+                                color: `${colors.greenAccent[200]} !important`,
+                              },
+                              "& .odd-row": { backgroundColor: "", color: "" },
+                              "& .even-row": { backgroundColor: "", color: "" },
+                              "& .MuiDataGrid-columnHeaderTitle": {
+                                color: colors.blueAccent[900],
+                                fontWeight: 600,
+                              },
+                              "& .MuiTablePagination-root": { color: "#fff" },
+                              "& .MuiTablePagination-selectLabel": { color: "#fff" },
+                              "& .MuiTablePagination-displayedRows": { color: "#fff" },
+                              "& .MuiTablePagination-selectIcon": { color: "#fff" },
+                              "& .MuiTablePagination-actions button": { color: "#fff" },
+                            }}
+                          >
+                            <DataGrid
+                              sx={{
+                                "& .MuiDataGrid-footerContainer": {
+                                  height: dataGridHeaderFooterHeight,
+                                  minHeight: dataGridHeaderFooterHeight,
+                                },
+                              }}
+                              rows={explorelistViewData}
+                              columns={columns}
+                              loading={exploreLoading}
+                              disableSelectionOnClick
+                              getRowId={(row) => row.RecordID}
+                              rowHeight={dataGridRowHeight}
+                              headerHeight={dataGridHeaderFooterHeight}
+                              pageSize={pageSize}
+                              rowsPerPageOptions={[5, 10, 20]}
+                              pagination
+                              onCellClick={(params) => {
+                                selectCellRowData({
+                                  rowData: params.row,
+                                  mode: "E",
+                                  field: params.field,
+                                  setFieldValue,
+                                });
+                                setOpenGiftMoneyModal(true);
+                              }}
+                              components={{ Toolbar: Employee }}
+                              onStateChange={(stateParams) =>
+                                setRowCount(stateParams.pagination.rowCount)
+                              }
+                              getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0
+                                  ? "odd-row"
+                                  : "even-row"
+                              }
+                              componentsProps={{
+                                toolbar: {
+                                  showQuickFilter: true,
+                                  quickFilterProps: { debounceMs: 500 },
+                                },
+                              }}
+                            />
+                          </Box>
+                        </Box>
+
+                        {/* ================= GIFT MONEY DIALOG ================= */}
+                        <Dialog
+                          open={openGiftMoneyModal}
+                          onClose={() => setOpenGiftMoneyModal(false)}
+                          fullWidth
+                          maxWidth="md"
+                        >
+                          <DialogTitle>
+                            <Box display="flex" alignItems="center" gap={1.5}>
+                              <Box
+                                sx={{
+                                  width: 40,
+                                  height: 40,
+                                  borderRadius: "50%",
+                                  backgroundColor: "#EAF2FF",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Typography sx={{ fontSize: 20 }}>🎁</Typography>
+                              </Box>
+                              <Box>
+                                <Typography variant="subtitle1" fontWeight={700}>
+                                  Gift Money
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                  Add gift money received details
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </DialogTitle>
+
+                          <DialogContent dividers sx={{ pt: "20px !important" }}>
+                            {/* ---------- Row 1 : Type + Frequency ---------- */}
+                            <Box
+                              display="grid"
+                              gap={2}
+                              gridTemplateColumns={{ xs: "1fr", sm: "1fr 1fr" }}
+                              mb={2}
+                            >
+                              {/* <TextField
+                                select
+                                fullWidth
+                                size="small"
+                                name="giftMoneyType"
+                                label={
+                                  <>
+                                    Gift Money Type
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </>
+                                }
+                                value={values.giftMoneyType}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!touched.giftMoneyType && !!errors.giftMoneyType}
+                                helperText={touched.giftMoneyType && errors.giftMoneyType}
+                              >
+                                {GIFT_TYPE_OPTIONS.map((opt) => (
+                                  <MenuItem key={opt} value={opt}>
+                                    {opt}
+                                  </MenuItem>
+                                ))}
+                              </TextField> */}
+                            <TextField
+                                type="text"
+                                fullWidth
+                                size="small"
+                                name="giftMoneyType"
+                                label={
+                                  <>
+                                    Gift Money Type
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </>
+                                }
+                                value={values.giftMoneyType}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!touched.giftMoneyType && !!errors.giftMoneyType}
+                                helperText={touched.giftMoneyType && errors.giftMoneyType}
+                              
+                              /> 
+                              <TextField
+                                select
+                                fullWidth
+                                size="small"
+                                name="frequency"
+                                label="Frequency"
+                                value={values.frequency}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!touched.frequency && !!errors.frequency}
+                                helperText={touched.frequency && errors.frequency}
+                              >
+                                {FREQUENCY_OPTIONS.map((opt) => (
+                                  <MenuItem key={opt} value={opt}>
+                                    {opt}
+                                  </MenuItem>
+                                ))}
+                              </TextField>
+                            </Box>
+
+                            {/* ---------- Row 2 : Date + Amount ---------- */}
+                            <Box
+                              display="grid"
+                              gap={2}
+                              gridTemplateColumns={{ xs: "1fr", sm: "1fr 1fr" }}
+                              mb={3}
+                            >
+                              <TextField
+                                fullWidth
+                                size="small"
+                                type="date"
+                                name="receivedDate"
+                                label={
+                                  <>
+                                    Date Of Gift Money Received
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </>
+                                }
+                                InputLabelProps={{ shrink: true }}
+                                value={values.receivedDate}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                error={!!touched.receivedDate && !!errors.receivedDate}
+                                helperText={touched.receivedDate && errors.receivedDate}
+                              />
+
+                              <TextField
+                                fullWidth
+                                size="small"
+                                name="amount"
+                                // placeholder="Enter amount"
+                                label={
+                                  <>
+                                    Amount
+                                    <span
+                                      style={{ color: "red", fontSize: "20px" }}
+                                    >
+                                      *
+                                    </span>
+                                  </>
+                                }
+                                InputLabelProps={{ shrink: true }}
+                                value={values.amount}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (/^\d*\.?\d*$/.test(val)) {
+                                    setFieldValue("amount", val);
+                                  }
+                                }}
+                                onBlur={(e) => {
+                                  if (e.target.value !== "") {
+                                    const num = parseFloat(e.target.value || 0);
+                                    setFieldValue("amount", num.toFixed(2));
+                                  }
+                                  handleBlur(e);
+                                }}
+                                error={!!touched.amount && !!errors.amount}
+                                helperText={touched.amount && errors.amount}
+                               InputProps={{
+                                  inputProps: { style: { textAlign: "right" } },
+                                }}
+                              />
+                            </Box>
+
+                            {/* ---------- Attachments ---------- */}
+                            <Box
+                              sx={{
+                                backgroundColor: "#F3F8FD",
+                                border: "1px solid #E1ECF7",
+                                borderRadius: 2,
+                                p: 2,
+                              }}
+                            >
+                              <Typography
+                                variant="subtitle2"
+                                fontWeight={700}
+                                color="#1E3A5F"
+                                mb={1.5}
+                              >
+                                Attachments
+                              </Typography>
+
+                              <Box
+                                display="grid"
+                                gap={2}
+                                gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr" }}
+                                alignItems="start"
+                              >
+                                <FileUploadCard
+                                  title="Photograph Sent"
+                                  icon={<ImageOutlinedIcon fontSize="small" />}
+                                  rule={FILE_RULES.photograph}
+                                  file={values.photograph}
+                                  existingName={values.photographName}
+                                  onPick={(f, serverName) => {
+                                    setFieldValue("photograph", f);
+                                    setFieldValue("photographName", serverName);
+                                  }}
+                                  onRemove={() => {
+                                    setFieldValue("photograph", null);
+                                    setFieldValue("photographName", "");
+                                  }}
+                                  error={touched.photograph && errors.photograph}
+                                />
+
+                                <FileUploadCard
+                                  title="Thanks Letter Sent"
+                                  icon={<DescriptionOutlinedIcon fontSize="small" />}
+                                  rule={FILE_RULES.thanksLetter}
+                                  file={values.thanksLetter}
+                                  existingName={values.thanksLetterName}
+                                  onPick={(f, serverName) => {
+                                    setFieldValue("thanksLetter", f);
+                                    setFieldValue("thanksLetterName", serverName);
+                                  }}
+                                  onRemove={() => {
+                                    setFieldValue("thanksLetter", null);
+                                    setFieldValue("thanksLetterName", "");
+                                  }}
+                                  error={touched.thanksLetter && errors.thanksLetter}
+                                />
+
+                                <FileUploadCard
+                                  title="Attachment"
+                                  optional
+                                  icon={<AttachFileIcon fontSize="small" />}
+                                  rule={FILE_RULES.attachment}
+                                  file={values.attachment}
+                                  existingName={values.attachmentName}
+                                  onPick={(f, serverName) => {
+                                    setFieldValue("attachment", f);
+                                    setFieldValue("attachmentName", serverName);
+                                  }}
+                                  onRemove={() => {
+                                    setFieldValue("attachment", null);
+                                    setFieldValue("attachmentName", "");
+                                  }}
+                                />
+                              </Box>
+                            </Box>
+                          </DialogContent>
+
+                          <DialogActions>
+                            <LoadingButton
+                              type="submit"
+                              variant="contained"
+                              loading={isLoading}
+                              onClick={handleSubmit}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                                color: "#fff",
+                                px: 4,
+                                bgcolor: "#0D9488",
+                                "&:hover": { bgcolor: "#0F766E" },
+                              }}
+                            >
+                              Save
+                            </LoadingButton>
+
+                            {/* {funMode === "E" && (
+                              <Button
+                                variant="contained"
+                                color="error"
+                                onClick={() => {
+                                  setOpenGiftMoneyModal(false);
+                                  Swal.fire({
+                                    title: errorMsgData.Warningmsg.Delete,
+                                    icon: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonText: "Confirm",
+                                  }).then((result) => {
+                                    if (result.isConfirmed) {
+                                      empGiftMoneyFn(values, resetForm, "harddelete");
+                                    }
+                                  });
+                                }}
+                                sx={{
+                                  px: 4,
+                                  borderRadius: 2,
+                                  textTransform: "none",
+                                  bgcolor: "#DC2626",
+                                  color: "#fff",
+                                  boxShadow: "none",
+                                  "&:hover": {
+                                    bgcolor: "#B91C1C",
+                                    boxShadow: "0 4px 10px rgba(220,38,38,0.25)",
+                                  },
+                                  "&:active": { bgcolor: "#991B1B" },
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            )} */}
+
+                            <Button
+                              variant="contained"
+                              color="warning"
+                              onClick={() => setOpenGiftMoneyModal(false)}
+                              sx={{
+                                px: 4,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                bgcolor: "#F97316",
+                                "&:hover": { bgcolor: "#EA580C" },
+                              }}
+                            >
+                              Back
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+                      </form>
+                    )}
+                  </Formik>
+                </Paper>
+              </Box>
+            </Box>
+          ) : (
+            false
+          )}
+
         </Box>
       </Box>
     </React.Fragment >

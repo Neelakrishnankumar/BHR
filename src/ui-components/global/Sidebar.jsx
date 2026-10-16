@@ -2495,7 +2495,7 @@ const Sidebars = () => {
   //   setOpen(!open);
   // };
   const CompanyID = sessionStorage.getItem("compID");
-  const isTrustcompany = CompanyID === "76"; 
+  const isTrustcompany = CompanyID === "586"; 
   const company = sessionStorage.getItem("company");
   const year = sessionStorage.getItem("year");
   const Groupaccess = JSON.parse(sessionStorage.getItem("Groupaccess")) || [];
@@ -3036,26 +3036,7 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR321",
           },
-          // ...(isTrustcompany
-          //   ? [
-          //   {
-          //   name: "Sponser",
-          //   id: 43495,
-          //   //  url: "./TR243/Party",
-          //   url: "./TR321/Sponser",
-          //   icon: (
-          //     <Tooltip title="Sponser">
-          //       <VolunteerActivismIcon color="info" />
-          //     </Tooltip>
-          //   ),
-          //   UGA_ADD: true,
-          //   UGA_DEL: true,
-          //   UGA_MOD: true,
-          //   UGA_PRINT: true,
-          //   UGA_PROCESS: true,
-          //   UGA_VIEW: true,
-          //   UGA_ACCESSIDS: "TR243",
-          // }]: []),
+          
          
           {
             name: "Settlement",
@@ -3148,6 +3129,48 @@ const Sidebars = () => {
 
         ],
       },
+      // ...(isTrustcompany
+      //       ? [
+       {
+        name: "Sponsor",
+        id: 45789,
+        MenuID: "SPR2100",
+        Tooltipname: "Sponsor",
+        icon: (
+          <Tooltip title="Sponsor">
+            <VolunteerActivismIcon sx={{ color: "#651fff" }} />
+          </Tooltip>
+        ),
+        url: "./TR419/Sponsor",
+        UGA_ADD: true,
+        UGA_DEL: true,
+        UGA_MOD: true,
+        UGA_PRINT: true,
+        UGA_PROCESS: true,
+        UGA_VIEW: true,
+        UGA_ACCESSIDS: "TR419",
+
+      },
+          //   {
+          //   name: "Sponsor",
+          //   id: 43495,
+          //   //  url: "./TR243/Party",
+          //   url: "./TR419/Sponsor",
+          //   icon: (
+          //     <Tooltip title="Sponsor">
+          //       <VolunteerActivismIcon color="info" />
+          //     </Tooltip>
+          //   ),
+          //   UGA_ADD: true,
+          //   UGA_DEL: true,
+          //   UGA_MOD: true,
+          //   UGA_PRINT: true,
+          //   UGA_PROCESS: true,
+          //   UGA_VIEW: true,
+          //   UGA_ACCESSIDS: "TR419",
+          // },
+        //  ]
+        //    : []),
       {
         name: "Transaction",
         id: 97659,

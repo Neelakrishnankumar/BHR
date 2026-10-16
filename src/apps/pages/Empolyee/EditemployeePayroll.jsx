@@ -54,6 +54,7 @@ import {
   payslipAttendance,
   PayrollconfigpayrollAttendance,
   CustomisedCaptionGet,
+  Processpost_v1,
 } from "../../../store/reducers/Formapireducer";
 import { fnFileUpload } from "../../../store/reducers/Imguploadreducer";
 import { fetchComboData1 } from "../../../store/reducers/Comboreducer";
@@ -2525,8 +2526,12 @@ const EditemployeePayroll = () => {
       };
 
       try {
-        const response = await dispatch(Processpost(data));
-
+        // const response = await dispatch(Processpost(data));
+        //Knowledge company - 593 UAT
+        const response =
+          String(CompanyID) === "593"
+            ? await dispatch(Processpost_v1(data))
+            : await dispatch(Processpost(data));
         if (response?.payload?.Status === "Y") {
           setProcessProgress((prev) => ({
             ...prev,
@@ -2564,6 +2569,7 @@ const EditemployeePayroll = () => {
       }
     }, 2000);
   };
+  
   // const attendaceProcessFnSave = async (values) => {
   //   const EmployeeIDs = payslipAttendanceData
   //     .map((row) => row.EmpRecid)

@@ -4640,6 +4640,8 @@ const Listview = () => {
                       date: sessionStorage.getItem("ToDate") || "",
                       party: JSON.parse(sessionStorage.getItem("TR328_Party")) || [],
                       product: JSON.parse(sessionStorage.getItem("TR328_Product")) || [],
+                       Employees:
+                        JSON.parse(sessionStorage.getItem("TR328_Employees")) || [],
                       freshCall: sessionStorage.getItem("TR328_FreshCall") || "N",
                       nextDueDate: sessionStorage.getItem("TR328_NextDueDate") || "N",
                       days: sessionStorage.getItem("TR328_Days") || "",
@@ -4666,6 +4668,10 @@ const Listview = () => {
                         const partyIds = values.party.map((p) => `'${p.RecordID}'`).join(", ");
                         conditions.push(`PartyID IN (${partyIds})`);
                       }
+                       if (values.Employees?.length > 0) {
+                        const EmpIds = values.Employees.map((p) => `'${p.RecordID}'`).join(", ");
+                        conditions.push(`HrLoginUserID IN (${EmpIds})`);
+                      }
 
                       // PRODUCT
                       if (values.product?.length > 0) {
@@ -4675,7 +4681,8 @@ const Listview = () => {
 
                       // BASE
                       if (compID) {
-                        conditions.push(`HrLoginUserID='${LoginID}' AND CompanyID='${compID}'`);
+                        conditions.push(` CompanyID='${compID}'`)
+                          // `HrLoginUserID='${LoginID}' AND CompanyID='${compID}'`);
                       }
 
                       // FILTER LOGIC
@@ -4752,7 +4759,15 @@ const Listview = () => {
                       return (
                         <form onSubmit={handleSubmit}>
                           <Box sx={{ height: 600, overflowY: "auto", mt: 4 }}>
-
+                          <IconButton
+                              size="small"
+                              onClick={() => setShowMore(false)}
+                              sx={{ position: "absolute", top: 5, right: 4 }}
+                            >
+                              <Tooltip title="Close">
+                                <CancelIcon color="error" />
+                              </Tooltip>
+                            </IconButton>
                             {/* FROM DATE */}
                             <TextField
                               type="date"
@@ -4875,7 +4890,22 @@ const Listview = () => {
                                 },
                               })}`}
                             />
-
+                          <MultiFormikOptimizedAutocomplete
+                            sx={{ width: 250, mt: 1 }}
+                            name="Employees"
+                            label="Personnel"
+                            id="Employees"
+                            value={values.Employees}                         
+                            onChange={(e, newValue) => {
+                              setFieldValue("Employees", newValue);
+                              sessionStorage.setItem(
+                                  "TR328_Employees",
+                                  JSON.stringify(newValue)
+                                );
+                            }}
+                            url={`${listViewurl}?data={"Query":{"AccessID":"2165","ScreenName":"EMPLOYEETEAMS","VerticalLicense":"${Subscriptionlastthree}","Filter":"CompanyID ='${CompId}'","Any":"","CompId":${compID}}}`
+                            }
+                          />
 
                             {/* FRESH CALL */}
                             <FormControlLabel
@@ -5046,7 +5076,7 @@ const Listview = () => {
                                   [
                                     "FromDate",
                                     "ToDate",
-
+                                    "TR328_Employees",
                                     "TR328_Party",
                                     "TR328_Product",
                                     "TR328_Filters",
@@ -5065,6 +5095,7 @@ const Listview = () => {
                                       date: "",
                                       party: [],
                                       product: [],
+                                      Employees:[],
                                       freshCall: "N",
                                       nextDueDate: "N",
                                       days: "",
@@ -5118,6 +5149,7 @@ const Listview = () => {
                         JSON.parse(sessionStorage.getItem("TR313_Party")) || [],
                       product:
                         JSON.parse(sessionStorage.getItem("TR313_Product")) || [],
+                       
                       ordertype: "",
                     }}
                     enableReinitialize
@@ -5126,6 +5158,7 @@ const Listview = () => {
                         values.fromdate ||
                         values.date ||
                         values.party ||
+                        values.Employees ||
                         values.product ||
                         values.ordertype ||
                         values.Created ||
@@ -5212,6 +5245,19 @@ const Listview = () => {
                         );
                       }
 
+                      //Employee filter
+                      if (
+                        Array.isArray(values.Employees) &&
+                        values.Employees.length > 0
+                      ) {
+                        const EmpIds = values.Employees
+                          .map((Employees) => `'${Employees.RecordID}'`)
+                          .join(", ");
+
+                        conditions.push(
+                          `HrLoginUserID IN (${EmpIds})`
+                        );
+                      }
                       // Product filter
                       if (
                         Array.isArray(values.product) &&

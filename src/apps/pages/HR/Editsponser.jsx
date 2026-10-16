@@ -50,6 +50,8 @@ import {
     VendorDefaultPUTdata,
     VendorDefaultFetchData,
     explorePostData,
+    SponsorRegistrationPost,
+    SponsorRegistrationGet,
 } from "../../../store/reducers/Formapireducer";
 import { useEffect, useState, useMemo } from "react";
 import { LoadingButton } from "@mui/lab";
@@ -60,6 +62,8 @@ import { tokens } from "../../../Theme";
 import { formGap } from "../../../ui-components/global/utils";
 import {
     CheckinAutocomplete,
+    MultiFormikOptimizedAutocomplete,
+    MultiFormikOptimizedselectAutocomplete,
     OrderItemAutocomplete,
 } from "../../../ui-components/global/Autocomplete";
 import { fetchExplorelitview } from "../../../store/reducers/Explorelitviewapireducer";
@@ -101,10 +105,10 @@ const Editsponser = () => {
         (state) => state.formApi.partyContactgetdata
     );
     const partyRegistergetdata = useSelector(
-        (state) => state.formApi.vendorregisterGetData
+        (state) => state.formApi.SponsorregisterGetData
     );
     const isPartyRegisterLoading = useSelector(
-        (state) => state.formApi.vendorregisterGetDataloading
+        (state) => state.formApi.SponsorregisterGetDataloading
     );
     const partyDefaultgetdata = useSelector(
         (state) => state.formApi.vendorDefaultGetData
@@ -172,6 +176,7 @@ const Editsponser = () => {
 
                 let schemaFields = {
                     name: Yup.string().trim().required(data.Party.name),
+                    code: Yup.string().trim().required(data.Party.code),
 
                     mobilenumber: Yup.string()
                         .required(data.Party.mobilenumber)
@@ -353,17 +358,17 @@ const Editsponser = () => {
     }, [explorelistViewData, show, fileTypeFilter]);
     // useEffect(() => {
     //   if (recID && mode === "E") {
-    //     dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+    //     dispatch(getFetchData({ accessID: "TR419", get: "get", recID }));
     //   } else {
-    //     dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+    //     dispatch(getFetchData({ accessID: "TR419", get: "get", recID }));
     //   }
     // }, [location.key, recID, mode]);
     useEffect(() => {
         if (show == "0") {
             if (recID && mode === "E") {
-                dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+                dispatch(getFetchData({ accessID: "TR419", get: "get", recID }));
             } else {
-                dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+                dispatch(getFetchData({ accessID: "TR419", get: "get", recID }));
             }
         }
     }, [location.key, recID, mode, show]);
@@ -615,18 +620,18 @@ const Editsponser = () => {
             console.log(event.target.value, "--find event.target.value");
 
             if (recID && mode === "E") {
-                dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
-                dispatch(VendorRegisterFetchData({ get: "get", recID }));
+                dispatch(getFetchData({ accessID: "TR419", get: "get", recID }));
+                dispatch(SponsorRegistrationGet({ get: "get", recID }));
 
             } else {
-                dispatch(getFetchData({ accessID: "TR243", get: "get", recID }));
+                dispatch(getFetchData({ accessID: "TR419", get: "get", recID }));
             }
         }
         if (event.target.value == "3") {
             if (recID && mode === "E") {
-                dispatch(VendorRegisterFetchData({ get: "get", recID }));
+                dispatch(SponsorRegistrationGet({ get: "get", recID }));
             } else {
-                dispatch(VendorRegisterFetchData({ get: "", recID }));
+                dispatch(SponsorRegistrationGet({ get: "", recID }));
             }
         }
         if (event.target.value == "4") {
@@ -765,50 +770,40 @@ const Editsponser = () => {
         code: data.Code || "",
         name: data.Name || "",
         Pancardnumber: partyRegistergetdata.PanCardNo || data.PanCardNo || "",
-        locality:
-            data.LocalityID && data.LocalityID !== "0"
-                ? {
-                    RecordID: data.LocalityID,
-                    Code: data.LocalityCode,
-                    Name: data.LocalityName,
-                }
-                : null,
-        ReferenceBy:
-            data?.StudentID
-                ? {
-                    // RecordID: data?.StudentID,
-                    EmployeeID: data?.StudentID,
-                    Code: data?.StudentCode,
-                    Name: data?.StudentName,
-                }
-                : null,
+        Student: Array.isArray(data.StudentID)
+        ? data.StudentID.map((d) => ({
+            RecordID: String(d.StudentID),
+            EmployeeID: String(d.StudentID),
+            Name: d.StudentName,
+            }))
+        : [],
+        // Student:
+        //     data?.StudentID
+        //         ? {
+        //             // RecordID: data?.StudentID,
+        //             RecordID: data?.StudentID,
+        //             Code: data?.StudentCode,
+        //             Name: data?.StudentName,
+        //         }
+        //         : [],
+        sortorder: data.SortOrder || 0,
+        disable: data.Disable === "Y" ? true : false,
+        delete: data.DeleteFlag === "Y" ? true : false,
         address: data.Address || "",
         maplink: data.MapLocation || "",
-        PanImg: data.PanImg || "",
-        GstImg: data.gstImage || "",
         gstnumber: partyRegistergetdata.GstNo || data.GstNo || "",
         mobilenumber: data.MobileNo || "",
         date: data.RegistrationDate || "",
         verifieddate: data.VerifyConfirmDate || "",
         emailid: data.EmailID || "",
-        Password: data.Password || "",
-        vendor: data.VendorCheckbox === "Y" ? true : false,
-        customer: data.CustomerCheckbox === "Y" ? true : false,
-        // prospect: data.Prospects === "Y" ? true : false,
-        prospect:
-            data?.RecordID
-                ? data?.Prospects === "Y"   // EDIT mode
-                : true,                     // ADD mode
-        delete: data.DeleteFlag === "Y" ? true : false,
-        BusinessPartner: data.BusinessPartner === "Y" ? true : false,
-        Parent: data.ParentCheckBox === "Y" ? true : false,
-        disable: data.Disable === "Y" ? true : false,
-        WholeSale: data.Type === "Y" ? true : false,
-        sortorder: data.SortOrder || 0,
+
+
     };
     console.log(data.PanImg, "dooo");
     const Fnsave = async (values, del) => {
-        setLoading(true);
+         const studentIds = values.Student?.map((d) => d.EmployeeID) || [];
+    const studentNames =  values.Student?.map((d) => d.Name) || [];
+   setLoading(true);
 
         let action =
             mode === "A" && !del
@@ -827,45 +822,38 @@ const Editsponser = () => {
             RecordID: recID,
             Code: values.code,
             Name: values.name,
-            LocalityID: values.locality?.RecordID || 0,
-            LocalityName: values.locality?.Name || "",
-            ReferenceID: values.ReferenceBy?.RecordID || 0,
-            ReferenceName: values.ReferenceBy?.Name || "",
+            StudentID: studentIds.join(","),
+            // Array.isArray(values?.Student)
+            //         ? values?.Student.map((d) => d.EmployeeID).join(",")
+            //         : 0,
+            // values.Student?.EmployeeID || data?.StudentID || 0,
+            StudentName: studentNames.join(","),
+            // Array.isArray(values?.Student)
+            //         ? values?.Student.map((d) => d.Name).join(",")
+            //         : "",
+            // values.Student?.Name || [],
             PanCardNo: values.Pancardnumber,
             Address: values.address,
             MapLocation: values.maplink,
-            PanImg: panImage,
             GstNo: values.gstnumber,
-            GstImg: gstImage,
             MobileNo: values.mobilenumber,
+            DeleteFlag: values.delete == true ? "Y" : "N",
+            Disable: values.disable == true ? "Y" : "N",
             RegistrationDate: values.date,
             VerifyConfirmDate: values.verifieddate,
             EmailID: values.emailid,
-            Password: values.Password || "",
-            Otp: "",
-            OtpStatus: "",
+            CompanyID: CompanyID,
             SortOrder: values.sortorder || 0,
-            CompanyID,
-            VendorCheckbox: values.vendor === true ? "Y" : "N",
-            CustomerCheckbox: values.customer === true ? "Y" : "N",
-            Prospects: values.prospect === true ? "Y" : "N",
-            // LocalityID: "1",
-            DeleteFlag: values.delete == true ? "Y" : "N",
-            BusinessPartner: values.BusinessPartner == true ? "Y" : "N",
-            ParentCheckBox: values.Parent == true ? "Y" : "N",
-            Disable: values.disable == true ? "Y" : "N",
-            Type: values.WholeSale == true ? "Y" : "N",
-            Source: "Cloud",
-            CreateBy: LoginID,
+
         };
 
         try {
-            const response = await dispatch(postData({ accessID: "TR243", action, idata }));
+            const response = await dispatch(postData({ accessID: "TR419", action, idata }));
 
             if (response.payload.Status === "Y") {
                 toast.success(response.payload.Msg);
-                // navigate("/Apps/TR243/Party");
-                navigate("/Apps/TR321/Party");
+                // navigate("/Apps/TR419/Party");
+                navigate(-1);
             } else {
                 toast.error(response.payload.Msg);
             }
@@ -885,12 +873,12 @@ const Editsponser = () => {
     const RegisterInitialValue = {
         code: partyRegistergetdata.Code || "",
         name: partyRegistergetdata.Name || "",
-        Pancardnumber: partyRegistergetdata.PanCardNo || "",
+        Pancardnumber: partyRegistergetdata.PanCardNumber || "",
         PanImg: partyRegistergetdata.PanImg || "",
         GstImg: partyRegistergetdata.GstImg || "",
-        gstnumber: partyRegistergetdata.GstNo || "",
-        date: partyRegistergetdata.RegistrationDate || "",
-        verifieddate: partyRegistergetdata.VerifyConfirmDate || "",
+        gstnumber: partyRegistergetdata.GstNumber || "",
+        sponsoreddate: partyRegistergetdata.RegistrationDate || "",
+        yearofsponsor: partyRegistergetdata.YearOfSponsor || "",
         // aadharcardnumber: partyRegistergetdata.aadharcardnumber || ""
     };
 
@@ -912,23 +900,28 @@ const Editsponser = () => {
                     : "update";
         const idata = {
             RecordID: recID,
-            PanCardNo: values.Pancardnumber,
+            PanCardNumber: values.Pancardnumber,
+            Code: partyRegistergetdata?.Code,
+            Name: partyRegistergetdata?.Name,
             PanImg: panImage || values.PanImg,
-            GstNo: values.gstnumber,
+            GstNumber: values.gstnumber,
             GstImg: gstImage || values.GstImg,
-            RegistrationDate: values.date,
-            VerifyConfirmDate: values.verifieddate,
+            RegistrationDate: values.sponsoreddate,
+            VerifyConfirmDate: "",
+
+            // VerifyConfirmDate: values.verifieddate,
             // aadharcardnumber: values.aadharcardnumber
         };
 
         try {
             const response = await dispatch(
-                VendorRegisterpostData({ accessID: "TR243", action, idata })
+                SponsorRegistrationPost({ action, idata })
             );
 
             if (response.payload.Status === "Y") {
                 toast.success(response.payload.Msg);
-                // navigate("/Apps/TR243/Party");
+                dispatch(SponsorRegistrationGet({ get: "get", recID }));
+                // navigate("/Apps/TR419/Party");
             } else {
                 toast.error(response.payload.Msg);
             }
@@ -982,12 +975,12 @@ const Editsponser = () => {
 
         try {
             const response = await dispatch(
-                VendorDefaultPUTdata({ accessID: "TR243", action, idata })
+                VendorDefaultPUTdata({ accessID: "TR419", action, idata })
             );
 
             if (response.payload.Status === "Y") {
                 toast.success(response.payload.Msg);
-                // navigate("/Apps/TR243/Party");
+                // navigate("/Apps/TR419/Party");
             } else {
                 toast.error(response.payload.Msg);
             }
@@ -1037,7 +1030,7 @@ const Editsponser = () => {
 
             if (response.payload.Status === "Y") {
                 toast.success(response.payload.Msg);
-                // navigate("/Apps/TR243/Party");
+                // navigate("/Apps/TR419/Party");
             } else {
                 toast.error(response.payload.Msg);
             }
@@ -1096,7 +1089,7 @@ const Editsponser = () => {
 
             if (response.payload.Status === "Y") {
                 toast.success(response.payload.Msg);
-                // navigate("/Apps/TR243/Party");
+                // navigate("/Apps/TR419/Party");
             } else {
                 toast.error(response.payload.Msg);
             }
@@ -1224,8 +1217,8 @@ const Editsponser = () => {
                     navigate("/");
                 }
                 if (props === "Close") {
-                    // navigate("/Apps/TR243/Party");
-                    navigate("/Apps/TR321/Party");
+                    // navigate("/Apps/TR419/Party");
+                    navigate(-1);
                 }
             }
         });
@@ -1237,13 +1230,13 @@ const Editsponser = () => {
     const formSections = [
         {
             value: "0",
-            label: "Party",
+            label: "Sponsor",
             desc: "Basic party information and details",
             icon: "🏢",
         },
         {
             value: "3",
-            label: "Registration",
+            label: "Sponsor Details",
             desc: "PAN, GST and registration documents",
             icon: "📝",
         },
@@ -1253,24 +1246,25 @@ const Editsponser = () => {
         //     desc: "Default product and payment mode",
         //     icon: "⚙️",
         // },
-        {
-            value: "2",
-            label: "Bank Details",
-            desc: "Bank account and branch information",
-            icon: "🏦",
-        },
-        {
-            value: "1",
-            label: "Contact Details",
-            desc: "Contact persons and ID proofs",
-            icon: "📞",
-        },
-        {
-            value: "5",
-            label: "List Of Documents",
-            desc: "Uploaded party documents",
-            icon: "📄",
-        },
+
+        // {
+        //     value: "2",
+        //     label: "Bank Details",
+        //     desc: "Bank account and branch information",
+        //     icon: "🏦",
+        // },
+        // {
+        //     value: "1",
+        //     label: "Contact Details",
+        //     desc: "Contact persons and ID proofs",
+        //     icon: "📞",
+        // },
+        // {
+        //     value: "5",
+        //     label: "List Of Documents",
+        //     desc: "Uploaded sponsor documents",
+        //     icon: "📄",
+        // },
     ];
 
     function FormSectionsSidebar({ show, screenChange, sections, open, onToggle }) {
@@ -1423,8 +1417,8 @@ const Editsponser = () => {
                                 }}
                             >
                                 {mode === "A"
-                                    ? `New Party`
-                                    : `Edit Party`}
+                                    ? `New Sponsor`
+                                    : `Edit Sponsor`}
                             </Typography>
                             {/* Breadcrumb */}
                             <Breadcrumbs
@@ -1444,8 +1438,8 @@ const Editsponser = () => {
                                     }}
                                 >
                                     {mode === "E"
-                                        ? `Party (${state.PName})`
-                                        : "Party (New)"}
+                                        ? `Sponsor (${data.Name})`
+                                        : "Sponsor (New)"}
                                 </Typography>
 
                                 {show == "1" && (
@@ -1462,21 +1456,21 @@ const Editsponser = () => {
 
                                 {show == "3" && (
                                     <Typography sx={breadcrumbStyles.active}>
-                                        Registration
+                                        Sponsor Details
                                     </Typography>
                                 )}
 
-                                {show == "4" && (
+                                {/* {show == "4" && (
                                     <Typography sx={breadcrumbStyles.active}>
                                         Default Settings
                                     </Typography>
-                                )}
+                                )} */}
 
-                                {show == "5" && (
+                                {/* {show == "5" && (
                                     <Typography sx={breadcrumbStyles.active}>
                                         List Of Documents
                                     </Typography>
-                                )}
+                                )} */}
                             </Breadcrumbs>
                         </Box>
                     </Box>
@@ -1577,10 +1571,10 @@ const Editsponser = () => {
                                             </Box>
                                             <Box>
                                                 <Typography variant="h6" fontWeight={700} color="#0D94885">
-                                                    Party
+                                                    Sponsor
                                                 </Typography>
                                                 <Typography variant="caption" color="text.secondary">
-                                                    Basic party information and details
+                                                    Basic Sponsor information and details
                                                 </Typography>
                                             </Box>
                                         </Box>
@@ -1596,24 +1590,7 @@ const Editsponser = () => {
                                                 },
                                             }}
                                         >
-                                            {/* {CompanyAutoCode == "Y" ? (
-                        <TextField
-                          name="code"
-                          type="text"
-                          id="code"
-                          label="Code"
-                          placeholder="Auto"
-                          variant="outlined"
-                          size="small"
-                          value={values.code}
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={!!touched.code && !!errors.code}
-                          helperText={touched.code && errors.code}
-                          InputProps={{ readOnly: true }}
-                          sx={textFieldSx}
-                        />
-                      ) : ( */}
+                                           
                                             <TextField
                                                 name="code"
                                                 type="text"
@@ -1654,7 +1631,7 @@ const Editsponser = () => {
                                                 error={!!touched.name && !!errors.name}
                                                 helperText={touched.name && errors.name}
                                                 sx={textFieldSx}
-                                                autoFocus={CompanyAutoCode == "Y"}
+                                                // autoFocus={CompanyAutoCode == "Y"}
                                             />
 
                                             <TextField
@@ -1751,15 +1728,27 @@ const Editsponser = () => {
                                                 sx={textFieldSx}
                                             />
 
-                                            <CheckinAutocomplete
-                                                id="ReferenceBy"
-                                                name="ReferenceBy"
+                                            <MultiFormikOptimizedselectAutocomplete
+                                                id="Student"
+                                                multiple
+                                                name="Student"
                                                 label="Sponsored Student"
                                                 variant="outlined"
-                                                value={values.ReferenceBy}
-                                                onChange={(newValue) => {
-                                                    setFieldValue("ReferenceBy", newValue);
-                                                }}
+                                                value={values.Student || []}
+                                                 onChange={(e, newValue) =>
+                                            setFieldValue(
+                                              "Student",
+                                              newValue,
+                                              true,
+                                            )
+                                          }
+                                                isOptionEqualToValue={(
+                                                    option,
+                                                    value,
+                                                ) =>
+                                                    String(option.EmployeeID) ===
+                                                    String(value.EmployeeID)
+                                                }
                                                 url={`${listViewurl}?data=${JSON.stringify({
                                                     Query: {
                                                         AccessID: "2182",
@@ -1853,7 +1842,7 @@ const Editsponser = () => {
                                             <Button
                                                 color="warning"
                                                 variant="contained"
-                                                onClick={() => navigate("/Apps/TR321/Party")}
+                                                onClick={() => navigate(-1)}
                                                 sx={{ textTransform: "none", borderRadius: 2, px: 4, bgcolor: "#F97316", "&:hover": { bgcolor: "#EA580C" } }}
                                             >
                                                 Back
@@ -2750,10 +2739,10 @@ const Editsponser = () => {
                                                     </Box>
                                                     <Box>
                                                         <Typography variant="h6" fontWeight={700} color="#0D94885">
-                                                            Registration
+                                                            Sponsor Details
                                                         </Typography>
                                                         <Typography variant="caption" color="text.secondary">
-                                                            PAN, GST and registration documents
+                                                            PAN, GST and sponsor details
                                                         </Typography>
                                                     </Box>
                                                 </Box>
@@ -2880,36 +2869,37 @@ const Editsponser = () => {
                                                         sx={textFieldSx}
                                                     />
                                                     <TextField
-                                                        name="date"
+                                                        name="sponsoreddate"
                                                         type="date"
-                                                        id="date"
+                                                        id="sponsoreddate"
                                                         label="Sponsored Date"
                                                         variant="outlined"
                                                         size="small"
                                                         inputFormat="YYYY-MM-DD"
-                                                        value={values.date}
+                                                        value={values.sponsoreddate}
                                                         onBlur={handleBlur}
                                                         onChange={handleChange}
-                                                        error={!!touched.date && !!errors.date}
-                                                        helperText={touched.date && errors.date}
+                                                        error={!!touched.sponsoreddate && !!errors.sponsoreddate}
+                                                        helperText={touched.sponsoreddate && errors.sponsoreddate}
                                                         sx={textFieldSx}
                                                         InputLabelProps={{ shrink: true }}
                                                     />
                                                     <TextField
-                                                        name="verifieddate"
-                                                        type="number"
-                                                        id="verifieddate"
-                                                        label="Sponsored Years"
+                                                        name="yearofsponsor"
+                                                        type="text"
+                                                        id="yearofsponsor"
+                                                        label="Year of Sponsor"
                                                         variant="outlined"
                                                         size="small"
                                                         // inputFormat="YYYY-MM-DD"
-                                                        value={values.verifieddate}
+                                                        value={values.yearofsponsor}
                                                         onBlur={handleBlur}
                                                         onChange={handleChange}
-                                                        error={!!touched.date && !!errors.date}
-                                                        helperText={touched.date && errors.date}
-                                                        sx={textFieldSx}                                                   
+                                                        error={!!touched.yearofsponsor && !!errors.yearofsponsor}
+                                                        helperText={touched.yearofsponsor && errors.yearofsponsor}
+                                                        sx={textFieldSx}
                                                         InputProps={{
+                                                            readOnly: true,
                                                             inputProps: {
                                                                 style: { textAlign: "right" },
                                                             },
