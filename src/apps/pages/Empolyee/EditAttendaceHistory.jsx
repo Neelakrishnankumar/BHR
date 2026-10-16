@@ -683,189 +683,173 @@ const AttInitialvalues = React.useMemo(() => ({
                         </Box>
                       </Box>
 
-                      {/* ----- ROW 1: filter fields only, wraps responsively ----- */}
-                    <Box padding={1}>
-                    <Stack
-                      direction="row"
-                      spacing={2}
-                      flexWrap="wrap"
-                      sx={{ width: "100%", rowGap: 2 }}
-                    >
-                      <TextField
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        id="month"
-                        name="month"
-                        label="Month"
-                        value={values.month}
-                        focused
-                        onChange={(e) => {
-                          handleChange(e);
-                          sessionStorage.setItem("month", e.target.value);
-                        }}
-                        onBlur={handleBlur}
-                        select
+           {/* Filter rows */}
+                      <Box
                         sx={{
-                          "& .MuiOutlinedInput-root": {
-                            backgroundColor: "#fff",
-                            borderRadius: "6px",
-                            "& fieldset": { borderColor: "#d1d5db" },
-                            "&:hover fieldset": { borderColor: "#bfc4cc" },
-                            "&.Mui-focused fieldset": { borderColor: "#d1d5db", borderWidth: "1px" },
-                          },
-                          "& .MuiInputLabel-root": { color: "#6b7280" },
-                          "& .MuiInputLabel-root.Mui-focused": { color: "#6b7280" },
-                          width: 110,
+                          px: 1,
+                          py: 0.5,
+                          // borderBottom: "1px solid #E5E7EB",
+                          width: "100%",
                         }}
                       >
-                        <MenuItem value={"1"}>January</MenuItem>
-                        <MenuItem value={"2"}>February</MenuItem>
-                        <MenuItem value={"3"}>March</MenuItem>
-                        <MenuItem value={"4"}>April</MenuItem>
-                        <MenuItem value={"5"}>May</MenuItem>
-                        <MenuItem value={"6"}>June</MenuItem>
-                        <MenuItem value={"7"}>July</MenuItem>
-                        <MenuItem value={"8"}>August</MenuItem>
-                        <MenuItem value={"9"}>September</MenuItem>
-                        <MenuItem value={"10"}>October</MenuItem>
-                        <MenuItem value={"11"}>November</MenuItem>
-                        <MenuItem value={"12"}>December</MenuItem>
-                      </TextField>
-
-                      <TextField
-                        variant="outlined"
-                        size="small"
-                        type="number"
-                        id="year"
-                        name="year"
-                        label="Year"
-                        value={values.year}
-                        inputProps={{ min: "1900", max: "2100", step: "1" }}
-                        focused
-                        onChange={(e) => {
-                          handleChange(e);
-                          sessionStorage.setItem("year", e.target.value);
-                        }}
-                        onBlur={handleBlur}
-                        sx={{
-                          "& .MuiOutlinedInput-root": {
-                            backgroundColor: "#fff",
-                            borderRadius: "6px",
-                            "& fieldset": { borderColor: "#d1d5db" },
-                            "&:hover fieldset": { borderColor: "#bfc4cc" },
-                            "&.Mui-focused fieldset": { borderColor: "#d1d5db", borderWidth: "1px" },
-                          },
-                          "& .MuiInputLabel-root": { color: "#6b7280" },
-                          "& .MuiInputLabel-root.Mui-focused": { color: "#6b7280" },
-                          width: 100,
-                        }}
-                      />
-
-                      <EventsmultiSelect
-                        name="location"
-                        label="Location"
-                        id="location"
-                        multiple
-                        value={values.location || []}
-                        onChange={(event, newValue) =>
-                          setFieldValue("location", newValue)
-                        }
-                        onOptionsLoaded={(opts) => {
-                          setLocationOptions(opts);
-                          if (!values.location || values.location.length === 0) {
-                            setFieldValue("location", opts);
-                          }
-                        }}
-                        error={!!touched.location && !!errors.location}
-                        helperText={touched.location && errors.location}
-                         sx={{ width: 350 }}
-                        url={`${listViewurl}?data=${JSON.stringify({
-                          Query: {
-                            AccessID: "2051",
-                            ScreenName: "Location",
-                            VerticalLicense: Subscriptionlastthree,
-                            Filter: `parentID=${CompanyID}`,
-                            Any: "",
-                          },
-                        })}`}
-                      />
-
-                      <TextField
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        id="sortby"
-                        name="sortby"
-                        label="Sort By"
-                        value={values.sortby}
-                        focused
-                        onChange={(e) => {
-                          handleChange(e);
-                          sessionStorage.setItem("sortby", e.target.value);
-                        }}
-                        onBlur={handleBlur}
-                        select
-                        sx={{
-                          "& .MuiOutlinedInput-root": {
-                            backgroundColor: "#fff",
-                            borderRadius: "6px",
-                            "& fieldset": { borderColor: "#d1d5db" },
-                            "&:hover fieldset": { borderColor: "#bfc4cc" },
-                            "&.Mui-focused fieldset": { borderColor: "#d1d5db", borderWidth: "1px" },
-                          },
-                          "& .MuiInputLabel-root": { color: "#6b7280" },
-                          "& .MuiInputLabel-root.Mui-focused": { color: "#6b7280" },
-                          width: 200,
-                        }}
-                      >
-                        <MenuItem value={"Name"}>Name</MenuItem>
-                        <MenuItem value={"DesignationRank"}>Designation</MenuItem>
-                        <MenuItem value={"DateOfJoin"}>Date of Joining</MenuItem>
-                        <MenuItem value={"Sortorder"}>Sortorder</MenuItem>
-                      </TextField>
-                    </Stack>
-                  </Box>
-
-                      {/* ----- ROW 2: Summary checkbox → Excel icon, own row, right-aligned ----- */}
-                      <Box padding={1} display="flex" justifyContent="flex-end">
                         <Stack
                           direction="row"
-                          spacing={2}
-                          flexWrap="wrap"
                           alignItems="center"
+                          spacing={1.5}
                           sx={{
-                            justifyContent: { xs: "flex-start", md: "flex-end" },
-                            width: { xs: "100%", md: "auto" },
-                            rowGap: 1,
+                            width: "100%",
+                            flexWrap: "nowrap",
+                            minWidth: 0,
                           }}
                         >
+                          {/* Month */}
+                          <TextField
+                            variant="outlined"
+                            size="small"
+                            id="month"
+                            name="month"
+                            label="Month"
+                            value={values.month}
+                            // focused
+                            select
+                            onChange={(e) => {
+                              handleChange(e);
+                              sessionStorage.setItem("month", e.target.value);
+                            }}
+                            onBlur={handleBlur}
+                            sx={{ width: 105, flexShrink: 0 }}
+                          >
+                            <MenuItem value="1">January</MenuItem>
+                            <MenuItem value="2">February</MenuItem>
+                            <MenuItem value="3">March</MenuItem>
+                            <MenuItem value="4">April</MenuItem>
+                            <MenuItem value="5">May</MenuItem>
+                            <MenuItem value="6">June</MenuItem>
+                            <MenuItem value="7">July</MenuItem>
+                            <MenuItem value="8">August</MenuItem>
+                            <MenuItem value="9">September</MenuItem>
+                            <MenuItem value="10">October</MenuItem>
+                            <MenuItem value="11">November</MenuItem>
+                            <MenuItem value="12">December</MenuItem>
+                          </TextField>
+
+                          {/* Year */}
+                          <TextField
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            id="year"
+                            name="year"
+                            label="Year"
+                            value={values.year}
+                            inputProps={{ min: "1900", max: "2100", step: "1" }}
+                            // focused
+                            onChange={(e) => {
+                              handleChange(e);
+                              sessionStorage.setItem("year", e.target.value);
+                            }}
+                            onBlur={handleBlur}
+                            sx={{ width: 90, flexShrink: 0 }}
+                          />
+
+                          {/* Location */}
+                          <Box sx={{ flex: "1 1 180px", minWidth: 120 }}>
+                            <EventsmultiSelect
+                              name="location"
+                              label="Location"
+                              id="location"
+                              multiple
+                              value={values.location || []}
+                              onChange={(event, newValue) =>
+                                setFieldValue("location", newValue)
+                              }
+                              onOptionsLoaded={(opts) => {
+                                setLocationOptions(opts);
+                                if (!values.location || values.location.length === 0) {
+                                  setFieldValue("location", opts);
+                                }
+                              }}
+                              error={!!touched.location && !!errors.location}
+                              helperText={touched.location && errors.location}
+                              sx={{
+                                width: "100%",
+                                "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                  borderColor: "#d1d5db",
+                                  borderWidth: "1px",
+                                },
+                              }}
+                              url={`${listViewurl}?data=${JSON.stringify({
+                                Query: {
+                                  AccessID: "2051",
+                                  ScreenName: "Location",
+                                  VerticalLicense: Subscriptionlastthree,
+                                  Filter: `parentID=${CompanyID}`,
+                                  Any: "",
+                                },
+                              })}`}
+                            />
+                          </Box>
+
+                          {/* Sort By */}
+                          <TextField
+                            variant="outlined"
+                            size="small"
+                            id="sortby"
+                            name="sortby"
+                            label="Sort By"
+                            value={values.sortby}
+                            // focused
+                            select
+                            onChange={(e) => {
+                              handleChange(e);
+                              sessionStorage.setItem("sortby", e.target.value);
+                            }}
+                            onBlur={handleBlur}
+                            sx={{ width: 155, flexShrink: 0 }}
+                          >
+                            <MenuItem value="Name">Name</MenuItem>
+                            <MenuItem value="DesignationRank">Designation</MenuItem>
+                            <MenuItem value="DateOfJoin">Date of Joining</MenuItem>
+                            <MenuItem value="Sortorder">Sortorder</MenuItem>
+                          </TextField>
+
+                          {/* Summary */}
                           <FormControlLabel
+                            sx={{
+                              m: 0,
+                              flexShrink: 0,
+                              whiteSpace: "nowrap",
+                            }}
                             control={
                               <Checkbox
                                 checked={summarycheck}
                                 onChange={(e) => setSummaryCheck(e.target.checked)}
                                 color="primary"
+                                size="small"
                               />
                             }
                             label="Summary"
                           />
+
+                          {/* Apply */}
                           <Button
                             type="submit"
                             variant="contained"
                             disabled={processProgress.open}
                             sx={{
+                              minWidth: 78,
+                              px: 2,
                               textTransform: "none",
                               borderRadius: 2,
-                              px: 4,
                               bgcolor: "#0D9488",
-                              "&:hover": {
-                                bgcolor: "#0F766E",
-                              },
+                              whiteSpace: "nowrap",
+                              "&:hover": { bgcolor: "#0F766E" },
                             }}
                           >
                             Apply
                           </Button>
+
+                          {/* Reset */}
                           <Button
                             type="reset"
                             variant="contained"
@@ -873,117 +857,115 @@ const AttInitialvalues = React.useMemo(() => ({
                             size="small"
                             disabled={processProgress.open}
                             sx={{
+                              minWidth: 75,
+                              px: 2,
                               textTransform: "none",
                               borderRadius: 2,
-                              px: 4,
+                              whiteSpace: "nowrap",
                             }}
                           >
                             Reset
                           </Button>
+
+                          {/* PDF and Excel export icons */}
                           {!summarycheck && historyRows?.length > 0 && (
-                            <PDFDownloadLink
-                              document={
-                                <AttendanceHistoryPDF
-                                  data={historyRows}
-                                  filters={{
-                                    Month: values.month,
-                                    Year: values.year,
-                                    EmployeeID: empData?.RecordID,
-                                    Imageurl: baseurlUAAM,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
-                                  }}
-                                  footerHeight={footerHeight}
+                            <>
+                              <PDFDownloadLink
+                                document={
+                                  <AttendanceHistoryPDF
+                                    data={historyRows}
+                                    filters={{
+                                      Month: values.month,
+                                      Year: values.year,
+                                      EmployeeID: empData?.RecordID,
+                                      Imageurl: baseurlUAAM,
+                                      HeaderImg: HeaderImg,
+                                      FooterImg: FooterImg,
+                                    }}
+                                    footerHeight={footerHeight}
+                                  />
+                                }
+                                fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
+                                style={{
+                                  color: "#d32f2f",
+                                  display: "flex",
+                                  flexShrink: 0,
+                                }}
+                              >
+                                {({ loading }) => (
+                                  <PictureAsPdfIcon
+                                    sx={{ fontSize: 23, opacity: loading ? 0.5 : 1 }}
+                                  />
+                                )}
+                              </PDFDownloadLink>
+
+                              <Box sx={{ display: "flex", flexShrink: 0 }}>
+                                <FaFileExcel
+                                  size={20}
+                                  color="#1D6F42"
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() =>
+                                    AttendanceHistoryExcel(
+                                      historyRows,
+                                      { month: values.month, year: values.year },
+                                      empData
+                                    )
+                                  }
                                 />
-                              }
-                              fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
-                              style={{ color: "#d32f2f", cursor: "pointer" }}
-                            >
-
-                              {({ loading }) =>
-                                loading ? (
-                                  <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
-                                ) : (
-                                  <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                                )
-                              }
-                            </PDFDownloadLink>
-
-
-                          )}
-                          {!summarycheck && historyRows?.length > 0 && (
-
-                            <FaFileExcel
-                              size={20}
-                              color="#1D6F42"
-                              style={{ cursor: "pointer", }}
-                              onClick={() =>
-                                AttendanceHistoryExcel(
-                                  historyRows,
-                                  {
-                                    month: values.month,
-                                    year: values.year
-                                  },
-                                  empData
-                                )
-                              }
-                            />
-
-                          )}
-
-
-
-                          {summarycheck && historyRows?.length > 0 && (
-                            <PDFDownloadLink
-                              document={
-                                <AttenHistrySummatyPDF
-                                  data={historyRows}
-                                  filters={{
-                                    Month: values.month,
-                                    Year: values.year,
-                                    EmployeeID: empData?.RecordID,
-                                    Imageurl: baseurlUAAM,
-                                    HeaderImg: HeaderImg,
-                                    FooterImg: FooterImg,
-                                  }}
-                                  footerHeight={footerHeight}
-                                />
-                              }
-                              fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
-                              style={{ color: "#d32f2f", cursor: "pointer" }}
-                            >
-
-                              {({ loading }) =>
-                                loading ? (
-                                  <PictureAsPdfIcon sx={{ fontSize: 24, opacity: 0.5 }} />
-                                ) : (
-                                  <PictureAsPdfIcon sx={{ fontSize: 24 }} />
-                                )
-                              }
-                            </PDFDownloadLink>
+                              </Box>
+                            </>
                           )}
 
                           {summarycheck && historyRows?.length > 0 && (
+                            <>
+                              <PDFDownloadLink
+                                document={
+                                  <AttenHistrySummatyPDF
+                                    data={historyRows}
+                                    filters={{
+                                      Month: values.month,
+                                      Year: values.year,
+                                      EmployeeID: empData?.RecordID,
+                                      Imageurl: baseurlUAAM,
+                                      HeaderImg: HeaderImg,
+                                      FooterImg: FooterImg,
+                                    }}
+                                    footerHeight={footerHeight}
+                                  />
+                                }
+                                fileName={`Attendance_Report_${empData?.Name || "Employee"}.pdf`}
+                                style={{
+                                  color: "#d32f2f",
+                                  display: "flex",
+                                  flexShrink: 0,
+                                }}
+                              >
+                                {({ loading }) => (
+                                  <PictureAsPdfIcon
+                                    sx={{ fontSize: 23, opacity: loading ? 0.5 : 1 }}
+                                  />
+                                )}
+                              </PDFDownloadLink>
 
-                            <FaFileExcel
-                              size={20}
-                              color="#1D6F42"
-                              style={{ cursor: "pointer", }}
-                              onClick={() =>
-                                AttendanceHistrySummaryExcel(
-                                  historyRows,
-                                  {
-                                    month: values.month,
-                                    year: values.year
-                                  },
-                                  empData
-                                )
-                              }
-                            />
-
+                              <Box sx={{ display: "flex", flexShrink: 0 }}>
+                                <FaFileExcel
+                                  size={20}
+                                  color="#1D6F42"
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() =>
+                                    AttendanceHistrySummaryExcel(
+                                      historyRows,
+                                      { month: values.month, year: values.year },
+                                      empData
+                                    )
+                                  }
+                                />
+                              </Box>
+                            </>
                           )}
                         </Stack>
                       </Box>
+
 
                       {!summarycheck && (
                         <Box sx={{ gridColumn: "span 4" }}>

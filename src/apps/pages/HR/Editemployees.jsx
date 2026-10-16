@@ -8672,7 +8672,7 @@ const Editemployee = () => {
                                 </Box> */}
                               </Box>
 
-                              <Divider />
+                              {/* <Divider /> */}
 
                               {/* ----- Bottom actions (inside the card) ----- */}
                               <Box
@@ -10432,33 +10432,34 @@ const Editemployee = () => {
 
                           {YearFlag == "true" ? (
                             <Button
-                              disabled={boMode == "A"}
-                              onClick={() => {
-                                Swal.fire({
-                                  title: errorMsgData.Warningmsg.Delete,
-                                  icon: "warning",
-                                  showCancelButton: true,
-                                  confirmButtonText: "Confirm",
-                                }).then((result) => {
-                                  if (result.isConfirmed) {
-                                    fnProcess(values, resetForm, "harddelete");
-                                    setOpenSkillModal(false);
-                                  }
-                                });
-                              }}
-                              sx={{
-                                px: 4,
-                                borderRadius: 2,
-                                textTransform: "none",
-                                color: "#fff",
-                                bgcolor: "#DC2626",
-                                "&:hover": {
-                                  bgcolor: "#B91C1C",
-                                },
-                              }}
-                            >
-                              Delete
-                            </Button>
+  disabled={boMode === "A"}
+  onClick={() => {
+    Swal.fire({
+      title: errorMsgData.Warningmsg.Delete,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Confirm",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fnProcess(values, resetForm, "harddelete");
+        setOpenSkillModal(false);
+      }
+    });
+  }}
+  variant="contained"
+  sx={{
+    px: 4,
+    borderRadius: 2,
+    textTransform: "none",
+    bgcolor: "#DC2626",
+    color: "#fff",
+    "&:hover": {
+      bgcolor: "#B91C1C",
+    },
+  }}
+>
+  Delete
+</Button>
                           ) : (
                             <Button
                               variant="contained"
@@ -10467,6 +10468,7 @@ const Editemployee = () => {
                                 px: 4,
                                 borderRadius: 2,
                                 textTransform: "none",
+                                color:"#ffff",
                               }}
                             >
                               Delete

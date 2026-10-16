@@ -66,7 +66,7 @@ const EditdailyAttendance = () => {
   console.log("HeaderImg", HeaderImg, FooterImg);
   const config = getConfig();
   const baseurlUAAM = config.UAAM_URL;
-console.log(baseurlUAAM, "--find baseurlUAAM");
+  console.log(baseurlUAAM, "--find baseurlUAAM");
 
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const AttendanceData = useSelector(
@@ -346,19 +346,19 @@ console.log(baseurlUAAM, "--find baseurlUAAM");
   };
   return (
     <React.Fragment>
-            
-       <Box sx={{ height: "100vh", overflow: "auto" }}>
-                <Box sx={{ p: 1.5, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
-                            <Paper sx={{ borderRadius: 3, border: "1px solid #E5E7EB" }}>
-        <Box display="flex" justifyContent="space-between" p={2}>
-          <Box display="flex" borderRadius="3px" alignItems="center">
-            {broken && !rtl && (
-              <IconButton onClick={() => toggleSidebar()}>
-                <MenuOutlinedIcon />
-              </IconButton>
-            )}
-            <Typography 
-               sx={{
+
+      <Box sx={{ height: "100vh", overflow: "auto" }}>
+        <Box sx={{ p: 1.5, backgroundColor: "#F8F9FB", minHeight: "100vh" }}>
+          <Paper sx={{ borderRadius: 3, border: "1px solid #E5E7EB" }}>
+            <Box display="flex" justifyContent="space-between" p={2}>
+              <Box display="flex" borderRadius="3px" alignItems="center">
+                {broken && !rtl && (
+                  <IconButton onClick={() => toggleSidebar()}>
+                    <MenuOutlinedIcon />
+                  </IconButton>
+                )}
+                <Typography
+                  sx={{
                     fontSize: 20,
                     fontWeight: 700,
                     color: "#111827",
@@ -366,159 +366,171 @@ console.log(baseurlUAAM, "--find baseurlUAAM");
                     px: 1,
                     py: 0.2,
                   }}
-            >Daily Attendance</Typography>
-          </Box>
-          <Box display="flex">
-            <Tooltip title="Close">
-              <IconButton onClick={() => fnLogOut("Close")} color="error">
-                <ResetTvIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Logout">
-              <IconButton color="error" onClick={() => fnLogOut("Logout")}>
-                <LogoutOutlinedIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        </Box>
-      </Paper>
+                >Daily Attendance</Typography>
+              </Box>
+              <Box display="flex">
+                <Tooltip title="Close">
+                  <IconButton onClick={() => fnLogOut("Close")} color="error">
+                    <ResetTvIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Logout">
+                  <IconButton color="error" onClick={() => fnLogOut("Logout")}>
+                    <LogoutOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Box>
+          </Paper>
 
-     <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap">
-        
-               <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
-        
-        <Paper elevation={3} sx={{ margin: "10px",backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
-          <Formik
-          initialValues={AttInitialvalues}
-          enableReinitialize={true}
-          onSubmit={(values, { resetForm }) => {
-            setTimeout(() => {
-              attendaceFnSave(values, resetForm);
-            }, 100);
-          }}
-        >
-          {({
-            errors,
-            touched,
-            handleBlur,
-            handleChange,
-            isSubmitting,
-            values,
-            handleSubmit,
-            resetForm,
-            setFieldValue
-          }) => (
-            <form
-              onSubmit={handleSubmit}
-              onReset={() => {
-                resetForm();
-                setFieldValue("date", new Date().toISOString().split("T")[0])
-                sessionStorage.removeItem("date")
-                dispatch(resetTrackingData());
-              }}
-            >
+          <Box display="flex" gap={3} alignItems="flex-start" flexWrap="wrap">
 
+            <Box flex={1} minWidth={0} display="flex" flexDirection="column" gap={3}>
 
-                 {/* ----- CARD HEADER ----- */}
-                                                <Box
-                display="flex"
-                alignItems="center"
-                gap={1.5}
-                mb={1}
-                sx={{ px: 2, pt: 2 }}
-              >
-                {/* ICON */}
-                <Box
-                  sx={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: "50%",
-                    backgroundColor: "#EFF6FF",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+              <Paper elevation={3} sx={{ margin: "10px", backgroundColor: "#ffff", border: "1px solid #b9bcc0", borderRadius: 3, }}>
+                <Formik
+                  initialValues={AttInitialvalues}
+                  enableReinitialize={true}
+                  onSubmit={(values, { resetForm }) => {
+                    setTimeout(() => {
+                      attendaceFnSave(values, resetForm);
+                    }, 100);
                   }}
                 >
-                  <Typography sx={{ fontSize: 18 }}>
-                   📋
-                  </Typography>
-                </Box>
-              
-                {/* TITLE + SUBTITLE */}
-                <Box>
-                  <Typography
-                    variant="subtitle1"
-                    fontWeight={700}
-                     color="#0D94885"
-                  >
-                    Daily Attendance
-                  </Typography>
-              
-                  <Typography variant="body2" color="text.secondary">
-                   Daily Attendance Summary Report
-                  </Typography>
-                </Box>
-              </Box>
+                  {({
+                    errors,
+                    touched,
+                    handleBlur,
+                    handleChange,
+                    isSubmitting,
+                    values,
+                    handleSubmit,
+                    resetForm,
+                    setFieldValue
+                  }) => (
+                    <form
+                      onSubmit={handleSubmit}
+                      onReset={() => {
+                        resetForm();
+                        setFieldValue("date", new Date().toISOString().split("T")[0])
+                        sessionStorage.removeItem("date")
+                        dispatch(resetTrackingData());
+                      }}
+                    >
 
 
-              <Box
-                display="grid"
-                gridTemplateColumns="repeat(2 , minMax(0,1fr))"
-                gap={formGap}
-                padding={1}
-                sx={{
-                  "& > div": {
-                    gridColumn: isNonMobile ? undefined : "span 4",
-                  },
-                }}
-              >
-                <Stack direction="row" spacing={2}>
-                  <TextField
-                    name="date"
-                    type="date"
-                    id="date"
-                    label="Date"
-                    variant="outlined"
-                    size="small"
-                    focused
-                    inputFormat="YYYY-MM-DD"
-                    value={values.date}
-                    onBlur={handleBlur}
-                    // onChange={handleChange}
-                    onChange={(e) => {
-                      handleChange(e);
-                      sessionStorage.setItem("date", e.target.value);
-                    }}
-                    error={!!touched.date && !!errors.date}
-                    helperText={touched.date && errors.date}
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-      backgroundColor: "#fff",
-      borderRadius: "6px",
+                      {/* ----- CARD HEADER ----- */}
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        gap={1.5}
+                        mb={1}
+                        sx={{ px: 2, pt: 2 }}
+                      >
+                        {/* ICON */}
+                        <Box
+                          sx={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: "50%",
+                            backgroundColor: "#EFF6FF",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography sx={{ fontSize: 18 }}>
+                            📋
+                          </Typography>
+                        </Box>
 
-      "& fieldset": {
-        borderColor: "#d1d5db", // 👈 light grey border
-      },
-      "&:hover fieldset": {
-        borderColor: "#bfc4cc", // 👈 slightly darker on hover
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
-        borderWidth: "1px",
-      },
-    },
+                        {/* TITLE + SUBTITLE */}
+                        <Box>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={700}
+                            color="#0D94885"
+                          >
+                            Daily Attendance
+                          </Typography>
 
-    "& .MuiInputLabel-root": {
-      color: "#6b7280", // label grey
-    },
-    "& .MuiInputLabel-root.Mui-focused": {
-      color: "#6b7280", // keep same on focus
-    },
-                      width: 200,
-                    }}
-                    inputProps={{ max: new Date().toISOString().split("T")[0] }}
-                  />
-                  {/* {isManager === "1" ? (
+                          <Typography variant="body2" color="text.secondary">
+                            Daily Attendance Summary Report
+                          </Typography>
+                        </Box>
+                      </Box>
+
+
+                      <Box
+                        display="grid"
+                        gridTemplateColumns={{
+                          xs: "1fr",
+                          sm: "1fr",
+                          md: "minmax(0, 1fr) auto",
+                        }}
+                        gap={formGap}
+                        padding={1}
+                        sx={{
+                          alignItems: "center",
+                          width: "100%",
+                          minWidth: 0,
+                        }}
+                      >
+                        <Stack
+                          direction="row"
+                          spacing={2}
+                          alignItems="center"
+                          sx={{
+                            width: "100%",
+                            minWidth: 0,
+                          }}
+                        >
+                          <TextField
+                            name="date"
+                            type="date"
+                            id="date"
+                            label="Date"
+                            variant="outlined"
+                            size="small"
+                            focused
+                            inputFormat="YYYY-MM-DD"
+                            value={values.date}
+                            onBlur={handleBlur}
+                            // onChange={handleChange}
+                            onChange={(e) => {
+                              handleChange(e);
+                              sessionStorage.setItem("date", e.target.value);
+                            }}
+                            error={!!touched.date && !!errors.date}
+                            helperText={touched.date && errors.date}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                backgroundColor: "#fff",
+                                borderRadius: "6px",
+
+                                "& fieldset": {
+                                  borderColor: "#d1d5db", // 👈 light grey border
+                                },
+                                "&:hover fieldset": {
+                                  borderColor: "#bfc4cc", // 👈 slightly darker on hover
+                                },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#d1d5db", // 👈 keep SAME grey on focus (like your UI)
+                                  borderWidth: "1px",
+                                },
+                              },
+
+                              "& .MuiInputLabel-root": {
+                                color: "#6b7280", // label grey
+                              },
+                              "& .MuiInputLabel-root.Mui-focused": {
+                                color: "#6b7280", // keep same on focus
+                              },
+                              width: 200,
+                            }}
+                            inputProps={{ max: new Date().toISOString().split("T")[0] }}
+                          />
+                          {/* {isManager === "1" ? (
                     <>
                       <Employeeautocomplete
                         sx={{ width: 400 }}
@@ -562,7 +574,7 @@ console.log(baseurlUAAM, "--find baseurlUAAM");
           }
           label="Self"
         /> */}
-                  {/* {isManager == "1" && (
+                          {/* {isManager == "1" && (
                                         <Employeeautocomplete
                                             sx={{ width: 400 }}
                                             name="Employee"
@@ -574,7 +586,7 @@ console.log(baseurlUAAM, "--find baseurlUAAM");
                                         />
                                     )} */}
 
-                  {/* <FormControlLabel
+                          {/* <FormControlLabel
                                         control={
                                             <Checkbox
                                                 checked={useCurrentEmp}
@@ -587,7 +599,7 @@ console.log(baseurlUAAM, "--find baseurlUAAM");
                                         }
                                         label="Self"
                                     /> */}
-                  {/* <Employeeautocomplete
+                          {/* <Employeeautocomplete
                                         sx={{ width: 400 }}
                                         name="Employee"
                                         label="Employee"
@@ -598,46 +610,55 @@ console.log(baseurlUAAM, "--find baseurlUAAM");
                                         url={`https://ess.beyondexs.com/api/wslistview_mysql.php?data={"Query":{"AccessID":"2024","ScreenName":"Employee","Filter":"CompanyID=${companyID}","Any":"","CompId":""}}`}
 
                                     /> */}
-                </Stack>
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  display="flex"
-                  padding={1}
-                  justifyContent="end"
-                >
-                  <Button
-                   type="submit" 
-                   variant="contained" 
-                   sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        bgcolor: "#0D9488",
-                        "&:hover": {
-                          bgcolor: "#0F766E",
-                        },
-                      }}
-                   >
-                    Apply
-                  </Button>
-                  <Button 
-                  type="reset" 
-                  variant="contained" 
-                  color="error"
-                  sx={{
-                        textTransform: "none",
-                        borderRadius: 2,
-                        px: 4,
-                        // bgcolor: "#0D9488",
-                        // "&:hover": {
-                        //   bgcolor: "#0F766E",
-                        // },
-                      }}
-                  >
-                    Reset
-                  </Button>
-                  {/* {rows?.length > 0 && (
+                        </Stack>
+
+                        <Stack
+                          direction="row"
+                          spacing={2}
+                          display="flex"
+                          padding={1}
+                          justifyContent={{
+                            xs: "flex-start",
+                            sm: "flex-start",
+                            md: "flex-end",
+                          }}
+                          alignItems="center"
+                          sx={{
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              bgcolor: "#0D9488",
+                              "&:hover": {
+                                bgcolor: "#0F766E",
+                              },
+                            }}
+                          >
+                            Apply
+                          </Button>
+                          <Button
+                            type="reset"
+                            variant="contained"
+                            color="error"
+                            sx={{
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 4,
+                              // bgcolor: "#0D9488",
+                              // "&:hover": {
+                              //   bgcolor: "#0F766E",
+                              // },
+                            }}
+                          >
+                            Reset
+                          </Button>
+                          {/* {rows?.length > 0 && (
                     <PDFDownloadLink
                       document={
                         <DailyattendancePDF
@@ -667,95 +688,96 @@ console.log(baseurlUAAM, "--find baseurlUAAM");
                       }
                     </PDFDownloadLink>
                   )} */}
-                  {AttendanceData?.length > 0 && (
-                    <Button
-                      onClick={async () => {
-                        try {
-                          setPdfGenerating(true);
-                          toast.loading("Generating PDF...");
+                          {AttendanceData?.length > 0 && (
+                            <Button
+                              onClick={async () => {
+                                try {
+                                  setPdfGenerating(true);
+                                  toast.loading("Generating PDF...");
 
-                          const pdfComponent = (
-                            <DailyattendancePDF
-                              data={AttendanceData}
-                              filters={{
-                                Date: values.date,
-                                Imageurl: baseurlUAAM,
-                                HeaderImg: HeaderImg,
-                                FooterImg: FooterImg
+                                  const pdfComponent = (
+                                    <DailyattendancePDF
+                                      data={AttendanceData}
+                                      filters={{
+                                        Date: values.date,
+                                        Imageurl: baseurlUAAM,
+                                        HeaderImg: HeaderImg,
+                                        FooterImg: FooterImg
+                                      }}
+                                      footerHeight={footerHeight}
+                                    />
+                                  );
+
+                                  // Generate in background without blocking UI
+                                  const blob = await generatePDFInBackground(pdfComponent);
+
+                                  if (blob) {
+                                    const url = URL.createObjectURL(blob);
+                                    const link = document.createElement("a");
+                                    link.href = url;
+                                    link.download = `Daily_Attendance_${values.date}.pdf`;
+                                    link.click();
+                                    URL.revokeObjectURL(url);
+                                    toast.dismiss();
+
+                                  } else {
+                                    toast.dismiss();
+                                    toast.error("PDF generation failed");
+                                  }
+                                } catch (error) {
+                                  toast.error("Error generating PDF");
+                                } finally {
+                                  setPdfGenerating(false);
+                                }
                               }}
-                              footerHeight={footerHeight}
-                            />
-                          );
+                              disabled={pdfGenerating}
+                              sx={{ color: "#d32f2f" }}
+                            >
+                              {pdfGenerating ? <CircularProgress size={24} /> : <PictureAsPdfIcon sx={{ fontSize: 24 }} />}
+                            </Button>
+                          )}
+                        </Stack>
+                      </Box>
 
-                          // Generate in background without blocking UI
-                          const blob = await generatePDFInBackground(pdfComponent);
-
-                          if (blob) {
-                            const url = URL.createObjectURL(blob);
-                            const link = document.createElement("a");
-                            link.href = url;
-                            link.download = `Daily_Attendance_${values.date}.pdf`;
-                            link.click();
-                            URL.revokeObjectURL(url);
-                            toast.dismiss();
-
-                          } else {
-                            toast.dismiss();
-                            toast.error("PDF generation failed");
-                          }
-                        } catch (error) {
-                          toast.error("Error generating PDF");
-                        } finally {
-                          setPdfGenerating(false);
-                        }
-                      }}
-                      disabled={pdfGenerating}
-                      sx={{ color: "#d32f2f" }}
-                    >
-                      {pdfGenerating ? <CircularProgress size={24} /> : <PictureAsPdfIcon sx={{ fontSize: 24 }} />}
-                    </Button>
-                  )}
-                </Stack>
-              </Box>
-              <Box sx={{ gridColumn: "span 4" }}>
-                <Box
-                  padding={1}
-                  height="500px"
-                  // height={dataGridHeight}
-                  marginTop={2}
-                  sx={{
-                    "& .MuiDataGrid-root": {
-                      // border: "none",
-                    },
-                    "& .MuiDataGrid-cell": {
-                      // borderBottom: "none",
-                    },
-                    "& .name-column--cell": {
-                      color: colors.greenAccent[300],
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                      backgroundColor: colors.blueAccent[800],
-                      // borderBottom: "none",
-                    },
-                    "& .MuiDataGrid-virtualScroller": {
-                      backgroundColor: colors.primary[400],
-                    },
-                    "& .MuiDataGrid-footerContainer": {
-                      // borderTop: "none",
-                      backgroundColor: colors.blueAccent[800],
-                    },
-                    "& .MuiCheckbox-root": {
-                      color: `${colors.greenAccent[200]} !important`,
-                    },
-                    "& .odd-row": {
-                      backgroundColor: "",
-                      color: "", // Color for odd rows
-                    },
-                    "& .even-row": {
-                      backgroundColor: "#d0edec",
-                      color: "", // Color for even rows
-                    },
-                    "& .MuiDataGrid-columnHeaderTitle": {
+                      <Box sx={{ gridColumn: "span 4" }}>
+                        <Box
+                          padding={1}
+                          height="500px"
+                          // height={dataGridHeight}
+                          // marginTop={1}
+                          sx={{
+                            "& .MuiDataGrid-root": {
+                              // border: "none",
+                            },
+                            "& .MuiDataGrid-cell": {
+                              // borderBottom: "none",
+                            },
+                            "& .name-column--cell": {
+                              color: colors.greenAccent[300],
+                            },
+                            "& .MuiDataGrid-columnHeaders": {
+                              backgroundColor: colors.blueAccent[800],
+                              // borderBottom: "none",
+                            },
+                            "& .MuiDataGrid-virtualScroller": {
+                              backgroundColor: colors.primary[400],
+                            },
+                            "& .MuiDataGrid-footerContainer": {
+                              // borderTop: "none",
+                              backgroundColor: colors.blueAccent[800],
+                            },
+                            "& .MuiCheckbox-root": {
+                              color: `${colors.greenAccent[200]} !important`,
+                            },
+                            "& .odd-row": {
+                              backgroundColor: "",
+                              color: "", // Color for odd rows
+                            },
+                            "& .even-row": {
+                              backgroundColor: "#d0edec",
+                              color: "", // Color for even rows
+                            },
+                            "& .MuiDataGrid-columnHeaderTitle": {
                               color: colors.blueAccent[900],
                               fontWeight: 600,
                             },
@@ -784,57 +806,57 @@ console.log(baseurlUAAM, "--find baseurlUAAM");
                             "& .MuiTablePagination-actions button": {
                               color: "#fff",
                             },
-                  }}
-                >
-                  <DataGrid
-                    sx={{
-                      "& .MuiDataGrid-footerContainer": {
-                        height: dataGridHeaderFooterHeight,
-                        minHeight: dataGridHeaderFooterHeight,
-                      },
-                    }}
-                    rowHeight={dataGridRowHeight}
-                    headerHeight={dataGridHeaderFooterHeight}
-                    rows={rows}
-                    columns={AttColumn}
-                    disableSelectionOnClick
-                    getRowId={(row) => row.SLNO}
-                    pageSize={pageSize}
-                    page={page}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    onPageChange={(newPage) => setPage(newPage)}
-                    onCellClick={(params) => { }}
-                    rowsPerPageOptions={[5, 10, 20]}
-                    pagination
-                    components={{
-                      Toolbar: AttendanceTool,
-                    }}
-                    onStateChange={(stateParams) =>
-                      setRowCount(stateParams.pagination.rowCount)
-                    }
-                    loading={getLoading}
-                    componentsProps={{
-                      toolbar: {
-                        showQuickFilter: true,
-                        quickFilterProps: { debounceMs: 500 },
-                      },
-                    }}
-                    getRowClassName={(params) =>
-                      params.indexRelativeToCurrentPage % 2 === 0
-                        ? "odd-row"
-                        : "even-row"
-                    }
-                  />
-                </Box>
-              </Box>
-            </form>
-          )}
-        </Formik>
-      </Paper>
+                          }}
+                        >
+                          <DataGrid
+                            sx={{
+                              "& .MuiDataGrid-footerContainer": {
+                                height: dataGridHeaderFooterHeight,
+                                minHeight: dataGridHeaderFooterHeight,
+                              },
+                            }}
+                            rowHeight={dataGridRowHeight}
+                            headerHeight={dataGridHeaderFooterHeight}
+                            rows={rows}
+                            columns={AttColumn}
+                            disableSelectionOnClick
+                            getRowId={(row) => row.SLNO}
+                            pageSize={pageSize}
+                            page={page}
+                            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                            onPageChange={(newPage) => setPage(newPage)}
+                            onCellClick={(params) => { }}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            pagination
+                            components={{
+                              Toolbar: AttendanceTool,
+                            }}
+                            onStateChange={(stateParams) =>
+                              setRowCount(stateParams.pagination.rowCount)
+                            }
+                            loading={getLoading}
+                            componentsProps={{
+                              toolbar: {
+                                showQuickFilter: true,
+                                quickFilterProps: { debounceMs: 500 },
+                              },
+                            }}
+                            getRowClassName={(params) =>
+                              params.indexRelativeToCurrentPage % 2 === 0
+                                ? "odd-row"
+                                : "even-row"
+                            }
+                          />
+                        </Box>
+                      </Box>
+                    </form>
+                  )}
+                </Formik>
+              </Paper>
+            </Box>
+          </Box>
         </Box>
-                    </Box>
-           </Box>
-                    </Box>
+      </Box>
     </React.Fragment>
   );
 };

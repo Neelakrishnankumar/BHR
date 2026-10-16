@@ -2294,6 +2294,7 @@ export const fetchListview =
                 disableColumnMenu: true,
                 disableExport: true,
                 renderCell: (params) => {
+
                   return (
                     <Box>
                       <Link
@@ -2308,6 +2309,36 @@ export const fetchListview =
                     </Box>
                   );
                 },
+              };
+            }
+
+            else if (AccessID == "TR409") {
+              obj = {
+                field: "action",
+                headerName: "Action",
+                minWidth: 250,
+                sortable: false,
+                filterable: false,
+                headerAlign: "center",
+                align: "center",
+                disableColumnMenu: true,
+                disableExport: true,
+                renderCell: (params) => (
+                  <Box>
+                    <a
+                      href={encodeURI(params.row.Attachments)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Tooltip title="Attachment">
+                        <IconButton color="info" size="small">
+                          {/* <AttachFileOutlinedIcon /> */}
+                        </IconButton>
+                      </Tooltip>
+                    </a>
+                  </Box>
+                ),
               };
             }
             else if (AccessID == "TR386") {
@@ -5249,6 +5280,7 @@ export const fetchListview =
                         AccessID !== "TR396" &&
                         AccessID !== "TR397" &&
                         AccessID !== "TR387" &&
+
                         AccessID !== "TR052" ? (
                         <Link
                           to={`./Edit${screenName}/${params.row.RecordID}/E`}
@@ -8446,7 +8478,6 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
           </>
         )}
 
-
         {accessID === "TR318" && (
           <>
             <Tooltip title="Edit">
@@ -8582,6 +8613,7 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             </Tooltip>
           </>
         )}
+
         {accessID === "TR324" && (
           <>
             <Tooltip title="Edit">
@@ -9030,6 +9062,8 @@ const ItemAction = ({ params, accessID, screenName, rights, AsmtType }) => {
             )}
           </Box>
         )}
+
+
       </div>
     </Fragment>
   );

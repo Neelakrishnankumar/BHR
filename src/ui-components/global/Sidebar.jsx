@@ -2201,6 +2201,7 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
 import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined';
 // const SubscriptionCode = sessionStorage.getItem("SubscriptionCode") || "";
+import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 // const is003Subscription = SubscriptionCode.endsWith("003");
 // const is00123Subscription = ["001", "002", "003"].some(code =>
 //   SubscriptionCode?.endsWith(code)
@@ -2965,7 +2966,6 @@ const Sidebars = () => {
           </Tooltip>
         ),
         children: [
-
           {
             name: "HSN",
             id: 43468,
@@ -2983,6 +2983,7 @@ const Sidebars = () => {
             UGA_VIEW: true,
             UGA_ACCESSIDS: "TR316",
           },
+
           {
             name: "Item",
             id: 43468,
